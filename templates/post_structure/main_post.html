@@ -1,0 +1,14 @@
+{% extends 'common/base.html' %}
+
+{% block title %}CREATE YOUR NEW POST{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Create a new post</h1>
+    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary mt-3">Save</button>
+    </form>
+</div>
+{% endblock %}
