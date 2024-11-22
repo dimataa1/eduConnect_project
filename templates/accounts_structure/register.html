@@ -1,0 +1,68 @@
+{% extends 'common/base.html' %}
+{% load form_helpers %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-sm p-5 w-100" style="max-width: 600px;">
+        <h2 class="text-center mb-4">Register</h2>
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            <!-- Username Field -->
+            <div class="mb-3">
+                {{ form.username.label_tag }}
+                {{ form.username|add_class:"form-control" }}
+                {% for error in form.username.errors %}
+                    <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Email Field -->
+            <div class="mb-3">
+                {{ form.email.label_tag }}
+                {{ form.email|add_class:"form-control" }}
+                {% for error in form.email.errors %}
+                    <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Role Field -->
+            <div class="mb-3">
+                {{ form.role.label_tag }}
+                {{ form.role|add_class:"form-control" }}
+                {% for error in form.role.errors %}
+                    <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Password Field -->
+            <div class="mb-3">
+                {{ form.password1.label_tag }}
+                {{ form.password1|add_class:"form-control" }}
+                {% for error in form.password1.errors %}
+                    <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Confirm Password Field -->
+            <div class="mb-3">
+                {{ form.password2.label_tag }}
+                {{ form.password2|add_class:"form-control" }}
+                {% for error in form.password2.errors %}
+                    <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Register</button>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p class="mb-0">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

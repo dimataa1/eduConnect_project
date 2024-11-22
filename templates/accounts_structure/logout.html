@@ -1,0 +1,15 @@
+{% extends 'common/base.html' %}
+{% block title %}Logout{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="text-center">
+        <h2>Are you sure you want to log out?</h2>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger mt-3">Logout</button>
+            <a href="{% url 'home' %}" class="btn btn-secondary mt-3">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
