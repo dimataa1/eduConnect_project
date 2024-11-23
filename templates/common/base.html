@@ -33,11 +33,11 @@
                 <ul class="nav">
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{% url 'dashboard' %}">
                                 <i class="bi bi-speedometer2"></i> Dashboard
                             </a>
                         </li>
-                        
+
                          <li class="nav-item">
                             <a class="nav-link btn btn-outline-primary me-2" href="{% url 'new_post' %}">
                                 <i class="bi bi-plus-circle"></i> Add Post
@@ -52,12 +52,12 @@
                                 </a>
                             </li>
                         {% endif %}
-                        
-                         
-                        
+
+
+
                         <li class="nav-item">
-                            <a class="nav-link" href="">
-                                <i class="bi bi-person"></i> Profile
+                            <a class="nav-link" href="{% url 'profile_details' %}">
+                                <i class="bi bi-person" ></i> Profile
                             </a>
                         </li>
                         <li class="nav-item">
@@ -85,8 +85,9 @@
     <!-- Main Content -->
     <main class="flex-grow-1">
         <div class="container py-4">
+
             {% block content %}
-                <!-- Page-specific content goes here -->
+
             {% endblock %}
         </div>
     </main>

@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.urls import path
-from .views import register, base_view, LoginView, LogoutView
+from .views import register, LoginView, LogoutView, ProfileDetailView
 
 urlpatterns = [
-    path('', base_view, name='home'),
     path('register/', register, name='register'),
     path('pending-approval/', lambda request: render(request, 'accounts_structure/pending_approval.html'), name='pending-approval'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('details/', ProfileDetailView.as_view(), name='profile_details'),
 ]
 

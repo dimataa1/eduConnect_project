@@ -1,0 +1,46 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold">Добре дошли в <span class="text-primary">EduConnect</span>!</h1>
+        <p class="fs-4 text-muted">Свързваме ученици и учители за по-добро образование.</p>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center text-success">Какво можете да правите в EduConnect?</h2>
+                    <ul class="list-unstyled my-4">
+                        <li class="mb-3">
+                            <i class="bi bi-journal-text text-primary"></i>
+                            <strong>Публикуване на въпроси и задачи:</strong> Споделете учебни въпроси или казуси.
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-image text-secondary"></i>
+                            <strong>Добавяне на изображения и файлове:</strong> Направете публикациите си ясни.
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-filter text-danger"></i>
+                            <strong>Филтриране по предмет и клас:</strong> Намерете информация бързо.
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-chat-left-text text-success"></i>
+                            <strong>Коментари и дискусии:</strong> Участвайте активно в обсъждания.
+                        </li>
+                        <li>
+                            <i class="bi bi-heart text-warning"></i>
+                            <strong>Оценявайте коментари:</strong> Подкрепете полезните отговори.
+                        </li>
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                            Започни сега!
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

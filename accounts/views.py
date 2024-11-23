@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.views import View
+from django.views.generic import DetailView
 
 from .forms import CustomUserForm, CustomLoginForm
 from django.views.generic.edit import FormView
@@ -8,6 +11,8 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
+
+from .models import Profile, AppUser
 
 
 def register(request):
@@ -25,10 +30,6 @@ def register(request):
     else:
         form = CustomUserForm()
     return render(request, 'accounts_structure/register.html', {'form': form})
-
-
-def base_view(request):
-    return render(request, 'common/base.html')
 
 
 class LoginView(FormView):
@@ -58,3 +59,15 @@ class LogoutView(View):
     def get(self, request, *args, **kwargs):
 
         return render(request, 'accounts_structure/logout.html')
+
+
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = 'accounts_structure/profile_details.html'
+    context_object_name = 'profile'
+
+    def get_object(self):
+        profile = Profile.objects.filter(user=self.request.user).first()
+        if profile is None:
+            raise Http404("Profile does not exist.")
+        return profile

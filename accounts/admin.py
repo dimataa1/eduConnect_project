@@ -9,8 +9,10 @@ class AppUserAdmin(admin.ModelAdmin):
     form = CustomUserChangeForm
     model = AppUser
 
-    list_display = ('email', 'username', 'role', 'is_approved', 'is_active')
-    list_filter = ('role', 'is_approved', 'is_active')
+    list_display = ('email', 'username', 'role', 'is_approved', 'is_active', 'is_staff')
+    list_filter = ('role', 'is_approved', 'is_active', 'is_staff')
+    search_fields = ('email', 'username', 'role')
+    ordering = ('email',)
     actions = ['approve_teachers']
 
     def approve_teachers(self, request, queryset):
@@ -21,4 +23,10 @@ class AppUserAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'first_name', 'last_name', 'age', 'points')
+    list_display = ('user', 'first_name', 'last_name', 'age', 'grade', 'subject')
+    list_filter = ('user__role', 'grade', 'subject')
+    search_fields = ('first_name', 'last_name', 'user__email', 'grade', 'subject')
+    ordering = ('user__email',)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('user')
