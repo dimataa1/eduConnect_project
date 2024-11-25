@@ -34,6 +34,7 @@ class CreatePostView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'form': form})
 
 
+
 class DashBoardListView(ListView):
     model = Post
     template_name = 'common/dashboard.html'
@@ -130,14 +131,3 @@ def add_school(request):
     return render(request, 'school_structure/add_school.html', {'form': form})
 
 
-class SchoolSearchAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        town = request.GET.get('town', '').strip()
-
-        schools = School.objects.all()
-
-        if town:
-            schools = schools.filter(town__icontains=town)
-
-        serializer = SchoolSerializer(schools, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)

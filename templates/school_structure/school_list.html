@@ -40,10 +40,11 @@
         </div>
     </div>
 
-    <!-- Add school button -->
-    <div class="text-center mt-4">
-        <a href="{% url 'add_school' %}" class="btn btn-success btn-lg">Add a New School</a>
-    </div>
+     {% if user.role == 'teacher' %}
+        <div class="text-center mt-4">
+            <a href="{% url 'add_school' %}" class="btn btn-success btn-lg">Add a New School</a>
+        </div>
+    {% endif %}
 </div>
 
 <script>

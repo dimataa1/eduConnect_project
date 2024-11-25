@@ -58,6 +58,7 @@ class School(models.Model):
     name = models.CharField(
         max_length=255
     )
+
     town = models.CharField(
         max_length=255
     )
