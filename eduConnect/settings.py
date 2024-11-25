@@ -91,9 +91,9 @@ WSGI_APPLICATION = 'eduConnect.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "educonnect",
+        "NAME": "",
         "USER": "postgres",
-        "PASSWORD": "D2007dimov",
+        "PASSWORD": "",
         "HOST": "localhost",
         "PORT": "5432",
     }
