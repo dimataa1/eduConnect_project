@@ -1,0 +1,29 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-lg">
+        <div class="card-header text-center bg-primary text-white">
+            <h2>{{ school.name }}</h2>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"><strong>Town:</strong> {{ school.town }}</h5>
+            <p class="card-text"><strong>Description:</strong> {{ school.description }}</p>
+
+            {% if school.image %}
+                <div class="text-center my-4">
+                    <img src="{{ school.image.url }}" alt="{{ school.name }}" class="img-fluid rounded" width="400">
+                </div>
+            {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                    No image available for this school.
+                </div>
+            {% endif %}
+
+            <div class="text-center">
+                <a href="{% url 'school_list' %}" class="btn btn-primary">Back to School List</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -47,7 +47,7 @@
                         <!-- Represent Your School Button (Only for Teachers) -->
                         {% if request.user.role == 'teacher' %}
                             <li class="nav-item">
-                                <a class="nav-link btn btn-outline-secondary me-2" href="">
+                                <a class="nav-link btn btn-outline-secondary me-2" href="{% url 'add_school' %}">
                                     <i class="bi bi-building"></i> Represent Your School
                                 </a>
                             </li>
@@ -56,7 +56,7 @@
 
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'profile_details' %}">
+                            <a class="nav-link" href="">
                                 <i class="bi bi-person" ></i> Profile
                             </a>
                         </li>

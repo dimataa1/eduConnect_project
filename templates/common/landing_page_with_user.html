@@ -2,10 +2,144 @@
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="text-center">Добре дошли обратно, {{ request.user.username }}!</h1>
-    <p class="text-center">Започнете да използвате функционалностите на EduConnect.</p>
-    <div class="text-center mt-4">
-        <a href="{% url 'dashboard' %}" class="btn btn-success btn-lg">Вижте вашия Dashboard</a>
+    <!-- Welcome Message -->
+    <h1 class="text-center">Добре дошли обратно, {{ username }}!</h1>
+    <p class="text-center">Използвайте функционалностите за търсене на постове и училища.</p>
+
+    <!-- Dashboard Button -->
+    <div class="text-center mt-4 mb-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-success btn-lg">
+            Вижте вашия Dashboard
+        </a>
     </div>
+
+    <!-- Search Posts -->
+    <div class="card shadow-lg mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Търсене на постове</h4>
+            <form id="searchPostForm">
+                <div class="row">
+                    <div class="col-md-5 mb-3">
+                        <input type="text" id="subject" name="subject" class="form-control" placeholder="Търсене по предмет">
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <input type="text" id="grade" name="grade" class="form-control" placeholder="Търсене по клас">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-block">Търси</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Display Posts -->
+    <div id="postResults" class="row mb-5"></div>
+
+    <!-- Search Schools -->
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h4 class="card-title">Търсене на училища</h4>
+            <form id="searchSchoolForm">
+                <div class="row">
+                    <div class="col-md-10 mb-3">
+                        <input type="text" id="town" name="town" class="form-control" placeholder="Въведете град за търсене">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-block">Търси</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Display Schools -->
+    <div id="schoolResults" class="row"></div>
 </div>
+
+<!-- JavaScript to handle the AJAX requests -->
+<script>
+document.getElementById("searchPostForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the form from submitting the traditional way
+
+    var subject = document.getElementById("subject").value;
+    var grade = document.getElementById("grade").value;
+
+    // Send an AJAX request to the API for posts
+    fetch(`/api/search/?subject=${subject}&grade=${grade}`)
+        .then(response => response.json())
+        .then(data => {
+            var resultsContainer = document.getElementById("postResults");
+            resultsContainer.innerHTML = ''; // Clear previous results
+
+            if (data.length === 0) {
+                resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени постове за зададените критерии.</div>';
+            } else {
+                data.forEach(post => {
+                    var postCard = `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="${post.image}" class="card-img-top" alt="${post.title}" style="max-height: 200px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="card-title">${post.title}</h5>
+                                    <p class="card-text text-muted">${post.description.substring(0, 100)}...</p>
+                                    <p><strong>Предмет:</strong> ${post.subject}</p>
+                                    <p><strong>Клас:</strong> ${post.grade}</p>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    Създадено на ${new Date(post.created_at).toLocaleDateString()}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    resultsContainer.innerHTML += postCard;
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching post search results:', error);
+        });
+});
+
+document.getElementById("searchSchoolForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the form from submitting the traditional way
+
+    var town = document.getElementById("town").value;
+
+    // Send an AJAX request to the API for schools
+    fetch(`/api/search_schools/?town=${town}`)
+        .then(response => response.json())
+        .then(data => {
+            var resultsContainer = document.getElementById("schoolResults");
+            resultsContainer.innerHTML = ''; // Clear previous results
+
+            if (data.length === 0) {
+                resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища за зададения град.</div>';
+            } else {
+                data.forEach(school => {
+                    var schoolCard = `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="${school.image}" class="card-img-top" alt="${school.name}" style="max-height: 200px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="card-title">${school.name}</h5>
+                                    <p class="card-text text-muted">${school.description.substring(0, 100)}...</p>
+                                    <p><strong>Град:</strong> ${school.town}</p>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <a href="/schools/${school.id}" class="btn btn-sm btn-outline-primary">Детайли</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    resultsContainer.innerHTML += schoolCard;
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching school search results:', error);
+        });
+});
+</script>
+
 {% endblock %}

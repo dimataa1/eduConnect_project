@@ -1,0 +1,64 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Schools</h1>
+
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <input 
+            type="text" 
+            id="schoolSearch" 
+            class="form-control" 
+            placeholder="Search by town..."
+            onkeyup="filterSchools()"
+        >
+    </div>
+
+    <!-- School List -->
+    <div id="schoolList" class="row justify-content-center">
+        <div class="col-lg-8">
+            {% for school in schools %}
+                <div class="card mb-4 shadow-sm school-card">
+                    <div class="row g-0">
+                        {% if school.image %}
+                            <div class="col-md-4">
+                                <img src="{{ school.image.url }}" class="img-fluid rounded-start" alt="{{ school.name }}" style="height: 100%; object-fit: cover;">
+                            </div>
+                        {% endif %}
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ school.name }}</h5>
+                                <p class="card-text town-name"><strong>Town:</strong> {{ school.town }}</p>
+                                <p class="card-text">{{ school.description|truncatechars:150 }}</p>
+                                <a href="{% url 'school_detail' school.id %}" class="btn btn-primary btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Add school button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'add_school' %}" class="btn btn-success btn-lg">Add a New School</a>
+    </div>
+</div>
+
+<script>
+    function filterSchools() {
+        const searchInput = document.getElementById("schoolSearch").value.toLowerCase();
+        const schoolCards = document.querySelectorAll(".school-card");
+
+        schoolCards.forEach(card => {
+            const townName = card.querySelector(".town-name").innerText.toLowerCase();
+            if (townName.includes(searchInput)) {
+                card.style.display = "block"; // Show card
+            } else {
+                card.style.display = "none"; // Hide card
+            }
+        });
+    }
+</script>
+{% endblock %}

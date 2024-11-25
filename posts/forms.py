@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Comment
+from .models import Post, Comment, School
 
 
 class PostForm(forms.ModelForm):
@@ -19,3 +19,22 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+
+
+class PostSearchForm(forms.Form):
+    subject = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Search by Subject'})
+    )
+    grade = forms.CharField(
+        max_length=50,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Search by Grade'})
+    )
+
+
+class SchoolForm(forms.ModelForm):
+    class Meta:
+        model = School
+        fields = ['name', 'town', 'description', 'image']

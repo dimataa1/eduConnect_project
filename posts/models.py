@@ -52,3 +52,22 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author} on {self.post.title}"
+
+
+class School(models.Model):
+    name = models.CharField(
+        max_length=255
+    )
+    town = models.CharField(
+        max_length=255
+    )
+
+    description = models.TextField()
+
+    image = models.ImageField(
+        upload_to='static/school_images/',
+        blank=True, null=True
+    )
+
+    def __str__(self):
+        return self.name

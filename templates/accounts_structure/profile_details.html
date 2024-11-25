@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="mb-4">Профил на {{}} {{ profile.last_name }}</h1>
+    <h1 class="mb-4">Профил на {} {{ profile.last_name }}</h1>
     <ul class="list-group">
         <li class="list-group-item"><strong>Email:</strong> {{ profile.user.email }}</li>
         <li class="list-group-item"><strong>Роля:</strong> {{ profile.user.role|capfirst }}</li>

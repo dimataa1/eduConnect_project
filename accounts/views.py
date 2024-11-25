@@ -24,6 +24,9 @@ def register(request):
                 user.is_approved = False
             user.save()
 
+            # Ensure profile is created for the new user
+            Profile.objects.get_or_create(user=user)  # Create Profile if it doesn't exist
+
             if user.role == 'teacher':
                 return redirect('pending-approval')
             return redirect('home')
@@ -44,6 +47,10 @@ class LoginView(FormView):
 
         if user is not None:
             login(self.request, user)
+
+            # Check if the user has a profile, if not, create one
+            Profile.objects.get_or_create(user=user)
+
             return super().form_valid(form)
         else:
             messages.error(self.request, "Invalid email or password.")
@@ -61,13 +68,11 @@ class LogoutView(View):
         return render(request, 'accounts_structure/logout.html')
 
 
-class ProfileDetailView(LoginRequiredMixin, DetailView):
-    model = Profile
-    template_name = 'accounts_structure/profile_details.html'
-    context_object_name = 'profile'
-
-    def get_object(self):
-        profile = Profile.objects.filter(user=self.request.user).first()
-        if profile is None:
-            raise Http404("Profile does not exist.")
-        return profile
+# class ProfileDetailView(LoginRequiredMixin, DetailView):
+#     model = Profile
+#     template_name = 'accounts_structure/profile_details.html'
+#     context_object_name = 'profile'
+#
+#     def get_object(self):
+#         profile, created = Profile.objects.get_or_create(user=self.request.user)
+#         return profile
