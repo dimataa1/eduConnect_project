@@ -1,5 +1,8 @@
+import os
+
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -79,7 +82,7 @@ class Profile(models.Model):
         max_length=50,
         blank=True,
         null=True,
-        help_text="Applicable for students. Example: '10th Grade'.",
+        help_text="Applicable for students. Example: '10'",
     )
 
     subject = models.CharField(
@@ -87,6 +90,14 @@ class Profile(models.Model):
         blank=True,
         null=True,
         help_text="Applicable for teachers. Example: 'Mathematics'.",
+    )
+
+    profile_picture = models.ImageField(
+        upload_to='static/profile_images/',
+        blank=True,
+        null=True,
+        help_text="Upload a profile picture.",
+        default='profile_images/default_pfp'
     )
 
     def __str__(self):
@@ -98,3 +109,21 @@ class Profile(models.Model):
         elif self.user.role == 'teacher':
             self.grade = None
         super().save(*args, **kwargs)
+
+    def clean(self):
+        if self.user.role == 'student' and self.subject:
+            raise ValidationError("Students cannot have a subject.")
+        if self.user.role == 'teacher' and self.grade:
+            raise ValidationError("Teachers cannot have a grade.")
+
+    def delete_profile_picture(self):
+
+        if self.profile_picture and hasattr(self.profile_picture, 'path') and os.path.isfile(self.profile_picture.path):
+            os.remove(self.profile_picture.path)
+        self.profile_picture = None
+        self.save()
+
+    def restore_default_picture(self):
+        self.delete_profile_picture()  # Remove any existing picture
+        self.profile_picture = 'profile_images/default_pfp.jpg'  # Set the default image
+        self.save()

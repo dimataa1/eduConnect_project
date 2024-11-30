@@ -91,9 +91,9 @@ WSGI_APPLICATION = 'eduConnect.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "",
+        "NAME": "educonnect",
         "USER": "postgres",
-        "PASSWORD": "",
+        "PASSWORD": "D2007dimov",
         "HOST": "localhost",
         "PORT": "5432",
     }
@@ -147,6 +147,12 @@ LOGIN_REDIRECT_URL = '/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKSv = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

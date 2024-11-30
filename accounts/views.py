@@ -1,11 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic import DetailView, DeleteView
 
-from .forms import CustomUserForm, CustomLoginForm
+from .forms import CustomUserForm, CustomLoginForm, ProfileUpdateForm
 from django.views.generic.edit import FormView
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
@@ -64,15 +66,24 @@ class LogoutView(View):
         return redirect('home')
 
     def get(self, request, *args, **kwargs):
-
         return render(request, 'accounts_structure/logout.html')
 
 
-# class ProfileDetailView(LoginRequiredMixin, DetailView):
-#     model = Profile
-#     template_name = 'accounts_structure/profile_details.html'
-#     context_object_name = 'profile'
-#
-#     def get_object(self):
-#         profile, created = Profile.objects.get_or_create(user=self.request.user)
-#         return profile
+@login_required
+def delete_profile_picture(request):
+    profile = get_object_or_404(Profile, user=request.user)
+    profile.delete_profile_picture()
+    messages.success(request, "Profile picture deleted successfully.")
+    return redirect('profile_details')
+
+
+class ProfileDeleteView(LoginRequiredMixin, DeleteView):
+    model = User
+    template_name = 'accounts_structure/profile_confirm_delete.html'
+    context_object_name = 'user'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_success_url(self):
+        return reverse_lazy('logout')

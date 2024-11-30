@@ -1,17 +1,67 @@
 {% extends 'common/base.html' %}
-
+{% load static %}
 {% block content %}
-<div class="container py-5">
-    <h1 class="mb-4">Профил на {} {{ profile.last_name }}</h1>
-    <ul class="list-group">
-        <li class="list-group-item"><strong>Email:</strong> {{ profile.user.email }}</li>
-        <li class="list-group-item"><strong>Роля:</strong> {{ profile.user.role|capfirst }}</li>
-        <li class="list-group-item"><strong>Възраст:</strong> {{ profile.age }}</li>
-        {% if profile.user.role == 'student' %}
-            <li class="list-group-item"><strong>Клас:</strong> {{ profile.grade }}</li>
-        {% elif profile.user.role == 'teacher' %}
-            <li class="list-group-item"><strong>Предмет:</strong> {{ profile.subject }}</li>
-        {% endif %}
-    </ul>
-</div>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h2>👤 Profile Details</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                {% if profile.profile_picture %}
+                                    <img src="{{ profile.profile_picture.url }}" class="img-fluid mb-3 border rounded">
+                                {% else %}
+                                    <img src="{% static 'profile_images/default_pfp.jpg' %}"
+                                         class="img-fluid mb-3 border rounded">
+                                {% endif %}
+
+                                <h5 class="text-muted">{{ profile.first_name }} {{ profile.last_name }}</h5>
+                                <p class="badge bg-secondary">{{ profile.user.get_role_display }}</p>
+                            </div>
+                            <div class="col-md-8">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <strong>Email: </strong>
+                                        <span class="text-muted">{{ profile.user.email }}</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Age: </strong>
+                                        <span class="text-muted">{{ profile.age|default:"N/A" }}</span>
+                                    </li>
+                                    {% if profile.user.role == 'student' %}
+                                        <li class="list-group-item">
+                                            <strong>Grade: </strong>
+                                            <span class="text-muted">{{ profile.grade|default:"N/A" }}</span>
+                                        </li>
+                                    {% elif profile.user.role == 'teacher' %}
+                                        <li class="list-group-item">
+                                            <strong>Subject: </strong>
+                                            <span class="text-muted">{{ profile.subject|default:"N/A" }}</span>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="{% url 'profile_update' %}" class="btn btn-outline-primary">
+                                ✏️ Edit Profile
+                            </a>
+                            <a href="{% url 'delete_profile_picture' %}" class="btn btn-outline-danger">
+                                🗑️ Delete Picture
+                            </a>
+                            <a href="{% url 'delete_profile' %}" class="btn btn-danger">
+                                🚨 Delete Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
