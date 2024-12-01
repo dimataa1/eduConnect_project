@@ -32,15 +32,77 @@ EduConnect is a web platform designed for students and teachers, where they can 
 
 ### Prerequisites
 
-Before running the project, ensure you have the following installed:
+## Installation and Setup
 
-- Python 3.x
-- Django (>= 3.2)
-- pip (Python package installer)
+1. **Clone the repository:**
 
-### Install Dependencies
-
-1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd <project-directory>
+   git clone https://github.com/yourusername/your-repo.git
+   cd your-repo
+   ```
+
+2. **Create a virtual environment (optional but recommended):**
+
+   ```bash
+   python -m venv env
+   ```
+
+   **Activate the virtual environment:**
+
+   - On Windows:
+     ```bash
+     .\env\Scripts\activate
+     ```
+
+   - On macOS/Linux:
+     ```bash
+     source env/bin/activate
+     ```
+
+3. **Install the required packages:**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run the Django development server:**
+
+   ```bash
+   python manage.py runserver
+   ```
+
+   This command will start the server, and you should be able to access your project at `http://127.0.0.1:8000/`.
+
+## Additional Commands
+
+- **Make migrations:**
+
+   ```bash
+   python manage.py makemigrations
+   ```
+
+- **Apply migrations:**
+
+   ```bash
+   python manage.py migrate
+   ```
+
+- **Create a superuser (for admin access):**
+
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+   Follow the prompts to create an admin user.
+
+## Usage
+
+Include instructions for using the project here.
+
+## Requirements
+
+Make sure you have a `requirements.txt` file in your project directory. You can generate it using:
+
+```bash
+pip freeze > requirements.txt
+```
