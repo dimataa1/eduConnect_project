@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
@@ -34,15 +35,26 @@ class CreatePostView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'form': form})
 
 
-
 class DashBoardListView(ListView):
     model = Post
     template_name = 'common/dashboard.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
+        # Fetch posts specific to the logged-in user, ordered by creation date
         return Post.objects.filter(author=self.request.user).order_by('-created_at')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        posts_list = context['posts']
+
+        # Paginate the posts
+        paginator = Paginator(posts_list, 3)  # 5 posts per page
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        return context
 
 class PostDetailView(DetailView):
     model = Post
@@ -108,7 +120,12 @@ def school_list(request):
     else:
         schools = School.objects.all()
 
+    paginator = Paginator(schools, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
+        'page_obj': page_obj,
         'schools': schools,
         'search_query': query
     }
@@ -131,3 +148,19 @@ def add_school(request):
     return render(request, 'school_structure/add_school.html', {'form': form})
 
 
+def post_list(request):
+    query = request.GET.get('search', '')
+    if query:
+        posts = Post.objects.filter(title__icontains=query).order_by('-created_at')
+    else:
+        posts = Post.objects.all().order_by('-created_at')
+
+    paginator = Paginator(posts, 5)  # Adjust the number to change the pagination size
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'search_query': query
+    }
+    return render(request, 'post_structure/post_list.html', context)

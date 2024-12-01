@@ -29,10 +29,16 @@
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary btn-block">Търси</button>
+                           <button onclick="window.location.href='{% url 'home' %}';" type="button" class="btn btn-primary btn-block"  style="background-color: #e74c3c; color: white; border: none; border-radius: 5px; padding: 8px 12px; font-size: 16px; transition: background-color 0.3s ease;">Изчисти</button>
                         </div>
+
                     </div>
                 </form>
+                <div class="text-center mt-4">
+                    <a href="{% url 'post_list' %}" class="btn btn-secondary">Всички Постове</a>
+                </div>
             </div>
+
         </div>
 
         <!-- Display Posts -->
@@ -50,6 +56,7 @@
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary btn-block">Търси</button>
+                            <button onclick="window.location.href='{% url 'home' %}';" type="button" class="btn btn-primary btn-block"  style="background-color: #e74c3c; color: white; border: none; border-radius: 5px; padding: 8px 12px; font-size: 16px; transition: background-color 0.3s ease;">Изчисти</button>
                         </div>
                     </div>
                 </form>
@@ -58,6 +65,7 @@
                 <a href="{% url 'school_list' %}" class="btn btn-secondary">Всички училища</a>
             </div>
         </div>
+
 
 
         <!-- Display Schools -->
@@ -86,10 +94,11 @@
                             var postCard = `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
+                                
                                 <img src="${post.image}" class="card-img-top" alt="${post.title}" style="max-height: 200px; object-fit: cover;">
                                 <div class="card-body">
                                     <h5 class="card-title">${post.title}</h5>
-                                    <p class="card-text text-muted">${post.description.substring(0, 100)}...</p>
+                                    <p class="card-text text-muted">${post.description.substring(0, 100)}</p>
                                     <p><strong>Предмет:</strong> ${post.subject}</p>
                                     <p><strong>Клас:</strong> ${post.grade}</p>
 

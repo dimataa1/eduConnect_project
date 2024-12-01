@@ -1,65 +1,112 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-<div class="container my-5">
-    <h1 class="text-center mb-4">Schools</h1>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Schools</h1>
 
-    <!-- Search Bar -->
-    <div class="mb-4">
-        <input 
-            type="text" 
-            id="schoolSearch" 
-            class="form-control" 
-            placeholder="Search by town..."
-            onkeyup="filterSchools()"
-        >
-    </div>
+        <!-- Search Bar -->
+        <div class="mb-4">
+            <input
+                    type="text"
+                    id="schoolSearch"
+                    class="form-control"
+                    placeholder="Search by town..."
+                    onkeyup="filterSchools()"
+            >
+        </div>
 
-    <!-- School List -->
-    <div id="schoolList" class="row justify-content-center">
-        <div class="col-lg-8">
-            {% for school in schools %}
-                <div class="card mb-4 shadow-sm school-card">
-                    <div class="row g-0">
-                        {% if school.image %}
-                            <div class="col-md-4">
-                                <img src="{{ school.image.url }}" class="img-fluid rounded-start" alt="{{ school.name }}" style="height: 100%; object-fit: cover;">
-                            </div>
-                        {% endif %}
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ school.name }}</h5>
-                                <p class="card-text town-name"><strong>Town:</strong> {{ school.town }}</p>
-                                <p class="card-text">{{ school.description|truncatechars:150 }}</p>
-                                <a href="{% url 'school_detail' school.id %}" class="btn btn-primary btn-sm">View Details</a>
+        <!-- School List -->
+        <div id="schoolList" class="row justify-content-center">
+            <div class="col-lg-8">
+                {% for school in schools %}
+                    <div class="card mb-4 shadow-sm school-card">
+                        <div class="row g-0">
+                            {% if school.image %}
+                                <div class="col-md-4">
+                                    <img src="{{ school.image.url }}" class="img-fluid rounded-start"
+                                         alt="{{ school.name }}" style="height: 100%; object-fit: cover;">
+                                </div>
+                            {% endif %}
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ school.name }}</h5>
+                                    <p class="card-text town-name"><strong>Town:</strong> {{ school.town }}</p>
+                                    <p class="card-text">{{ school.description|truncatechars:150 }}</p>
+                                    <a href="{% url 'school_detail' school.id %}" class="btn btn-primary btn-sm">View
+                                        Details</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=
+                                {{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                            Previous
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=
+                                {{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                            Next
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=
+                                {{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                            Last
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        {% if user.role == 'teacher' %}
+            <div class="text-center mt-4">
+                <a href="{% url 'add_school' %}" class="btn btn-success btn-lg">Add a New School</a>
+            </div>
+        {% endif %}
     </div>
 
-     {% if user.role == 'teacher' %}
-        <div class="text-center mt-4">
-            <a href="{% url 'add_school' %}" class="btn btn-success btn-lg">Add a New School</a>
-        </div>
-    {% endif %}
-</div>
+    <script>
+        function filterSchools() {
+            const searchInput = document.getElementById("schoolSearch").value.toLowerCase();
+            const schoolCards = document.querySelectorAll(".school-card");
 
-<script>
-    function filterSchools() {
-        const searchInput = document.getElementById("schoolSearch").value.toLowerCase();
-        const schoolCards = document.querySelectorAll(".school-card");
-
-        schoolCards.forEach(card => {
-            const townName = card.querySelector(".town-name").innerText.toLowerCase();
-            if (townName.includes(searchInput)) {
-                card.style.display = "block"; // Show card
-            } else {
-                card.style.display = "none"; // Hide card
-            }
-        });
-    }
-</script>
+            schoolCards.forEach(card => {
+                const townName = card.querySelector(".town-name").innerText.toLowerCase();
+                if (townName.includes(searchInput)) {
+                    card.style.display = "block"; // Show card
+                } else {
+                    card.style.display = "none"; // Hide card
+                }
+            });
+        }
+    </script>
 {% endblock %}
