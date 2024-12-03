@@ -39,9 +39,8 @@ class PostFormTests(TestCase):
 
 class CommentFormTests(TestCase):
     def test_comment_form_invalid_empty_content(self):
-        # Create a dictionary with an empty content field (assuming it's required)
         form_data = {
-            'content': '',  # Invalid: `content` should not be empty if `blank=False`
+            'content': '',
         }
         form = CommentForm(data=form_data)
         self.assertFalse(form.is_valid())
