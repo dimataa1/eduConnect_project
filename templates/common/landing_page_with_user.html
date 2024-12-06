@@ -29,7 +29,11 @@
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary btn-block">Търси</button>
-                           <button onclick="window.location.href='{% url 'home' %}';" type="button" class="btn btn-primary btn-block"  style="background-color: #e74c3c; color: white; border: none; border-radius: 5px; padding: 8px 12px; font-size: 16px; transition: background-color 0.3s ease;">Изчисти</button>
+                            <button onclick="window.location.href='{% url 'home' %}';" type="button"
+                                    class="btn btn-primary btn-block"
+                                    style="background-color: #e74c3c; color: white; border: none; border-radius: 5px; padding: 8px 12px; font-size: 16px; transition: background-color 0.3s ease;">
+                                Изчисти
+                            </button>
                         </div>
 
                     </div>
@@ -56,7 +60,11 @@
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary btn-block">Търси</button>
-                            <button onclick="window.location.href='{% url 'home' %}';" type="button" class="btn btn-primary btn-block"  style="background-color: #e74c3c; color: white; border: none; border-radius: 5px; padding: 8px 12px; font-size: 16px; transition: background-color 0.3s ease;">Изчисти</button>
+                            <button onclick="window.location.href='{% url 'home' %}';" type="button"
+                                    class="btn btn-primary btn-block"
+                                    style="background-color: #e74c3c; color: white; border: none; border-radius: 5px; padding: 8px 12px; font-size: 16px; transition: background-color 0.3s ease;">
+                                Изчисти
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -67,99 +75,111 @@
         </div>
 
 
-
         <!-- Display Schools -->
         <div id="schoolResults" class="row"></div>
     </div>
 
     <!-- JavaScript to handle the AJAX requests -->
     <script>
-        document.getElementById("searchPostForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the form from submitting the traditional way
+      document.getElementById("searchPostForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent the form from submitting the traditional way
 
-            var subject = document.getElementById("subject").value;
-            var grade = document.getElementById("grade").value;
+    var subject = document.getElementById("subject").value;
+    var grade = document.getElementById("grade").value;
 
-            // Send an AJAX request to the API for posts
-            fetch(`/api/search/?subject=${subject}&grade=${grade}`)
-                .then(response => response.json())
-                .then(data => {
-                    var resultsContainer = document.getElementById("postResults");
-                    resultsContainer.innerHTML = ''; // Clear previous results
+    // Send an AJAX request to the API for posts
+    fetch(`/api/search/?subject=${subject}&grade=${grade}`)
+        .then(response => response.json())
+        .then(data => {
+            var resultsContainer = document.getElementById("postResults");
+            resultsContainer.innerHTML = ''; // Clear previous results
 
-                    if (data.length === 0) {
-                        resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени постове за зададените критерии.</div>';
-                    } else {
-                        data.forEach(post => {
-                            var postCard = `
+            if (data.length === 0) {
+                resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени постове за зададените критерии.</div>';
+            } else {
+                data.forEach(post => {
+                    var postCard = `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
-                                
                                 <img src="${post.image}" class="card-img-top" alt="${post.title}" style="max-height: 200px; object-fit: cover;">
                                 <div class="card-body">
                                     <h5 class="card-title">${post.title}</h5>
                                     <p class="card-text text-muted">${post.description.substring(0, 100)}</p>
                                     <p><strong>Предмет:</strong> ${post.subject}</p>
                                     <p><strong>Клас:</strong> ${post.grade}</p>
-
                                 </div>
                                 <div class="card-footer text-muted">
                                     Създадено на ${new Date(post.created_at).toLocaleDateString()}
                                 </div>
-                                <a href="#" class="btn btn-primary mt-3" id="details-link-${post.id}">View Details</a>
-
+                                <a href="javascript:void(0);" class="btn btn-primary mt-3" data-id="${post.id}">View Details</a>
                             </div>
                         </div>
                     `;
-                            resultsContainer.innerHTML += postCard;
-                            document.getElementById(`details-link-${post.id}`).addEventListener("click", function () {
-                                window.location.href = `post/post/${post.id}/`;
-                            });
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching post search results:', error);
+                    resultsContainer.innerHTML += postCard;
                 });
+
+                // Add event listeners for "View Details" buttons after adding them to the DOM
+                document.querySelectorAll("#postResults .btn-primary").forEach(button => {
+                    button.addEventListener("click", function (e) {
+                        var postId = e.target.getAttribute("data-id");
+                        window.location.href = `post/post/${postId}/`; // 
+                    });
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching post search results:', error);
         });
+});
 
-        document.getElementById("searchSchoolForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the form from submitting the traditional way
+document.getElementById("searchSchoolForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent the form from submitting the traditional way
 
-            var town = document.getElementById("town").value;
+    var town = document.getElementById("town").value;
 
-            // Send an AJAX request to the API for schools
-            fetch(`/api/schools/search/?town=${town}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    var resultsContainer = document.getElementById("schoolResults");
-                    resultsContainer.innerHTML = ''; // Clear previous results
+    // Send an AJAX request to the API for schools
+    fetch(`/api/schools/search/?town=${town}`)
+        .then(response => response.json())
+        .then(data => {
+            var resultsContainer = document.getElementById("schoolResults");
+            resultsContainer.innerHTML = ''; // Clear previous results
 
-                    if (data.length === 0) {
-                        resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища за зададения град.</div>';
-                    } else {
-                        data.forEach(school => {
-                            var schoolCard = `
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 shadow-sm">
-                            <img src="${school.image}" class="card-img-top" alt="${school.name}" style="max-height: 200px; object-fit: cover;">
-                            <div class="card-body">
-                                <h5 class="card-title">${school.name}</h5>
-                                <p class="card-text text-muted">${school.description.substring(0, 100)}...</p>
-                                <p><strong>Град:</strong> ${school.town}</p>
+            if (data.length === 0) {
+                resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища за зададения град.</div>';
+            } else {
+                data.forEach(school => {
+                    var schoolCard = `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="${school.image}" class="card-img-top" alt="${school.name}" style="max-height: 200px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="card-title">${school.name}</h5>
+                                    <p class="card-text text-muted">${school.description.substring(0, 100)}...</p>
+                                    <p><strong>Град:</strong> ${school.town}</p>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    <a href="javascript:void(0);" class="btn btn-primary mt-3" data-id="${school.id}">View Details</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-                            resultsContainer.innerHTML += schoolCard;
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching search results:', error);
+                    `;
+                    resultsContainer.innerHTML += schoolCard;
                 });
+
+                // Add event listeners for "View Details" buttons after adding them to the DOM
+                document.querySelectorAll("#schoolResults .btn-primary").forEach(button => {
+                    button.addEventListener("click", function (e) {
+                        var schoolId = e.target.getAttribute("data-id");
+                        window.location.href = `post/school/${schoolId}/`; // Ensure the URL matches the path in your Django urls.py
+                    });
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching school search results:', error);
         });
+});
+
     </script>
 
 {% endblock %}
