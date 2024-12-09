@@ -2,20 +2,20 @@
 
 {% block content %}
     <div class="container py-5">
-        <!-- Post Card -->
+
         <div class="card shadow-lg mb-4 border-info">
             <div class="card-body">
-                <!-- Post Title and Description -->
+
                 <h3 class="card-title text-primary">{{ post.title }}</h3>
                 <p class="card-text">{{ post.description }}</p>
 
-                <!-- Post Image (if available) -->
+
                 {% if post.image %}
                     <img src="{{ post.image.url }}" class="img-fluid mb-3 border rounded" alt="{{ post.title }}"
                          style="max-width: 150px; height: auto;">
                 {% endif %}
 
-                <!-- Post Meta Data -->
+
                 <div class="text-muted mb-4">
                     <small>Created on: {{ post.created_at|date:"F j, Y, g:i a" }}</small>
                 </div>
@@ -33,8 +33,7 @@
                 {% endif %}
             </div>
         </div>
-
-        <!-- Comments Section -->
+    
         <div class="comments-section">
             <h4 class="text-info">Comments</h4>
 
@@ -49,8 +48,7 @@
             {% else %}
                 <p>No comments yet. Be the first to comment!</p>
             {% endif %}
-
-            <!-- Comment Form -->
+        
             <h5 class="text-info">Add a Comment</h5>
             <form method="post">
                 {% csrf_token %}

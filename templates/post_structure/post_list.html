@@ -4,7 +4,7 @@
 <div class="container my-5">
     <h1 class="text-center mb-4">All Posts</h1>
 
-    <!-- Search Bar -->
+
     <div class="mb-4">
         <input 
             type="text" 
@@ -15,13 +15,12 @@
         >
     </div>
 
-    <!-- Post List -->
+
     <div id="postList" class="row justify-content-center">
         <div class="col-lg-8">
             {% for post in page_obj %}
                 <div class="card mb-4 shadow-sm post-card">
                     <div class="row g-0">
-                        <!-- Post Image -->
                         {% if post.image %}
                             <div class="col-md-4">
                                 <img src="{{ post.image.url }}" class="img-fluid rounded-start" alt="{{ post.title }}" style="height: 100%; object-fit: cover;">
@@ -29,16 +28,13 @@
                         {% endif %}
                         <div class="col-md-8">
                             <div class="card-body">
-                                <!-- Post Title and Description -->
                                 <h3 class="card-title text-primary">{{ post.title }}</h3>
                                 <p class="card-text">{{ post.description|truncatechars:150 }}</p>
-
-                                <!-- Post Meta Data -->
+                                
                                 <div class="text-muted mb-4">
                                     <small>Created on: {{ post.created_at|date:"F j, Y, g:i a" }}</small>
                                 </div>
-
-                                <!-- View Details Button -->
+                                
                                 <a href="{% url 'post_detail' post.id %}" class="btn btn-primary btn-sm">View Details</a>
                             </div>
                         </div>
@@ -48,7 +44,6 @@
         </div>
     </div>
 
-    <!-- Pagination Controls -->
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
@@ -98,9 +93,9 @@
         postCards.forEach(card => {
             const postTitle = card.querySelector(".card-title").innerText.toLowerCase();
             if (postTitle.includes(searchInput)) {
-                card.style.display = "block"; // Show card
+                card.style.display = "block"; 
             } else {
-                card.style.display = "none"; // Hide card
+                card.style.display = "none"; 
             }
         });
     }

@@ -3,8 +3,7 @@
 {% block content %}
     <div class="container py-5">
         <h1 class="mb-4 text-center">Your Posts</h1>
-
-        <!-- Center the row by using d-flex and justify-content-center -->
+    
         <div class="row justify-content-center">
             {% for post in page_obj %}
                 <div class="col-md-4 mb-4">
@@ -34,8 +33,7 @@
                 </div>
             {% endfor %}
         </div>
-
-        <!-- Pagination Controls -->
+    
         <div class="pagination mt-4 d-flex justify-content-center">
             {% if page_obj.has_previous %}
                 <a href="?page=1" class="btn btn-primary mx-1">First</a>

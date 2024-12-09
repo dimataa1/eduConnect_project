@@ -5,15 +5,13 @@
         <!-- Welcome Message -->
         <h1 class="text-center">Добре дошли обратно, {{ username }}!</h1>
         <p class="text-center">Използвайте функционалностите за търсене на постове и училища.</p>
-
-        <!-- Dashboard Button -->
+        
         <div class="text-center mt-4 mb-4">
             <a href="{% url 'dashboard' %}" class="btn btn-success btn-lg">
                 Вижте вашия Dashboard
             </a>
         </div>
-
-        <!-- Search Posts -->
+        
         <div class="card shadow-lg mb-4">
             <div class="card-body">
                 <h4 class="card-title">Търсене на постове</h4>
@@ -44,11 +42,9 @@
             </div>
 
         </div>
-
-        <!-- Display Posts -->
+        
         <div id="postResults" class="row mb-5"></div>
-
-        <!-- Search Schools -->
+        
         <div class="card shadow-lg">
             <div class="card-body">
                 <h4 class="card-title">Търсене на училища</h4>
@@ -74,20 +70,17 @@
             </div>
         </div>
 
-
-        <!-- Display Schools -->
+        
         <div id="schoolResults" class="row"></div>
     </div>
-
-    <!-- JavaScript to handle the AJAX requests -->
+    
     <script>
       document.getElementById("searchPostForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent the form from submitting the traditional way
+    event.preventDefault(); 
 
     var subject = document.getElementById("subject").value;
     var grade = document.getElementById("grade").value;
-
-    // Send an AJAX request to the API for posts
+          
     fetch(`/api/search/?subject=${subject}&grade=${grade}`)
         .then(response => response.json())
         .then(data => {
@@ -117,8 +110,7 @@
                     `;
                     resultsContainer.innerHTML += postCard;
                 });
-
-                // Add event listeners for "View Details" buttons after adding them to the DOM
+                
                 document.querySelectorAll("#postResults .btn-primary").forEach(button => {
                     button.addEventListener("click", function (e) {
                         var postId = e.target.getAttribute("data-id");
@@ -133,16 +125,15 @@
 });
 
 document.getElementById("searchSchoolForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent the form from submitting the traditional way
+    event.preventDefault(); 
 
     var town = document.getElementById("town").value;
-
-    // Send an AJAX request to the API for schools
+    
     fetch(`/api/schools/search/?town=${town}`)
         .then(response => response.json())
         .then(data => {
             var resultsContainer = document.getElementById("schoolResults");
-            resultsContainer.innerHTML = ''; // Clear previous results
+            resultsContainer.innerHTML = ''; 
 
             if (data.length === 0) {
                 resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища за зададения град.</div>';
@@ -165,12 +156,11 @@ document.getElementById("searchSchoolForm").addEventListener("submit", function 
                     `;
                     resultsContainer.innerHTML += schoolCard;
                 });
-
-                // Add event listeners for "View Details" buttons after adding them to the DOM
+                
                 document.querySelectorAll("#schoolResults .btn-primary").forEach(button => {
                     button.addEventListener("click", function (e) {
                         var schoolId = e.target.getAttribute("data-id");
-                        window.location.href = `post/school/${schoolId}/`; // Ensure the URL matches the path in your Django urls.py
+                        window.location.href = `post/school/${schoolId}/`; 
                     });
                 });
             }

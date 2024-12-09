@@ -3,8 +3,7 @@
 {% block content %}
     <div class="container my-5">
         <h1 class="text-center mb-4">Schools</h1>
-
-        <!-- Search Bar -->
+    
         <div class="mb-4">
             <input
                 type="text"
@@ -14,8 +13,7 @@
                 onkeyup="filterSchools()"
             >
         </div>
-
-        <!-- School List -->
+    
         <div id="schoolList" class="row justify-content-center">
             <div class="col-lg-8">
                 {% for school in page_obj.object_list %}
@@ -41,8 +39,7 @@
                 {% endfor %}
             </div>
         </div>
-
-        <!-- Pagination -->
+    
         <nav aria-label="Page navigation" class="mt-4">
             <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}

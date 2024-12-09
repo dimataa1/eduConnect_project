@@ -4,10 +4,9 @@
 
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow-sm p-5 w-100" style="max-width: 600px;"> <!-- Adjusted width -->
+    <div class="card shadow-sm p-5 w-100" style="max-width: 600px;"> 
         <h3 class="text-center mb-4">Login</h3>
-        
-        <!-- Display form-level error messages -->
+    
         {% if form.errors %}
         <div class="alert alert-danger d-flex align-items-center" role="alert">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-circle me-2" viewBox="0 0 16 16">
@@ -26,20 +25,20 @@
             {% csrf_token %}
             <div class="mb-4">
                 {{ form.email.label_tag }}
-                {{ form.email|add_class:"form-control form-control-lg" }} <!-- Larger input -->
+                {{ form.email|add_class:"form-control form-control-lg" }} 
                 {% for error in form.email.errors %}
                     <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
                 {% endfor %}
             </div>
             <div class="mb-4">
                 {{ form.password.label_tag }}
-                {{ form.password|add_class:"form-control form-control-lg" }} <!-- Larger input -->
+                {{ form.password|add_class:"form-control form-control-lg" }} 
                 {% for error in form.password.errors %}
                     <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
                 {% endfor %}
             </div>
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Login</button> <!-- Enlarged button -->
+                <button type="submit" class="btn btn-primary btn-lg">Login</button> 
             </div>
             <div class="text-center mt-4">
                 <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Register</a></p>

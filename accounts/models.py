@@ -124,6 +124,6 @@ class Profile(models.Model):
         self.save()
 
     def restore_default_picture(self):
-        self.delete_profile_picture()  # Remove any existing picture
-        self.profile_picture = 'profile_images/default_pfp.jpg'  # Set the default image
+        self.delete_profile_picture()
+        self.profile_picture = 'profile_images/default_pfp.jpg'
         self.save()

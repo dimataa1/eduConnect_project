@@ -155,7 +155,7 @@ def post_list(request):
     else:
         posts = Post.objects.all().order_by('-created_at')
 
-    paginator = Paginator(posts, 5)  # Adjust the number to change the pagination size
+    paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

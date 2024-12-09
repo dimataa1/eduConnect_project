@@ -26,8 +26,7 @@ def register(request):
                 user.is_approved = False
             user.save()
 
-            # Ensure profile is created for the new user
-            Profile.objects.get_or_create(user=user)  # Create Profile if it doesn't exist
+            Profile.objects.get_or_create(user=user)
 
             if user.role == 'teacher':
                 return redirect('pending-approval')
@@ -40,7 +39,7 @@ def register(request):
 class LoginView(FormView):
     template_name = "accounts_structure/login.html"
     form_class = CustomLoginForm
-    success_url = reverse_lazy('home')  # Replace 'home' with your target page after login
+    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         email = form.cleaned_data['email']
