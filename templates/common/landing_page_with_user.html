@@ -5,13 +5,13 @@
         <!-- Welcome Message -->
         <h1 class="text-center">Добре дошли обратно, {{ username }}!</h1>
         <p class="text-center">Използвайте функционалностите за търсене на постове и училища.</p>
-        
+
         <div class="text-center mt-4 mb-4">
             <a href="{% url 'dashboard' %}" class="btn btn-success btn-lg">
                 Вижте вашия Dashboard
             </a>
         </div>
-        
+
         <div class="card shadow-lg mb-4">
             <div class="card-body">
                 <h4 class="card-title">Търсене на постове</h4>
@@ -42,9 +42,9 @@
             </div>
 
         </div>
-        
+
         <div id="postResults" class="row mb-5"></div>
-        
+
         <div class="card shadow-lg">
             <div class="card-body">
                 <h4 class="card-title">Търсене на училища</h4>
@@ -70,28 +70,28 @@
             </div>
         </div>
 
-        
+
         <div id="schoolResults" class="row"></div>
     </div>
-    
+
     <script>
-      document.getElementById("searchPostForm").addEventListener("submit", function (event) {
-    event.preventDefault(); 
+        document.getElementById("searchPostForm").addEventListener("submit", function (event) {
+            event.preventDefault();
 
-    var subject = document.getElementById("subject").value;
-    var grade = document.getElementById("grade").value;
-          
-    fetch(`/api/search/?subject=${subject}&grade=${grade}`)
-        .then(response => response.json())
-        .then(data => {
-            var resultsContainer = document.getElementById("postResults");
-            resultsContainer.innerHTML = ''; // Clear previous results
+            var subject = document.getElementById("subject").value;
+            var grade = document.getElementById("grade").value;
 
-            if (data.length === 0) {
-                resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени постове за зададените критерии.</div>';
-            } else {
-                data.forEach(post => {
-                    var postCard = `
+            fetch(`/api/search/?subject=${subject}&grade=${grade}`)
+                .then(response => response.json())
+                .then(data => {
+                    var resultsContainer = document.getElementById("postResults");
+                    resultsContainer.innerHTML = '';
+
+                    if (data.length === 0) {
+                        resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени постове за зададените критерии.</div>';
+                    } else {
+                        data.forEach(post => {
+                            var postCard = `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
                                 <img src="${post.image}" class="card-img-top" alt="${post.title}" style="max-height: 200px; object-fit: cover;">
@@ -108,38 +108,38 @@
                             </div>
                         </div>
                     `;
-                    resultsContainer.innerHTML += postCard;
+                            resultsContainer.innerHTML += postCard;
+                        });
+
+                        document.querySelectorAll("#postResults .btn-primary").forEach(button => {
+                            button.addEventListener("click", function (e) {
+                                var postId = e.target.getAttribute("data-id");
+                                window.location.href = `post/post/${postId}/`; //
+                            });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching post search results:', error);
                 });
-                
-                document.querySelectorAll("#postResults .btn-primary").forEach(button => {
-                    button.addEventListener("click", function (e) {
-                        var postId = e.target.getAttribute("data-id");
-                        window.location.href = `post/post/${postId}/`; // 
-                    });
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching post search results:', error);
         });
-});
 
-document.getElementById("searchSchoolForm").addEventListener("submit", function (event) {
-    event.preventDefault(); 
+        document.getElementById("searchSchoolForm").addEventListener("submit", function (event) {
+            event.preventDefault();
 
-    var town = document.getElementById("town").value;
-    
-    fetch(`/api/schools/search/?town=${town}`)
-        .then(response => response.json())
-        .then(data => {
-            var resultsContainer = document.getElementById("schoolResults");
-            resultsContainer.innerHTML = ''; 
+            var town = document.getElementById("town").value;
 
-            if (data.length === 0) {
-                resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища за зададения град.</div>';
-            } else {
-                data.forEach(school => {
-                    var schoolCard = `
+            fetch(`/api/schools/search/?town=${town}`)
+                .then(response => response.json())
+                .then(data => {
+                    var resultsContainer = document.getElementById("schoolResults");
+                    resultsContainer.innerHTML = '';
+
+                    if (data.length === 0) {
+                        resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища за зададения град.</div>';
+                    } else {
+                        data.forEach(school => {
+                            var schoolCard = `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
                                 <img src="${school.image}" class="card-img-top" alt="${school.name}" style="max-height: 200px; object-fit: cover;">
@@ -154,21 +154,21 @@ document.getElementById("searchSchoolForm").addEventListener("submit", function 
                             </div>
                         </div>
                     `;
-                    resultsContainer.innerHTML += schoolCard;
+                            resultsContainer.innerHTML += schoolCard;
+                        });
+
+                        document.querySelectorAll("#schoolResults .btn-primary").forEach(button => {
+                            button.addEventListener("click", function (e) {
+                                var schoolId = e.target.getAttribute("data-id");
+                                window.location.href = `post/school/${schoolId}/`;
+                            });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching school search results:', error);
                 });
-                
-                document.querySelectorAll("#schoolResults .btn-primary").forEach(button => {
-                    button.addEventListener("click", function (e) {
-                        var schoolId = e.target.getAttribute("data-id");
-                        window.location.href = `post/school/${schoolId}/`; 
-                    });
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching school search results:', error);
         });
-});
 
     </script>
 

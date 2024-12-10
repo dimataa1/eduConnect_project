@@ -15,7 +15,7 @@
                                 {% if profile.profile_picture %}
                                     <img src="{{ profile.profile_picture.url }}" class="img-fluid mb-3 border rounded">
                                 {% else %}
-                                    <img src="{% static 'profile_images/default_pfp.jpg' %}"
+                                    <img src="{% static 'profile_images/../../static/default/default_pfp.jpg' %}"
                                          class="img-fluid mb-3 border rounded">
                                 {% endif %}
 

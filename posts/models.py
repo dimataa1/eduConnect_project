@@ -18,7 +18,8 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to="static/post_images/",
         blank=True,
-        null=True
+        null=True,
+        default="static/default/default.png"
     )
 
     subject = models.CharField(
@@ -67,7 +68,9 @@ class School(models.Model):
 
     image = models.ImageField(
         upload_to='static/school_images/',
-        blank=True, null=True
+        blank=True,
+        null=True,
+        default="static/default/default.png"
     )
 
     def __str__(self):

@@ -97,7 +97,7 @@ class Profile(models.Model):
         blank=True,
         null=True,
         help_text="Upload a profile picture.",
-        default='profile_images/default_pfp'
+        default='default/default_pfp'
     )
 
     def __str__(self):
@@ -108,11 +108,14 @@ class Profile(models.Model):
             self.subject = None
         elif self.user.role == 'teacher':
             self.grade = None
+
         super().save(*args, **kwargs)
 
     def clean(self):
+
         if self.user.role == 'student' and self.subject:
             raise ValidationError("Students cannot have a subject.")
+
         if self.user.role == 'teacher' and self.grade:
             raise ValidationError("Teachers cannot have a grade.")
 
@@ -120,10 +123,12 @@ class Profile(models.Model):
 
         if self.profile_picture and hasattr(self.profile_picture, 'path') and os.path.isfile(self.profile_picture.path):
             os.remove(self.profile_picture.path)
+
         self.profile_picture = None
         self.save()
 
     def restore_default_picture(self):
+
         self.delete_profile_picture()
-        self.profile_picture = 'profile_images/default_pfp.jpg'
+        self.profile_picture = 'default/default_pfp.jpg'
         self.save()
