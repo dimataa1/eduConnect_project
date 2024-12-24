@@ -1,13 +1,14 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.views import View
 from django.views.generic import DetailView, DeleteView
 
-from .forms import CustomUserForm, CustomLoginForm, ProfileUpdateForm
+from .forms import CustomUserForm, CustomLoginForm, ProfileUpdateForm, CustomPasswordChangeForm
 from django.views.generic.edit import FormView
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
@@ -86,3 +87,22 @@ class ProfileDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('logout')
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(request.POST)
+
+        if form.is_valid():
+            user = request.user
+            form.save(user)
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password has been successfully updated!')
+            return redirect('profile_details')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = CustomPasswordChangeForm()
+
+    return render(request, 'accounts_structure/change_password.html', {'form': form})

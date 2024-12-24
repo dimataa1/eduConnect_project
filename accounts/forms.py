@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django import forms
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect, get_object_or_404
@@ -100,3 +100,34 @@ class ProfileUpdateForm(forms.ModelForm):
             cleaned_data['subject'] = None
 
         return cleaned_data
+
+
+class CustomPasswordChangeForm(forms.Form):
+    current_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your current password'}),
+        label="Current Password"
+    )
+    new_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your new password'}),
+        label="New Password"
+    )
+    confirm_new_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm your new password'}),
+        label="Confirm New Password"
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password = cleaned_data.get("new_password")
+        confirm_new_password = cleaned_data.get("confirm_new_password")
+
+        if new_password != confirm_new_password:
+            raise forms.ValidationError("The new passwords do not match.")
+
+        return cleaned_data
+
+    def save(self, user, commit=True):
+        user.set_password(self.cleaned_data["new_password"])
+        if commit:
+            user.save()
+        return user
