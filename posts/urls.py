@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import CreatePostView, PostEditView, PostDeleteView, PostDetailView, school_detail, add_school, school_list, \
-    post_list
+    post_list, vote_comment
 
 urlpatterns = [
     path('new-post/', CreatePostView.as_view(), name='new_post'),
@@ -12,4 +12,6 @@ urlpatterns = [
     path('school/<int:school_id>/', school_detail, name='school_detail'),
     path('add_school/', add_school, name='add_school'),
     path('post_list/', post_list, name='post_list'),
+    path('post/<int:post_id>/vote/<int:comment_id>/<str:vote_action>/', vote_comment, name='vote_comment'),
+
 ]

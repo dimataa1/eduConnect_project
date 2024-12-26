@@ -51,8 +51,31 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    up_votes = models.IntegerField(default=0)
+    down_votes = models.IntegerField(default=0)
+
     def __str__(self):
         return f"Comment by {self.author} on {self.post.title}"
+
+
+    @property
+    def rating(self) -> int:
+        return self.up_votes - self.down_votes
+
+    def update_rating(self, action):
+        if action == 'upvote':
+            self.up_votes += 1
+        elif action == 'downvote':
+            self.down_votes += 1
+        self.save()
+        return self.rating
+
+    @rating.setter
+    def rating(self, value):
+        self._rating = value
+
+    def has_user_voted(self, user):
+        return Vote.objects.filter(user=user, comment=self).exists()
 
 
 class School(models.Model):
@@ -75,3 +98,16 @@ class School(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Vote(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    vote_type = models.CharField(
+        max_length=10,
+        choices=(('upvote', 'Upvote'), ('downvote', 'Downvote'))
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'comment')

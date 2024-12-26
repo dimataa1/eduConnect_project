@@ -33,22 +33,38 @@
                 {% endif %}
             </div>
         </div>
-    
+
         <div class="comments-section">
             <h4 class="text-info">Comments</h4>
 
-            {% if comments %}
-                {% for comment in comments %}
+            {% if post.comments %}
+                {% for comment in post.comments.all|dictsortreversed:"rating" %}
                     <div class="comment mb-4 p-3 border rounded bg-light">
                         <strong class="text-primary">{{ comment.author.username }}</strong>
                         <p class="text-muted small">Posted on: {{ comment.created_at|date:"F j, Y, g:i a" }}</p>
                         <p>{{ comment.content }}</p>
+
+                        <div class="d-flex align-items-center mt-3">
+                            <button class="btn btn-sm btn-outline-success mr-4"
+                                    onclick="vote('{{ comment.id }}', 'upvote')">👍
+                            </button>
+
+                            <button class="btn btn-sm btn-outline-danger mr-4"
+                                    onclick="vote('{{ comment.id }}', 'downvote')">👎
+                            </button>
+
+                            <span id="rating-{{ comment.id }}" class="font-weight-bold text-dark ml-3">
+                                Rating: {{ comment.rating|default:"No rating yet" }}
+                            </span>
+
+                        </div>
+
                     </div>
                 {% endfor %}
             {% else %}
                 <p>No comments yet. Be the first to comment!</p>
             {% endif %}
-        
+
             <h5 class="text-info">Add a Comment</h5>
             <form method="post">
                 {% csrf_token %}
@@ -63,4 +79,31 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function vote(comment_id, vote_action) {
+            // Construct the URL for the vote action
+            let url = `/post/post/{{ post.id }}/vote/${comment_id}/${vote_action}/`;
+
+            // Send the AJAX request to the server
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}', // Include CSRF token for POST requests
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.new_rating !== undefined) {
+                        // Update the rating on the page
+                        document.getElementById('rating-' + comment_id).innerText = `Rating: ${data.new_rating}`;
+                    } else {
+                        alert(data.error);  // Show an error if something goes wrong
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
 {% endblock %}
