@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "common.apps.CommonConfig",
     "posts.apps.PostsConfig",
     'rest_framework',
+    "quiz.apps.QuizConfig"
 ]
 
 MIDDLEWARE = [
@@ -85,7 +86,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Sofia'
 USE_I18N = True
 USE_TZ = True
 

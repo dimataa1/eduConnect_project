@@ -17,12 +17,12 @@
 
     <header class="bg-light py-3 shadow-sm">
         <div class="container d-flex justify-content-between align-items-center">
-        
+
             <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center">
                 <img src="{% static 'images/logo.webp' %}" alt="Logo" width="40" height="40" class="me-2">
                 <span class="fw-bold">EduConnect</span>
             </a>
-        
+
             <nav>
                 <ul class="nav">
                     {% if request.user.is_authenticated %}
@@ -32,12 +32,18 @@
                             </a>
                         </li>
 
-                         <li class="nav-item">
+                        <li class="nav-item ms-0">
+                            <a class="nav-link px-3 py-2 d-flex align-items-center me-2" href="">
+                                <i class="bi bi-question-circle me-1"></i> Quiz
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link btn btn-outline-primary me-2" href="{% url 'new_post' %}">
                                 <i class="bi bi-plus-circle"></i> Add Post
                             </a>
                         </li>
-                        
+
                         {% if request.user.role == 'teacher' %}
                             <li class="nav-item">
                                 <a class="nav-link btn btn-outline-secondary me-2" href="{% url 'add_school' %}">
@@ -48,9 +54,9 @@
 
 
 
-                        <li class="nav-item">
+                        <li class="nav-item ms-4">
                             <a class="nav-link" href="{% url 'profile_details' %}">
-                                <i class="bi bi-person" ></i> Profile
+                                <i class="bi bi-person"></i> Profile
                             </a>
                         </li>
                         <li class="nav-item">

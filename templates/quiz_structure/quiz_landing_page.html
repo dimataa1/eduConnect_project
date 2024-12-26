@@ -1,0 +1,109 @@
+{#{% extends 'common/base.html' %}#}
+{##}
+{#{% block content %}#}
+{#<div class="container py-5">#}
+{#    <!-- Welcome Message -->#}
+{#    <p class="text-center">Изберете опция за генериране на тест.</p>#}
+{##}
+{#    <!-- Options for quiz generation -->#}
+{#    <div class="row justify-content-center mb-4">#}
+{#        <!-- Option 1: Upload a file -->#}
+{#        <div class="col-md-6 mb-3">#}
+{#            <div class="card shadow-lg">#}
+{#                <div class="card-body">#}
+{#                    <h4 class="card-title text-center">Качете файл</h4>#}
+{#                    <form action="{% url 'quiz_from_file' %}" method="POST" enctype="multipart/form-data">#}
+{#                        {% csrf_token %}#}
+{#                        <div class="form-group mb-3">#}
+{#                            <label for="fileUpload" class="form-label">Изберете файл</label>#}
+{#                            <input type="file" id="fileUpload" name="file" class="form-control" required>#}
+{#                        </div>#}
+{#                        <div class="text-center">#}
+{#                            <button type="submit" class="btn btn-primary btn-lg">Генерирайте тест</button>#}
+{#                        </div>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <!-- Option 2: Select grade and subject -->#}
+{#        <div class="col-md-6 mb-3">#}
+{#            <div class="card shadow-lg">#}
+{#                <div class="card-body">#}
+{#                    <h4 class="card-title text-center">Изберете предмет и клас</h4>#}
+{#                    <form id="quizForm" action="{% url 'quiz_from_selection' %}" method="POST">#}
+{#                        {% csrf_token %}#}
+{#                        <div class="row">#}
+{#                            <div class="col-md-6 mb-3">#}
+{#                                <label for="subject" class="form-label">Предмет</label>#}
+{#                                <input type="text" id="subject" name="subject" class="form-control" placeholder="Пример: Математика" required>#}
+{#                            </div>#}
+{#                            <div class="col-md-6 mb-3">#}
+{#                                <label for="grade" class="form-label">Клас</label>#}
+{#                                <input type="text" id="grade" name="grade" class="form-control" placeholder="Пример: 8 клас" required>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="text-center">#}
+{#                            <button type="submit" class="btn btn-primary btn-lg">Генерирайте тест</button>#}
+{#                        </div>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <!-- Results Section (Optional) -->#}
+{#    <div id="quizResults" class="row mb-5"></div>#}
+{##}
+{#</div>#}
+{##}
+{#<script>#}
+{#    document.getElementById("quizForm").addEventListener("submit", function (event) {#}
+{#        event.preventDefault();#}
+{##}
+{#        var subject = document.getElementById("subject").value;#}
+{#        var grade = document.getElementById("grade").value;#}
+{##}
+{#        fetch(`/api/quiz/search/?subject=${subject}&grade=${grade}`)#}
+{#            .then(response => response.json())#}
+{#            .then(data => {#}
+{#                var resultsContainer = document.getElementById("quizResults");#}
+{#                resultsContainer.innerHTML = '';#}
+{##}
+{#                if (data.length === 0) {#}
+{#                    resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени тестове за зададените критерии.</div>';#}
+{#                } else {#}
+{#                    data.forEach(quiz => {#}
+{#                        var quizCard = `#}
+{#                            <div class="col-md-4 mb-4">#}
+{#                                <div class="card h-100 shadow-sm">#}
+{#                                    <div class="card-body">#}
+{#                                        <h5 class="card-title">${quiz.title}</h5>#}
+{#                                        <p class="card-text text-muted">${quiz.description.substring(0, 100)}</p>#}
+{#                                        <p><strong>Предмет:</strong> ${quiz.subject}</p>#}
+{#                                        <p><strong>Клас:</strong> ${quiz.grade}</p>#}
+{#                                    </div>#}
+{#                                    <div class="card-footer text-muted">#}
+{#                                        <a href="javascript:void(0);" class="btn btn-primary mt-3" data-id="${quiz.id}">Вижте детайли</a>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        `;#}
+{#                        resultsContainer.innerHTML += quizCard;#}
+{#                    });#}
+{##}
+{#                    document.querySelectorAll("#quizResults .btn-primary").forEach(button => {#}
+{#                        button.addEventListener("click", function (e) {#}
+{#                            var quizId = e.target.getAttribute("data-id");#}
+{#                            window.location.href = `quiz/${quizId}/`;#}
+{#                        });#}
+{#                    });#}
+{#                }#}
+{#            })#}
+{#            .catch(error => {#}
+{#                console.error('Error fetching quiz search results:', error);#}
+{#            });#}
+{#    });#}
+{#</script>#}
+{##}
+{#{% endblock %}#}
