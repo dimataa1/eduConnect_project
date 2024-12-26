@@ -107,6 +107,7 @@ class Vote(models.Model):
         max_length=10,
         choices=(('upvote', 'Upvote'), ('downvote', 'Downvote'))
     )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
