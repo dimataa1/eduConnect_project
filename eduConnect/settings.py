@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', config('SECRET_KEY'))
 
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', config('CSRF_TRUSTED_ORIGINS', [])).split(',')
-
+# DJANGO_SETTINGS_MODULE = os.getenv('DJANGO_SETTINGS_MODULE', config('DJANGO_SETTINGS_MODULE'))
 
 DEBUG = os.getenv('DEBUG', config('DEBUG')) == "True"
 

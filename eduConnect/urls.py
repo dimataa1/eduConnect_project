@@ -9,7 +9,7 @@ urlpatterns = [
     path('account/', include('accounts.urls')),
     path('', include('common.urls')),
     path('post/', include('posts.urls')),
-    # path('quizzes/', include('quiz.urls')),
+    path('quizzes/', include('quiz.urls')),
 ]
 
 

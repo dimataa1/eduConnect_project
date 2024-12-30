@@ -1,62 +1,65 @@
-{#{% extends 'common/base.html' %}#}
-{##}
-{#{% block content %}#}
-{#<div class="container py-5">#}
-{#    <!-- Welcome Message -->#}
-{#    <p class="text-center">Изберете опция за генериране на тест.</p>#}
-{##}
-{#    <!-- Options for quiz generation -->#}
-{#    <div class="row justify-content-center mb-4">#}
-{#        <!-- Option 1: Upload a file -->#}
-{#        <div class="col-md-6 mb-3">#}
-{#            <div class="card shadow-lg">#}
-{#                <div class="card-body">#}
-{#                    <h4 class="card-title text-center">Качете файл</h4>#}
-{#                    <form action="{% url 'quiz_from_file' %}" method="POST" enctype="multipart/form-data">#}
-{#                        {% csrf_token %}#}
-{#                        <div class="form-group mb-3">#}
-{#                            <label for="fileUpload" class="form-label">Изберете файл</label>#}
-{#                            <input type="file" id="fileUpload" name="file" class="form-control" required>#}
-{#                        </div>#}
-{#                        <div class="text-center">#}
-{#                            <button type="submit" class="btn btn-primary btn-lg">Генерирайте тест</button>#}
-{#                        </div>#}
-{#                    </form>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{##}
-{#        <!-- Option 2: Select grade and subject -->#}
-{#        <div class="col-md-6 mb-3">#}
-{#            <div class="card shadow-lg">#}
-{#                <div class="card-body">#}
-{#                    <h4 class="card-title text-center">Изберете предмет и клас</h4>#}
-{#                    <form id="quizForm" action="{% url 'quiz_from_selection' %}" method="POST">#}
-{#                        {% csrf_token %}#}
-{#                        <div class="row">#}
-{#                            <div class="col-md-6 mb-3">#}
-{#                                <label for="subject" class="form-label">Предмет</label>#}
-{#                                <input type="text" id="subject" name="subject" class="form-control" placeholder="Пример: Математика" required>#}
-{#                            </div>#}
-{#                            <div class="col-md-6 mb-3">#}
-{#                                <label for="grade" class="form-label">Клас</label>#}
-{#                                <input type="text" id="grade" name="grade" class="form-control" placeholder="Пример: 8 клас" required>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="text-center">#}
-{#                            <button type="submit" class="btn btn-primary btn-lg">Генерирайте тест</button>#}
-{#                        </div>#}
-{#                    </form>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{##}
-{#    <!-- Results Section (Optional) -->#}
-{#    <div id="quizResults" class="row mb-5"></div>#}
-{##}
-{#</div>#}
-{##}
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="col-md-12 mb-5">
+        <h1 class="text-center">Изберете опция за генериране на тест!</h1>
+    </div>
+    <!-- Options for quiz generation -->
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-12 mb-5">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Качете файл и позволете на изкуствения интелект да генерира тест!</h4>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="fileUpload" class="form-label">Изберете файл</label>
+                            <input type="file" id="fileUpload" name="file" class="form-control" required>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">Генерирайте тест</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-12 mb-5">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Изберете предмет и клас</h4>
+                    <form id="quizForm" action="" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="subject" class="form-label">Предмет</label>
+                                <input type="text" id="subject" name="subject" class="form-control" placeholder="Пример: Математика" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="grade" class="form-label">Клас</label>
+                                <input type="text" id="grade" name="grade" class="form-control" placeholder="Пример: 8 клас" required>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">Генерирайте тест</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Results Section (Optional) -->
+    <div id="quizResults" class="row mb-5"></div>
+
+</div>
+
 {#<script>#}
 {#    document.getElementById("quizForm").addEventListener("submit", function (event) {#}
 {#        event.preventDefault();#}
@@ -105,5 +108,5 @@
 {#            });#}
 {#    });#}
 {#</script>#}
-{##}
-{#{% endblock %}#}
+
+{% endblock %}

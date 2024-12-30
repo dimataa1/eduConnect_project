@@ -1,0 +1,27 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2>{{ quiz.title }}</h2>
+    <p>Предмет: {{ quiz.subject }}</p>
+    <p>Клас: {{ quiz.grade }}</p>
+    <p>{{ quiz.description }}</p>
+
+    <h3>Въпроси</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {% for question in questions %}
+            <div>
+                <p><strong>{{ question.text }}</strong></p>
+                {% for answer in question.answers.all %}
+                    <div>
+                        <input type="radio" id="answer_{{ answer.id }}" name="question_{{ question.id }}" value="{{ answer.id }}">
+                        <label for="answer_{{ answer.id }}">{{ answer.text }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Изпратете отговорите</button>
+    </form>
+</div>
+{% endblock %}
