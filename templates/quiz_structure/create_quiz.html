@@ -1,0 +1,49 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<h1>Create Quiz</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <!-- Add Question Section -->
+    <div id="questions-container">
+        <h3>Questions</h3>
+        <div class="question-form">
+            <!-- Dynamic Question form will be added here -->
+        </div>
+        <button type="button" id="add-question-btn" class="btn btn-secondary">Add New Question</button>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Create Quiz</button>
+</form>
+
+<script>
+    // JavaScript to dynamically add new question fields
+    document.getElementById('add-question-btn').addEventListener('click', function() {
+        var questionFormHTML = `
+            <div class="form-group">
+                <label for="question">Question</label>
+                <input type="text" name="question" class="form-control" placeholder="Enter question" required>
+            </div>
+            <div class="form-group">
+                <label for="answer">Correct Answer</label>
+                <input type="text" name="answer" class="form-control" placeholder="Enter correct answer" required>
+            </div>
+            <button type="button" class="btn btn-danger remove-question-btn">Remove Question</button>
+            <hr>
+        `;
+        // Append the new question form to the container
+        var container = document.querySelector('#questions-container .question-form');
+        container.innerHTML += questionFormHTML;
+        
+        // Add remove functionality
+        container.querySelectorAll('.remove-question-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                button.parentElement.remove();
+            });
+        });
+    });
+</script>
+
+{% endblock %}

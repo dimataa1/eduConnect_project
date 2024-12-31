@@ -1,4 +1,7 @@
 from django import forms
+from django.forms import modelformset_factory
+
+from quiz.models import Quiz, Question, Answer
 
 
 class QuizSearchForm(forms.Form):
@@ -27,3 +30,41 @@ class FileUploadForm(forms.Form):
             'accept': '.pdf,.doc,.docx,.txt'
         })
     )
+
+
+class QuizForm(forms.ModelForm):
+    class Meta:
+        model = Quiz
+        fields = ['title', 'description', 'subject', 'grade']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
+            'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Grade'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            if field.initial is None:
+                field.initial = ''
+            if isinstance(field.widget, forms.TextInput) or isinstance(field.widget, forms.Textarea):
+                if not field.initial:
+                    field.initial = ''
+
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['text']
+
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['text', 'is_correct']
+
+
+# Formsets
+QuestionFormSet = modelformset_factory(Question, form=QuestionForm, extra=1)
+AnswerFormSet = modelformset_factory(Answer, form=AnswerForm, extra=4)
