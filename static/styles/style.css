@@ -1,19 +1,19 @@
 /* General body styling */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* Light gray background */
-    color: #212529; /* Standard text color */
+    background-color: #f8f9fa;
+    color: #212529;
 }
 
 /* Navbar logo text styling */
 .navbar-brand span {
-    font-size: 1.5rem; /* Increase the logo text size */
-    color: #007bff; /* Bootstrap primary color */
+    font-size: 1.5rem;
+    color: #007bff;
 }
 
 .navbar-brand span:hover {
     text-decoration: none;
-    color: #0056b3; /* Darker blue on hover */
+    color: #0056b3;
 }
 
 /* Button customization */
@@ -23,19 +23,19 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
     border-color: #0056b3;
 }
 
 /* Card styling */
 .card {
     border-radius: 10px;
-    border: 1px solid #dee2e6; /* Light gray border */
+    border: 1px solid #dee2e6;
 }
 
 /* Footer styling */
 footer {
-    background-color: #343a40; /* Dark gray */
+    background-color: #343a40;
     color: #ffffff;
     font-size: 0.9rem;
 }
@@ -63,4 +63,30 @@ img.rounded-circle {
   padding: 0.5rem 1.5rem;
 }
 
+.nav-link {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #007bff;
+  transition: all 0.3s ease;
+}
 
+.nav-link:hover {
+  color: #0056b3;
+  text-shadow: 0 0 8px #007bff, 0 0 15px #007bff;
+}
+
+.dropdown-menu {
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+.dropdown-item:hover {
+  background-color: #e9ecef;
+  color: #0056b3;
+}

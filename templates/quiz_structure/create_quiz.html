@@ -19,7 +19,6 @@
 </form>
 
 <script>
-    // JavaScript to dynamically add new question fields
     document.getElementById('add-question-btn').addEventListener('click', function() {
         var questionFormHTML = `
             <div class="form-group">
@@ -30,14 +29,28 @@
                 <label for="answer">Correct Answer</label>
                 <input type="text" name="answer" class="form-control" placeholder="Enter correct answer" required>
             </div>
+            <div class="form-group answers-group">
+                <label>Possible Answers</label>
+                <input type="text" name="answers_0" class="form-control" placeholder="Enter answer" required>
+                <input type="text" name="answers_1" class="form-control" placeholder="Enter answer" required>
+                <input type="text" name="answers_2" class="form-control" placeholder="Enter answer" required>
+                <input type="text" name="answers_3" class="form-control" placeholder="Enter answer" required>
+            </div>
+            <div class="form-group">
+                <label for="correct_answer">Correct Answer</label>
+                <select name="correct_answer_0" class="form-control">
+                    <option value="0">Answer 1</option>
+                    <option value="1">Answer 2</option>
+                    <option value="2">Answer 3</option>
+                    <option value="3">Answer 4</option>
+                </select>
+            </div>
             <button type="button" class="btn btn-danger remove-question-btn">Remove Question</button>
             <hr>
         `;
-        // Append the new question form to the container
         var container = document.querySelector('#questions-container .question-form');
         container.innerHTML += questionFormHTML;
-        
-        // Add remove functionality
+
         container.querySelectorAll('.remove-question-btn').forEach(function(button) {
             button.addEventListener('click', function() {
                 button.parentElement.remove();
