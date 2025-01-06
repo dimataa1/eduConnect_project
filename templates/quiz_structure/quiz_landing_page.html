@@ -2,12 +2,11 @@
 
 {% block content %}
 <div class="container py-5">
-
     <div class="col-md-12 mb-5">
         <h1 class="text-center">Изберете опция за генериране на тест!</h1>
     </div>
-    <!-- Options for quiz generation -->
 
+    <!-- Options for quiz generation -->
     <div class="row justify-content-center mb-4">
         <div class="col-md-12 mb-5">
             <div class="card shadow-lg">
@@ -54,59 +53,51 @@
         </div>
     </div>
 
-
     <!-- Results Section (Optional) -->
     <div id="quizResults" class="row mb-5"></div>
 
 </div>
 
-{#<script>#}
-{#    document.getElementById("quizForm").addEventListener("submit", function (event) {#}
-{#        event.preventDefault();#}
-{##}
-{#        var subject = document.getElementById("subject").value;#}
-{#        var grade = document.getElementById("grade").value;#}
-{##}
-{#        fetch(`/api/quiz/search/?subject=${subject}&grade=${grade}`)#}
-{#            .then(response => response.json())#}
-{#            .then(data => {#}
-{#                var resultsContainer = document.getElementById("quizResults");#}
-{#                resultsContainer.innerHTML = '';#}
-{##}
-{#                if (data.length === 0) {#}
-{#                    resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени тестове за зададените критерии.</div>';#}
-{#                } else {#}
-{#                    data.forEach(quiz => {#}
-{#                        var quizCard = `#}
-{#                            <div class="col-md-4 mb-4">#}
-{#                                <div class="card h-100 shadow-sm">#}
-{#                                    <div class="card-body">#}
-{#                                        <h5 class="card-title">${quiz.title}</h5>#}
-{#                                        <p class="card-text text-muted">${quiz.description.substring(0, 100)}</p>#}
-{#                                        <p><strong>Предмет:</strong> ${quiz.subject}</p>#}
-{#                                        <p><strong>Клас:</strong> ${quiz.grade}</p>#}
-{#                                    </div>#}
-{#                                    <div class="card-footer text-muted">#}
-{#                                        <a href="javascript:void(0);" class="btn btn-primary mt-3" data-id="${quiz.id}">Вижте детайли</a>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        `;#}
-{#                        resultsContainer.innerHTML += quizCard;#}
-{#                    });#}
-{##}
-{#                    document.querySelectorAll("#quizResults .btn-primary").forEach(button => {#}
-{#                        button.addEventListener("click", function (e) {#}
-{#                            var quizId = e.target.getAttribute("data-id");#}
-{#                            window.location.href = `quiz/${quizId}/`;#}
-{#                        });#}
-{#                    });#}
-{#                }#}
-{#            })#}
-{#            .catch(error => {#}
-{#                console.error('Error fetching quiz search results:', error);#}
-{#            });#}
-{#    });#}
-{#</script>#}
+<script>
+    document.getElementById("quizForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        var subject = document.getElementById("subject").value;
+        var grade = document.getElementById("grade").value;
+
+        fetch(`/quizzes/api/quiz/search/?subject=${subject}&grade=${grade}`)
+            .then(response => response.json())
+            .then(data => {
+                var resultsContainer = document.getElementById("quizResults");
+                resultsContainer.innerHTML = '';
+
+                if (data.length === 0) {
+                    resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени тестове за зададените критерии.</div>';
+                } else {
+                    data.forEach(quiz => {
+                        var quizCard = `
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${quiz.title}</h5>
+                                        <p class="card-text text-muted">${quiz.description.substring(0, 100)}</p>
+                                        <p><strong>Предмет:</strong> ${quiz.subject}</p>
+                                        <p><strong>Клас:</strong> ${quiz.grade}</p>
+                                    </div>
+                                    <div class="card-footer text-muted">
+                                        <a href="/quiz/${quiz.id}/" class="btn btn-primary mt-3">Вижте детайли</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        resultsContainer.innerHTML += quizCard;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching quiz search results:', error);
+            });
+    });
+</script>
 
 {% endblock %}
