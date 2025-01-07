@@ -6,7 +6,6 @@
         <h1 class="text-center">Изберете опция за генериране на тест!</h1>
     </div>
 
-    <!-- Options for quiz generation -->
     <div class="row justify-content-center mb-4">
         <div class="col-md-12 mb-5">
             <div class="card shadow-lg">
@@ -85,12 +84,18 @@
                                         <p><strong>Клас:</strong> ${quiz.grade}</p>
                                     </div>
                                     <div class="card-footer text-muted">
-                                        <a href="/quiz/${quiz.id}/" class="btn btn-primary mt-3">Вижте детайли</a>
+                                       <a href="javascript:void(0);" class="btn btn-primary mt-3" data-id="${quiz.id}">Вижте детайли</a>
                                     </div>
                                 </div>
                             </div>
                         `;
                         resultsContainer.innerHTML += quizCard;
+                    });
+                     document.querySelectorAll("#quizResults .btn-primary").forEach(button => {
+                        button.addEventListener("click", function (e) {
+                            var quizId = e.target.getAttribute("data-id");
+                           window.location.href = `/quizzes/quiz/${quizId}/`
+                        });
                     });
                 }
             })

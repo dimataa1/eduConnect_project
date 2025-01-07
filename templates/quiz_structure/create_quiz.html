@@ -9,7 +9,43 @@
             <label for="quiz-title" class="form-label">Quiz Title</label>
             <input type="text" name="quiz_title" id="quiz-title" class="form-control" placeholder="Enter quiz title" required>
         </div>
+         <div class="mb-3">
+        <label for="subject" class="form-label">Предмет</label>
+        <select name="subject" id="subject" class="form-select" required>
+            <option value="">Изберете предмет</option>
+            <option value="Български език">Български език</option>
+            <option value="Математика">Математика</option>
+            <option value="История">История</option>
+            <option value="География">География</option>
+            <option value="Физика">Физика</option>
+            <option value="Литература">Литература</option>
+             <option value="Биология">Биология</option>
+             <option value="Химия">Химия</option>
+             <option value="Философия">Философия</option>
+             <option value="ИТ">ИТ</option>
+             <option value="Английски">Английски</option>
+            <!-- Add more subjects here -->
+        </select>
+    </div>
 
+    <div class="mb-3">
+        <label for="grade" class="form-label">Клас</label>
+        <select name="grade" id="grade" class="form-select" required>
+            <option value="">Изберете клас</option>
+            <option value="1">1 клас</option>
+            <option value="2">2 клас</option>
+            <option value="3">3 клас</option>
+            <option value="4">4 клас</option>
+            <option value="5">5 клас</option>
+            <option value="6">6 клас</option>
+            <option value="7">7 клас</option>
+            <option value="8">8 клас</option>
+            <option value="9">9 клас</option>
+            <option value="10">10 клас</option>
+            <option value="11">11 клас</option>
+            <option value="12">12 клас</option>
+        </select>
+    </div>
         <div id="questions-container">
             <h3>Questions</h3>
             <!-- Dynamic question blocks will be added here -->

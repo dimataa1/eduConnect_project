@@ -90,3 +90,22 @@ img.rounded-circle {
   background-color: #e9ecef;
   color: #0056b3;
 }
+/* Add custom styles for form input focus and hover states */
+input:focus, textarea:focus, select:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.5);
+}
+
+/* Style the submit button for hover effects */
+.btn-primary:hover {
+    background-color: #004085;
+    border-color: #003366;
+}
+
+/* Image preview container */
+#image-preview-container {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: none;
+}

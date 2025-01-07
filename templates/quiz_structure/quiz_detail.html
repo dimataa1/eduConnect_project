@@ -2,26 +2,83 @@
 
 {% block content %}
 <div class="container py-5">
-    <h2>{{ quiz.title }}</h2>
-    <p>Предмет: {{ quiz.subject }}</p>
-    <p>Клас: {{ quiz.grade }}</p>
-    <p>{{ quiz.description }}</p>
+    <h1 class="text-center mb-5">{{ quiz.title }}</h1>
+    <p class="text-muted text-center">{{ quiz.description }}</p>
 
-    <h3>Въпроси</h3>
-    <form method="POST">
+    <form id="quizForm">
         {% csrf_token %}
-        {% for question in questions %}
-            <div>
-                <p><strong>{{ question.text }}</strong></p>
-                {% for answer in question.answers.all %}
-                    <div>
-                        <input type="radio" id="answer_{{ answer.id }}" name="question_{{ question.id }}" value="{{ answer.id }}">
-                        <label for="answer_{{ answer.id }}">{{ answer.text }}</label>
+        <div class="row">
+            {% for question in quiz.questions.all %}
+            <div class="col-md-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ question.text }}</h5>
+                        <div class="form-group">
+                            {% for answer in question.answers %}
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="question-{{ question.id }}"
+                                    id="answer-{{ answer.id }}"
+                                    value="{{ answer.id }}"
+                                    required
+                                />
+                                <label class="form-check-label" for="answer-{{ answer.id }}">
+                                    {{ answer.text }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
-                {% endfor %}
+                </div>
             </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Изпратете отговорите</button>
+            {% endfor %}
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg">Потвърди отговорите</button>
+        </div>
     </form>
+
+    <div id="quizResults" class="mt-5"></div>
 </div>
+
+<script>
+    document.getElementById("quizForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const userAnswers = {};
+        const quizId = "{{ quiz.id }}";
+
+        formData.forEach((value, key) => {
+            const questionId = key.split("-")[1];
+            userAnswers[questionId] = value;
+        });
+
+        fetch(`/api/quiz/${quizId}/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ answers: userAnswers }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const resultsDiv = document.getElementById("quizResults");
+                resultsDiv.innerHTML = `
+                    <div class="card shadow-lg">
+                        <div class="card-body">
+                            <h3 class="card-title text-center">Резултати</h3>
+                            <p><strong>Верни отговори:</strong> ${data.correct_count} / ${data.total_questions}</p>
+                            <p><strong>Процент:</strong> ${data.percentage.toFixed(2)}%</p>
+                            <p><strong>Оценка:</strong> ${data.grade.toFixed(2)}</p>
+                        </div>
+                    </div>
+                `;
+            })
+            .catch(error => console.error("Error submitting answers:", error));
+    });
+</script>
 {% endblock %}
