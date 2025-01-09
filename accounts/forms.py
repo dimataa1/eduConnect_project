@@ -34,7 +34,8 @@ class CustomLoginForm(forms.Form):
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}),
-        label="Password"
+        label="Password",
+
     )
 
     def clean(self):

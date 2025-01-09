@@ -109,3 +109,33 @@ input:focus, textarea:focus, select:focus {
     padding: 10px;
     display: none;
 }
+
+.position-relative {
+    position: relative;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+.end-0 {
+    right: 0;
+}
+
+.top-50 {
+    top: 50%;
+}
+
+.translate-middle-y {
+    transform: translateY(-50%);
+}
+
+.pe-3 {
+    padding-right: 1rem;
+}
+
+.fa-eye, .fa-eye-slash {
+    z-index: 2;
+    cursor: pointer;
+}
+
