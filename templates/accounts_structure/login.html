@@ -3,145 +3,111 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-    <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
-        <div class="card shadow-sm p-5 w-100" style="max-width: 600px;">
-            <h3 class="text-center mb-4">Login</h3>
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-sm p-5 w-100" style="max-width: 600px;">
+        <h3 class="text-center mb-4">Login</h3>
 
-            {% if form.errors %}
-                <div class="alert alert-danger d-flex align-items-center" role="alert">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                         class="bi bi-exclamation-circle me-2" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                        <path d="M7.002 11a1 1 0 1 0 2 0 1 1 0 0 0-2 0zm.93-6.588-.82 4.794a.25.25 0 0 0 .247.294h1.286a.25.25 0 0 0 .247-.294l-.82-4.794a.25.25 0 0 0-.492 0z"></path>
-                    </svg>
-                    <div>
-                        {% for error in form.non_field_errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
+        {% if form.errors %}
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                class="bi bi-exclamation-circle me-2" viewBox="0 0 16 16">
+                <path
+                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z">
+                </path>
+                <path
+                    d="M7.002 11a1 1 0 1 0 2 0 1 1 0 0 0-2 0zm.93-6.588-.82 4.794a.25.25 0 0 0 .247.294h1.286a.25.25 0 0 0 .247-.294l-.82-4.794a.25.25 0 0 0-.492 0z">
+                </path>
+            </svg>
+            <div>
+                {% for error in form.non_field_errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
-            <form method="post">
-                {% csrf_token %}
-                <div class="mb-4 position-relative">
-                    {{ form.email.label_tag }}
-                    {{ form.email|add_class:"form-control form-control-lg" }}
-                    {% for error in form.email.errors %}
-                        <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
-                    {% endfor %}
-                </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4 position-relative">
+                {{ form.email.label_tag }}
+                {{ form.email|add_class:"form-control form-control-lg" }}
+                {% for error in form.email.errors %}
+                <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                {% endfor %}
+            </div>
 
-                <div class="mb-4 position-relative">
-                    {{ form.password.label_tag }}
+            <div class="mb-4">
+                <label for="password">{{ form.password.label }}</label>
+                <div class="d-flex align-items-center position-relative">
                     {{ form.password|add_class:"form-control form-control-lg toggled" }}
-                    <span class="position-absolute end-0 top-50 translate-middle-y pe-3" style="cursor: pointer;" id="togglePassword">
+                    <div class="position-absolute toggle-password" id="togglePassword" style="margin-left: 92%; top: 50%; transform: translateY(-50%); cursor: pointer;">
                         <i class="fa-solid fa-eye-slash" id="toggle-slash"></i>
                         <i class="fa-solid fa-eye d-none" id="toggle-eye"></i>
-                    </span>
-                    {% for error in form.password.errors %}
-                        <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
-                    {% endfor %}
+                    </div>
                 </div>
+                {% for error in form.password.errors %}
+                <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                {% endfor %}
+            </div>
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary btn-lg">Login</button>
-                </div>
-                <div class="text-center mt-4">
-                    <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
-                </div>
-            </form>
-        </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Login</button>
+            </div>
+            <div class="text-center mt-4">
+                <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+            </div>
+        </form>
     </div>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Elements for toggling password visibility
-            const togglePassword = $('#togglePassword');
-            const passwordField = $('.toggled');
-            const toggleSlash = $('#toggle-slash');
-            const toggleEye = $('#toggle-eye');
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const togglePassword = $('#togglePassword');
+        const passwordField = $('.toggled');
+        const toggleSlash = $('#toggle-slash');
+        const toggleEye = $('#toggle-eye');
 
-            // Show password when the eye icon is clicked
-            togglePassword.on('click', function () {
-                if (passwordField.attr('type') === 'password') {
-                    passwordField.attr('type', 'text');
-                    toggleSlash.addClass('d-none');
-                    toggleEye.removeClass('d-none');
-                } else {
-                    passwordField.attr('type', 'password');
-                    toggleEye.addClass('d-none');
-                    toggleSlash.removeClass('d-none');
-                }
-            });
+        togglePassword.on('click', function () {
+            if (passwordField.attr('type') === 'password') {
+                passwordField.attr('type', 'text');
+                toggleSlash.addClass('d-none');
+                toggleEye.removeClass('d-none');
+            } else {
+                passwordField.attr('type', 'password');
+                toggleEye.addClass('d-none');
+                toggleSlash.removeClass('d-none');
+            }
         });
-    </script>
+    });
+</script>
 {% endblock %}
 
 {% block extra_styles %}
 <style>
-    /* Container for password input and toggle button */
-    .password-group {
-        position: relative;
-        width: 100%;
-        max-width: 350px; /* Adjust the max-width as per your design needs */
-        margin: 0 auto; /* Center the container */
-    }
-
-    /* Flex container for input and icon */
-    .input-group {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    /* Icon container */
-    .toggle-btns-container {
-        position: absolute;
-        right: 15px; /* Position the icon container to the right */
-        top: 50%;
-        transform: translateY(-50%); /* Vertically center the icons */
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    /* Hide the password field when it is not focused */
-    .input-group > input:focus + .red-clr {
-        display: inline-block;
-    }
-
-    /* Style for the password input field */
-    .password-group input {
-        padding-right: 40px; /* Add space for the toggle icon */
-        width: 100%; /* Make the input take full width */
-    }
-
-    /* Focused input field styling */
-    .password-group input:focus {
-        border-color: #007bff; /* Optional: Add a custom border color for focus */
-    }
-
-    /* Toggle button when password is hidden (eye-slash icon) */
-    .fa-eye-slash {
-        display: block;
-    }
-
-    /* Toggle button when password is shown (eye icon) */
-    .fa-eye {
-        display: none;
-    }
-
-    /* Optional: Add transitions for smooth changes */
-    .password-group input,
-    .toggle-btns-container i {
-        transition: all 0.3s ease;
-    }
-
+    {#.d-flex {#}
+    {#    display: flex;#}
+    {#    align-items: center;#}
+    {#    position: relative;#}
+    {#}#}
+    {##}
+    {#.toggled {#}
+    {#    padding-right: 2.5rem;#}
+    {#}#}
+    {##}
+    {#.toggle-password {#}
+    {#    position: absolute;#}
+    {#    top: 50%;#}
+    {#    transform: translateY(-50%);#}
+    {#    cursor: pointer;#}
+    {#    display: flex;#}
+    {#    align-items: center;#}
+    {#}#}
+    {##}
+    {#.toggle-password i {#}
+    {#    font-size: 1.25rem;#}
+    {#}#}
 </style>
-
-
 {% endblock %}
