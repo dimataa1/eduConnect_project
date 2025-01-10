@@ -5,7 +5,7 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from rest_framework import status
@@ -13,10 +13,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.serializers import PostSerializer
-from .forms import PostForm, CommentForm, SchoolForm
+from .forms import PostForm, CommentForm, SchoolForm, ScheduleTourForm
 from django.contrib import messages
 
-from .models import Post, School, Comment, Vote
+from .models import Post, School, Comment, Vote, Tour
 from .serializers import SchoolSerializer
 
 
@@ -206,3 +206,49 @@ def vote_comment(request, post_id, comment_id, vote_action):
 
     # Return the updated rating
     return JsonResponse({'new_rating': comment.rating})
+
+
+class CreateTourView(LoginRequiredMixin, View):
+    template_name = 'tour_structure/create_tour.html'
+
+    def get(self, request):
+        form = ScheduleTourForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = ScheduleTourForm(request.POST, request.FILES)
+        if form.is_valid():
+            tour = form.save(commit=False)
+            tour.teacher = request.user
+            tour.save()
+            messages.success(request, "Tour scheduled successfully!")
+            return redirect('home')
+        else:
+            messages.error(request, "There was an error scheduling the tour.")
+        return render(request, self.template_name, {'form': form})
+
+class TourListView(ListView):
+    model = Tour
+    template_name = 'tour_structure/tour_list.html'
+    context_object_name = 'tours'
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', '')
+        if query:
+            return Tour.objects.filter(name__icontains=query).order_by('date')
+        return Tour.objects.all().order_by('date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.get_queryset(), 5)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        return context
+
+
+class TourDetailView(DetailView):
+    model = Tour
+    template_name = 'tour_structure/tour_detail.html'
+    context_object_name = 'tour'

@@ -1,0 +1,132 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header bg-gradient-primary text-white text-center py-4">
+                        <h2 class="mb-0">✨ Schedule a Tour</h2>
+                        <p class="mb-0">Fill out the form below to organize an unforgettable school tour!</p>
+                    </div>
+                    <div class="card-body px-5">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label for="id_name" class="form-label font-weight-bold">Tour Name</label>
+                                <input type="text" class="form-control" id="id_name" name="name" value="{{ form.name.value|default:'' }}" placeholder="Enter the name of the tour">
+                                {% if form.name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.name.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-4">
+                                <label for="id_description" class="form-label font-weight-bold">Tour Description</label>
+                                <textarea class="form-control" id="id_description" name="description" rows="3" placeholder="Provide a short description for the tour">{{ form.description.value|default:'' }}</textarea>
+                                {% if form.description.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.description.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-4">
+                                <label for="id_date" class="form-label font-weight-bold">Tour Date</label>
+                                <input type="date" class="form-control" id="id_date" name="date" value="{{ form.date.value|default:'' }}">
+                                {% if form.date.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.date.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-4">
+                                <label for="id_location" class="form-label font-weight-bold">Location</label>
+                                <input type="text" class="form-control" id="id_location" name="location" value="{{ form.location.value|default:'' }}" placeholder="Enter the location of the tour">
+                                {% if form.location.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.location.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-4">
+                                <label for="id_school" class="form-label font-weight-bold">Select School</label>
+                                <select class="form-control" id="id_school" name="school">
+                                    <option value="">Choose a school</option>
+                                    {% for school in form.school.field.queryset %}
+                                        <option value="{{ school.id }}" {% if form.school.value == school.id %}selected{% endif %}>{{ school.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.school.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.school.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-4">
+                                <label for="id_image" class="form-label font-weight-bold">Tour Image</label>
+                                <input type="file" class="form-control" id="id_image" name="image">
+                                {% if form.image.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.image.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-lg btn-gradient-primary text-white px-5 py-2 rounded-pill">
+                                    Create Tour 🚀
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer bg-light text-center py-3">
+                        <small class="text-muted">Make sure the details are accurate before submitting!</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_styles %}
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(45deg, #007bff, #6c63ff);
+        }
+
+        .btn-gradient-primary {
+            background: linear-gradient(90deg, #6c63ff, #007bff);
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-gradient-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            border-bottom: none;
+        }
+
+        .card-footer {
+            font-size: 0.9rem;
+        }
+    </style>
+{% endblock %}

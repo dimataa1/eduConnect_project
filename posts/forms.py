@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Comment, School
+from .models import Post, Comment, School, Tour
 
 
 class PostForm(forms.ModelForm):
@@ -38,3 +38,35 @@ class SchoolForm(forms.ModelForm):
     class Meta:
         model = School
         fields = ['name', 'town', 'description', 'image']
+
+
+class TourForm(forms.ModelForm):
+    class Meta:
+        model = Tour
+        fields = ['school', 'description', 'date']
+        widgets = {
+            'school': forms.Select(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Provide a short description for the tour'
+            }),
+            'date': forms.DateTimeInput(attrs={
+                'class': 'form-control',
+                'type': 'datetime-local',
+                'placeholder': 'Select date and time'
+            }),
+        }
+
+
+class ScheduleTourForm(forms.ModelForm):
+    class Meta:
+        model = Tour
+        fields = ['name', 'description', 'date', 'location', 'image', 'school']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tour Name'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'school': forms.Select(attrs={'class': 'form-control'}),
+        }

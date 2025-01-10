@@ -13,5 +13,5 @@ urlpatterns = [
     path('add_school/', add_school, name='add_school'),
     path('post_list/', post_list, name='post_list'),
     path('post/<int:post_id>/vote/<int:comment_id>/<str:vote_action>/', vote_comment, name='vote_comment'),
-
+    path('create_tour/', views.CreateTourView.as_view(), name='create_tour'),
 ]

@@ -112,3 +112,38 @@ class Vote(models.Model):
 
     class Meta:
         unique_together = ('user', 'comment')
+
+
+class Tour(models.Model):
+    school = models.ForeignKey(
+        School,
+        on_delete=models.CASCADE,
+        related_name='tours',
+    )
+    name = models.CharField(
+        max_length=255,
+        help_text="The name of the tour.",
+    )
+    description = models.TextField()
+    date = models.DateTimeField()
+    location = models.CharField(
+        max_length=255,
+        help_text="The location of the tour.",
+    )
+    image = models.ImageField(
+        upload_to='static/tour_images/',
+        blank=True,
+        null=True,
+        default="static/default/default.png",
+    )
+    teacher = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='scheduled_tours',
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    def __str__(self):
+        return f"Tour: {self.name} for {self.school.name} on {self.date.strftime('%Y-%m-%d')}"

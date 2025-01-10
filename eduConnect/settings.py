@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     "common.apps.CommonConfig",
     "posts.apps.PostsConfig",
     'rest_framework',
-    "quiz.apps.QuizConfig"
+    "quiz.apps.QuizConfig",
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
