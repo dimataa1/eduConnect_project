@@ -171,3 +171,13 @@ input:focus, textarea:focus, select:focus {
 .card-body {
     padding: 20px;
 }
+
+
+/*.navbar-brand:first-child {*/
+/*    margin-left: -10px;*/
+/*}*/
+
+/*!* Adjust EduConnect Logo *!*/
+/*.navbar-brand.ms-3 {*/
+/*    margin-left: 20px;*/
+/*}*/
