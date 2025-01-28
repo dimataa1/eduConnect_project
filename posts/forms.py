@@ -70,3 +70,44 @@ class ScheduleTourForm(forms.ModelForm):
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'school': forms.Select(attrs={'class': 'form-control'}),
         }
+
+
+class TourSearchForm(forms.Form):
+    name = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Search by Name'})
+    )
+    location = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Search by Location'})
+    )
+    date_from = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'placeholder': 'From Date'})
+    )
+    date_to = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'placeholder': 'To Date'})
+    )
+
+
+class TourDeleteConfirmationForm(forms.Form):
+    confirm = forms.BooleanField(
+        label="Are you sure you want to delete this tour?",
+        required=True,
+    )
+
+class TourUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Tour
+        fields = ['name', 'description', 'date', 'location', 'image', 'school']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tour Name'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Update Description'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Update Location'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'school': forms.Select(attrs={'class': 'form-control'}),
+        }

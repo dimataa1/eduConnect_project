@@ -125,7 +125,9 @@ class Tour(models.Model):
         help_text="The name of the tour.",
     )
     description = models.TextField()
+
     date = models.DateTimeField()
+
     location = models.CharField(
         max_length=255,
         help_text="The location of the tour.",

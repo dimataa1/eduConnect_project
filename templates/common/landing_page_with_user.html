@@ -75,6 +75,7 @@
     </div>
 
     <script>
+        // Handle post search form submission
         document.getElementById("searchPostForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
@@ -85,37 +86,30 @@
                 .then(response => response.json())
                 .then(data => {
                     var resultsContainer = document.getElementById("postResults");
-                    resultsContainer.innerHTML = '';
+                    resultsContainer.innerHTML = ''; // Clear previous results
 
-                    if (data.length === 0) {
+                    if (data.posts.length === 0) {
                         resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени постове за зададените критерии.</div>';
                     } else {
-                        data.forEach(post => {
+                        data.posts.forEach(post => {
                             var postCard = `
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm">
-                                <img src="${post.image}" class="card-img-top" alt="${post.title}" style="max-height: 200px; object-fit: cover;">
-                                <div class="card-body">
-                                    <h5 class="card-title">${post.title}</h5>
-                                    <p class="card-text text-muted">${post.description.substring(0, 100)}</p>
-                                    <p><strong>Предмет:</strong> ${post.subject}</p>
-                                    <p><strong>Клас:</strong> ${post.grade}</p>
-                                </div>
-                                <div class="card-footer text-muted">
-                                    Създадено на ${new Date(post.created_at).toLocaleDateString()}
-                                </div>
-                                <a href="javascript:void(0);" class="btn btn-primary mt-3" data-id="${post.id}">View Details</a>
-                            </div>
-                        </div>
-                    `;
+              <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                  <img src="${post.image}" class="card-img-top" alt="${post.title}" style="max-height: 200px; object-fit: cover;">
+                  <div class="card-body">
+                    <h5 class="card-title">${post.title}</h5>
+                    <p class="card-text text-muted">${post.description.substring(0, 100)}...</p>
+                    <p><strong>Предмет:</strong> ${post.subject}</p>
+                    <p><strong>Клас:</strong> ${post.grade}</p>
+                  </div>
+                  <div class="card-footer text-muted">
+                    Създадено на ${new Date(post.created_at).toLocaleDateString()}
+                  </div>
+                  <a href="/post/${post.id}/" class="btn btn-primary mt-3">View Details</a>
+                </div>
+              </div>
+            `;
                             resultsContainer.innerHTML += postCard;
-                        });
-
-                        document.querySelectorAll("#postResults .btn-primary").forEach(button => {
-                            button.addEventListener("click", function (e) {
-                                var postId = e.target.getAttribute("data-id");
-                                window.location.href = `post/post/${postId}/`; //
-                            });
                         });
                     }
                 })
@@ -124,6 +118,7 @@
                 });
         });
 
+        // Handle school search form submission
         document.getElementById("searchSchoolForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
@@ -133,43 +128,63 @@
                 .then(response => response.json())
                 .then(data => {
                     var resultsContainer = document.getElementById("schoolResults");
-                    resultsContainer.innerHTML = '';
+                    resultsContainer.innerHTML = ''; // Clear previous results
 
-                    if (data.length === 0) {
-                        resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища за зададения град.</div>';
+                    if (data.schools.length === 0 && data.tours.length === 0) {
+                        resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища или турове за зададения град.</div>';
                     } else {
-                        data.forEach(school => {
-                            var schoolCard = `
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm">
-                                <img src="${school.image}" class="card-img-top" alt="${school.name}" style="max-height: 200px; object-fit: cover;">
-                                <div class="card-body">
-                                    <h5 class="card-title">${school.name}</h5>
-                                    <p class="card-text text-muted">${school.description.substring(0, 100)}...</p>
-                                    <p><strong>Град:</strong> ${school.town}</p>
-                                </div>
-                                <div class="card-footer text-muted">
-                                    <a href="javascript:void(0);" class="btn btn-primary mt-3" data-id="${school.id}">View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                            resultsContainer.innerHTML += schoolCard;
-                        });
-
-                        document.querySelectorAll("#schoolResults .btn-primary").forEach(button => {
-                            button.addEventListener("click", function (e) {
-                                var schoolId = e.target.getAttribute("data-id");
-                                window.location.href = `post/school/${schoolId}/`;
+                        // Display Schools
+                        if (data.schools.length > 0) {
+                            resultsContainer.innerHTML += '<h2>Училища</h2>';
+                            data.schools.forEach(school => {
+                                var schoolCard = `
+                <div class="col-md-4 mb-4">
+                  <div class="card h-100 shadow-sm">
+                    <img src="${school.image}" class="card-img-top" alt="${school.name}" style="max-height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                      <h5 class="card-title">${school.name}</h5>
+                      <p class="card-text text-muted">${school.description.substring(0, 100)}...</p>
+                      <p><strong>Град:</strong> ${school.town}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                      <a href="/post/school/${school.id}/" class="btn btn-primary mt-3">View Details</a>
+                    </div>
+                  </div>
+                </div>
+              `;
+                                resultsContainer.innerHTML += schoolCard;
                             });
-                        });
+                        }
+
+                        // Display Tours
+                        if (data.tours.length > 0) {
+                            resultsContainer.innerHTML += '<h2>Турове</h2>';
+                            data.tours.forEach(tour => {
+                                var tourCard = `
+                <div class="col-md-4 mb-4">
+                  <div class="card h-100 shadow-sm">
+                    <img src="${tour.image}" class="card-img-top" alt="${tour.name}" style="max-height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                      <h5 class="card-title">${tour.name}</h5>
+                      <p class="card-text text-muted">${tour.description.substring(0, 100)}...</p>
+                     <p><strong>Град:</strong> ${tour.school.town || 'Неизвестен'}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                      <a href="post/tour/${tour.id}/" class="btn btn-primary mt-3">View Details</a>
+                    </div>
+                  </div>
+                </div>
+              `;
+                                resultsContainer.innerHTML += tourCard;
+                            });
+                        }
                     }
                 })
                 .catch(error => {
-                    console.error('Error fetching school search results:', error);
+                    console.error('Error fetching school and tour search results:', error);
                 });
         });
-
     </script>
+
 
 {% endblock %}

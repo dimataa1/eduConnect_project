@@ -5,9 +5,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from posts.models import Post, School
+from posts.models import Post, School, Tour
 from .forms import PostSearchForm, SchoolSearchForm
-from .serializers import PostSerializer, SchoolSerializer
+from .serializers import PostSerializer, SchoolSerializer, TourSerializer
+
 
 class HomeView(View):
     def get(self, request, *args, **kwargs):
@@ -44,13 +45,21 @@ class SchoolSearchAPIView(APIView):
         town = request.GET.get('town', '').strip()
 
         schools = School.objects.all()
+        tours = Tour.objects.all()
 
         if town:
             schools = schools.filter(town__icontains=town)
-            print(schools)
+            tours = tours.filter(school__town__icontains=town)
 
-        serializer = SchoolSerializer(schools, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        school_serializer = SchoolSerializer(schools, many=True)
+        tour_serializer = TourSerializer(tours, many=True)
+
+        combined_data = {
+            'schools': school_serializer.data,
+            'tours': tour_serializer.data
+        }
+
+        return Response(combined_data, status=status.HTTP_200_OK)
 
 
 class AcademicCalendarView(TemplateView):

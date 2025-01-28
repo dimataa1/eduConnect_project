@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import F
+from django.db.models import F, Value, DateTimeField
+from django.db.models.functions import Cast
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -39,23 +40,53 @@ class CreatePostView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'form': form})
 
 
+class CreateTourView(LoginRequiredMixin, View):
+    template_name = 'tour_structure/create_tour.html'
+
+    def get(self, request):
+        form = ScheduleTourForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = ScheduleTourForm(request.POST, request.FILES)
+        if form.is_valid():
+            tour = form.save(commit=False)
+            tour.teacher = request.user
+            tour.save()
+            messages.success(request, "Tour scheduled successfully!")
+            return redirect('home')
+        else:
+            messages.error(request, "There was an error scheduling the tour.")
+        return render(request, self.template_name, {'form': form})
+
+
 class DashBoardListView(ListView):
-    model = Post
     template_name = 'common/dashboard.html'
-    context_object_name = 'posts'
+    context_object_name = 'items_with_type'
 
     def get_queryset(self):
-        return Post.objects.filter(author=self.request.user).order_by('-created_at')
+        posts = Post.objects.filter(author=self.request.user)
+        tours = Tour.objects.filter(teacher=self.request.user)
+        # Combine both querysets into one list
+        combined = list(posts) + list(tours)
+        return combined
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        posts_list = context['posts']
 
-        paginator = Paginator(posts_list, 3)
+        items_list = context['items_with_type']
+        paginator = Paginator(items_list, 3)  # Paginate with 3 items per page
+
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
         context['page_obj'] = page_obj
+
+        # Add the 'type' field back to each item for the template
+        context['items_with_type'] = [
+            {'item': item, 'type': 'Post' if isinstance(item, Post) else 'Tour'}
+            for item in page_obj.object_list  # Use the paginated list of items
+        ]
         return context
 
 
@@ -102,6 +133,12 @@ class PostDetailView(DetailView):
             return self.render_to_response(context)
 
 
+class TourDetailView(DetailView):
+    model = Tour
+    template_name = 'tour_structure/tour_detail.html'
+    context_object_name = 'tour'
+
+
 class PostEditView(UpdateView):
     model = Post
     form_class = PostForm
@@ -112,10 +149,37 @@ class PostEditView(UpdateView):
         return reverse_lazy('dashboard')
 
 
+class TourEditView(LoginRequiredMixin, UpdateView):
+    model = Tour
+    form_class = ScheduleTourForm
+    template_name = 'tour_structure/tour_edit.html'
+    context_object_name = 'tour'
+
+    def get_queryset(self):
+
+        return Tour.objects.filter(teacher=self.request.user)
+
+    def form_valid(self, form):
+        messages.success(self.request, "Tour updated successfully!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard')
+
+
 class PostDeleteView(DeleteView):
     model = Post
     template_name = 'post_structure/post_confirm_delete.html'
     context_object_name = 'post'
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard')
+
+
+class TourDeleteView(LoginRequiredMixin, DeleteView):
+    model = Tour
+    template_name = 'tour_structure/tour_confirm_delete.html'
+    context_object_name = 'tour'
 
     def get_success_url(self):
         return reverse_lazy('dashboard')
@@ -138,6 +202,30 @@ def school_list(request):
         'search_query': query
     }
     return render(request, 'school_structure/school_list.html', context)
+
+
+class TourListView(ListView):
+    model = Tour
+    template_name = 'tour_structure/tour_list.html'
+    context_object_name = 'tours'
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', '')
+        queryset = Tour.objects.all().order_by('date')
+        if query:
+            queryset = queryset.filter(name__icontains=query)
+        if self.request.GET.get('location'):
+            queryset = queryset.filter(location__icontains=self.request.GET.get('location'))
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.get_queryset(), 5)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        return context
 
 
 def school_detail(request, school_id):
@@ -179,11 +267,10 @@ def post_list(request):
 def vote_comment(request, post_id, comment_id, vote_action):
     comment = get_object_or_404(Comment, id=comment_id)
 
-    # Check if the user has already voted
     existing_vote = Vote.objects.filter(user=request.user, comment=comment).first()
 
     if existing_vote:
-        # If the vote exists and the action is the same, return an error
+
         if existing_vote.vote_type == vote_action:
             return JsonResponse({'error': 'You have already voted this way on this comment'}, status=400)
         else:
@@ -194,7 +281,7 @@ def vote_comment(request, post_id, comment_id, vote_action):
                 comment.down_votes -= 1
             existing_vote.vote_type = vote_action
     else:
-        # Create a new vote if none exists
+
         existing_vote = Vote(user=request.user, comment=comment, vote_type=vote_action)
         if vote_action == 'upvote':
             comment.up_votes += 1
@@ -204,51 +291,4 @@ def vote_comment(request, post_id, comment_id, vote_action):
     comment.save()
     existing_vote.save()
 
-    # Return the updated rating
     return JsonResponse({'new_rating': comment.rating})
-
-
-class CreateTourView(LoginRequiredMixin, View):
-    template_name = 'tour_structure/create_tour.html'
-
-    def get(self, request):
-        form = ScheduleTourForm()
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        form = ScheduleTourForm(request.POST, request.FILES)
-        if form.is_valid():
-            tour = form.save(commit=False)
-            tour.teacher = request.user
-            tour.save()
-            messages.success(request, "Tour scheduled successfully!")
-            return redirect('home')
-        else:
-            messages.error(request, "There was an error scheduling the tour.")
-        return render(request, self.template_name, {'form': form})
-
-class TourListView(ListView):
-    model = Tour
-    template_name = 'tour_structure/tour_list.html'
-    context_object_name = 'tours'
-
-    def get_queryset(self):
-        query = self.request.GET.get('search', '')
-        if query:
-            return Tour.objects.filter(name__icontains=query).order_by('date')
-        return Tour.objects.all().order_by('date')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        paginator = Paginator(self.get_queryset(), 5)
-        page_number = self.request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        context['page_obj'] = page_obj
-        return context
-
-
-class TourDetailView(DetailView):
-    model = Tour
-    template_name = 'tour_structure/tour_detail.html'
-    context_object_name = 'tour'
