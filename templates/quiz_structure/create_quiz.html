@@ -1,133 +1,159 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-<h1 class="text-center my-4">Create a Stunning Quiz</h1>
-<div class="container">
-    <form method="post" id="quiz-form">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="quiz-title" class="form-label">Quiz Title</label>
-            <input type="text" name="quiz_title" id="quiz-title" class="form-control" placeholder="Enter quiz title" required>
-        </div>
-         <div class="mb-3">
-        <label for="subject" class="form-label">Предмет</label>
-        <select name="subject" id="subject" class="form-select" required>
-            <option value="">Изберете предмет</option>
-            <option value="Български език">Български език</option>
-            <option value="Математика">Математика</option>
-            <option value="История">История</option>
-            <option value="География">География</option>
-            <option value="Физика">Физика</option>
-            <option value="Литература">Литература</option>
-             <option value="Биология">Биология</option>
-             <option value="Химия">Химия</option>
-             <option value="Философия">Философия</option>
-             <option value="ИТ">ИТ</option>
-             <option value="Английски">Английски</option>
-            <!-- Add more subjects here -->
-        </select>
+    <h1 class="text-center my-4">Create a Quiz</h1>
+    <div class="container">
+        <form method="post" id="quiz-form">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="quiz-title" class="form-label">Quiz Title</label>
+                <input type="text" name="title" id="quiz-title" class="form-control" placeholder="Enter quiz title" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="quiz-description" class="form-label">Quiz Description</label>
+                <textarea name="description" id="quiz-description" class="form-control" rows="2" placeholder="Short description"></textarea>
+            </div>
+
+            <div class="mb-3 select-dropdown">
+                <label for="subject" class="form-label">Предмет</label>
+                <select name="subject" id="subject" class="form-select" required>
+                    <option value="">Изберете предмет</option>
+                    <option value="Български език">Български език</option>
+                    <option value="Математика">Математика</option>
+                    <option value="История">История</option>
+                    <option value="География">География</option>
+                    <option value="Физика">Физика</option>
+                    <option value="Литература">Литература</option>
+                    <option value="Биология">Биология</option>
+                    <option value="Химия">Химия</option>
+                    <option value="Философия">Философия</option>
+                    <option value="ИТ">ИТ</option>
+                    <option value="Английски">Английски</option>
+                    <option value="Музика">Музика</option>
+                    <option value="Испански">Испански</option>
+                    <option value="Немски">Немски</option>
+                    <option value="Френски">Френски</option>
+                    <option value="Изобразително изкуство">Изобразително изкуство</option>
+                </select>
+            </div>
+
+            <div class="mb-3 select-dropdown">
+                <label for="grade" class="form-label">Клас</label>
+                <select name="grade" id="grade" class="form-select" required>
+                    <option value="">Изберете клас</option>
+                    <option value="1">1 клас</option>
+                    <option value="2">2 клас</option>
+                    <option value="3">3 клас</option>
+                    <option value="4">4 клас</option>
+                    <option value="5">5 клас</option>
+                    <option value="6">6 клас</option>
+                    <option value="7">7 клас</option>
+                    <option value="8">8 клас</option>
+                    <option value="9">9 клас</option>
+                    <option value="10">10 клас</option>
+                    <option value="11">11 клас</option>
+                    <option value="12">12 клас</option>
+                </select>
+            </div>
+
+            <div id="questions-container">
+                <h3>Questions</h3>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="button" id="add-question-btn" class="btn btn-success btn-lg my-3">
+                    <i class="bi bi-plus-circle"></i> Add New Question
+                </button>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary btn-lg mt-4">
+                    <i class="bi bi-cloud-upload"></i> Create Quiz
+                </button>
+            </div>
+        </form>
     </div>
 
-    <div class="mb-3">
-        <label for="grade" class="form-label">Клас</label>
-        <select name="grade" id="grade" class="form-select" required>
-            <option value="">Изберете клас</option>
-            <option value="1">1 клас</option>
-            <option value="2">2 клас</option>
-            <option value="3">3 клас</option>
-            <option value="4">4 клас</option>
-            <option value="5">5 клас</option>
-            <option value="6">6 клас</option>
-            <option value="7">7 клас</option>
-            <option value="8">8 клас</option>
-            <option value="9">9 клас</option>
-            <option value="10">10 клас</option>
-            <option value="11">11 клас</option>
-            <option value="12">12 клас</option>
-        </select>
-    </div>
-        <div id="questions-container">
-            <h3>Questions</h3>
-            <!-- Dynamic question blocks will be added here -->
-        </div>
-        <div class="d-flex justify-content-end">
-            <button type="button" id="add-question-btn" class="btn btn-success btn-lg my-3">
-                <i class="bi bi-plus-circle"></i> Add New Question
-            </button>
-        </div>
-
-        <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary btn-lg mt-4">
-                <i class="bi bi-cloud-upload"></i> Create Quiz
-            </button>
-        </div>
-    </form>
-</div>
-
-<script>
-    document.getElementById('add-question-btn').addEventListener('click', function() {
-        const questionId = Date.now(); // Unique ID for each question block
-        const questionFormHTML = `
-            <div class="question-block p-3 mb-4 border rounded bg-light">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5>Question</h5>
-                    <button type="button" class="btn btn-danger btn-sm remove-question-btn">
-                        <i class="bi bi-trash"></i> Remove
-                    </button>
-                </div>
-                <div class="form-group mt-3">
-                    <label for="question-${questionId}">Question</label>
-                    <input type="text" name="questions[]" id="question-${questionId}" class="form-control" placeholder="Enter the question" required>
-                </div>
-                <div class="form-group mt-3">
-                    <label for="answers-${questionId}">Possible Answers</label>
-                    <div id="answers-${questionId}" class="d-flex flex-column gap-2">
-                        <input type="text" name="answers_${questionId}[]" class="form-control" placeholder="Enter answer 1" required>
-                        <input type="text" name="answers_${questionId}[]" class="form-control" placeholder="Enter answer 2" required>
-                        <input type="text" name="answers_${questionId}[]" class="form-control" placeholder="Enter answer 3" required>
-                        <input type="text" name="answers_${questionId}[]" class="form-control" placeholder="Enter answer 4" required>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('add-question-btn').addEventListener('click', function () {
+            const questionId = Date.now();
+            const questionFormHTML = `
+                <div class="question-block p-3 mb-4 border rounded bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>Question</h5>
+                        <button type="button" class="btn btn-danger btn-sm remove-question-btn">
+                            <i class="bi bi-trash"></i> Remove
+                        </button>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="question-${questionId}">Question</label>
+                        <input type="text" name="questions[${questionId}]" id="question-${questionId}" class="form-control" placeholder="Enter the question" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="answers-${questionId}">Possible Answers</label>
+                        <div id="answers-${questionId}" class="d-flex flex-column gap-2">
+                            <input type="text" name="answers_${questionId}_1" class="form-control" placeholder="Enter answer 1" required>
+                            <input type="text" name="answers_${questionId}_2" class="form-control" placeholder="Enter answer 2" required>
+                            <input type="text" name="answers_${questionId}_3" class="form-control" placeholder="Enter answer 3" required>
+                            <input type="text" name="answers_${questionId}_4" class="form-control" placeholder="Enter answer 4" required>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="correct-answer-${questionId}">Correct Answer</label>
+                        <select name="correct_answer_${questionId}" id="correct-answer-${questionId}" class="form-select">
+                            <option value="0">Answer 1</option>
+                            <option value="1">Answer 2</option>
+                            <option value="2">Answer 3</option>
+                            <option value="3">Answer 4</option>
+                        </select>
                     </div>
                 </div>
-                <div class="form-group mt-3">
-                    <label for="correct-answer-${questionId}">Correct Answer</label>
-                    <select name="correct_answers[]" id="correct-answer-${questionId}" class="form-select">
-                        <option value="0">Answer 1</option>
-                        <option value="1">Answer 2</option>
-                        <option value="2">Answer 3</option>
-                        <option value="3">Answer 4</option>
-                    </select>
-                </div>
-            </div>
-        `;
-        const container = document.getElementById('questions-container');
-        container.insertAdjacentHTML('beforeend', questionFormHTML);
+            `;
+            const container = document.getElementById('questions-container');
+            container.insertAdjacentHTML('beforeend', questionFormHTML);
 
-        // Attach event listener to remove button
-        container.querySelectorAll('.remove-question-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                button.closest('.question-block').remove();
+            container.querySelectorAll('.remove-question-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    button.closest('.question-block').remove();
+                });
             });
         });
     });
 </script>
 
-<style>
-    #quiz-form {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .btn {
-        transition: all 0.3s ease;
-    }
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    .question-block {
-        background: linear-gradient(135deg, #f0f9ff, #cbebff);
-    }
-</style>
+
+    <style>
+        #quiz-form {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-block {
+            background: linear-gradient(135deg, #f0f9ff, #cbebff);
+        }
+
+        .select-dropdown {
+            position: relative;
+        }
+
+        .select-dropdown .form-select {
+            position: relative;
+            z-index: 1050;
+        }
+    </style>
 
 {% endblock %}

@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ question.text }}</h5>
                         <div class="form-group">
-                            {% for answer in question.answers %}
+                            {% for answer in question.answers.all %}
                             <div class="form-check">
                                 <input
                                     class="form-check-input"
@@ -45,8 +45,10 @@
 </div>
 
 <script>
+    // Adding debugging to see if the event listener is working
     document.getElementById("quizForm").addEventListener("submit", function (event) {
-        event.preventDefault();
+        event.preventDefault(); // Prevent page reload on form submit
+        console.log('Form submitted'); // Debug: check if form submission is being triggered
 
         const formData = new FormData(event.target);
         const userAnswers = {};
@@ -56,6 +58,8 @@
             const questionId = key.split("-")[1];
             userAnswers[questionId] = value;
         });
+
+        console.log('Form Data:', userAnswers); // Debug: check the form data being captured
 
         fetch(`/api/quiz/${quizId}/`, {
             method: "POST",
@@ -67,6 +71,8 @@
             .then(response => response.json())
             .then(data => {
                 const resultsDiv = document.getElementById("quizResults");
+                console.log('API Response:', data); // Debug: check API response
+
                 resultsDiv.innerHTML = `
                     <div class="card shadow-lg">
                         <div class="card-body">
@@ -78,7 +84,9 @@
                     </div>
                 `;
             })
-            .catch(error => console.error("Error submitting answers:", error));
+            .catch(error => {
+                console.error("Error submitting answers:", error); // Debug: log any errors
+            });
     });
 </script>
 {% endblock %}

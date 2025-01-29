@@ -103,55 +103,97 @@ class QuizView(View):
 # views.py
 
 
-class CreateQuizView(LoginRequiredMixin, View):
+import json
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.views import View
+from .forms import QuizForm
+from .models import Quiz, Question, Answer
+
+
+class CreateQuizView(View):
     template_name = 'quiz_structure/create_quiz.html'
 
     def get(self, request):
-        form = QuizForm()
-        return render(request, self.template_name, {'form': form})
+        quiz_form = QuizForm()
+        return render(request, self.template_name, {'quiz_form': quiz_form})
 
     def post(self, request):
-        form = QuizForm(request.POST)
-        if form.is_valid():
-            print("Form is valid")
-            print("POST data:", request.POST)
-            quiz = form.save(commit=False)
+        quiz_form = QuizForm(request.POST)
+
+        if quiz_form.is_valid():
+            # Save quiz object
+            quiz = quiz_form.save(commit=False)
             quiz.creator = request.user
             quiz.save()
 
-            question_formset = QuestionFormSet(request.POST)
-            answer_formset = AnswerFormSet(request.POST)
+            # Debugging: Check if data is coming as expected
+            print(f"Quiz created: {quiz.id} - {quiz.title}")
 
-            if question_formset.is_valid() and answer_formset.is_valid():
+            # Get question and answer data from the request
+            data = request.POST
+            questions_data = []
 
-                for question_form in question_formset:
-                    question = question_form.save(commit=False)
-                    question.quiz = quiz
-                    question.save()
+            # Collecting all questions and answers
+            for key in data:
+                if key.startswith("questions["):
+                    question_id = key.split('[')[1].split(']')[0]
+                    question_text = data[key]
 
-                    for answer_form in answer_formset:
-                        answer = answer_form.save(commit=False)
-                        answer.question = question
-                        answer.save()
+                    # Collect answers for the current question
+                    answers = []
+                    for i in range(1, 5):  # assuming max 4 answers
+                        answer_key = f"answers_{question_id}_{i}"
+                        if answer_key in data:
+                            answers.append(data[answer_key])
 
-                return redirect('quiz_detail', pk=quiz.id)
-            else:
-                messages.error(request, 'There was an issue with the form.')
-        return render(request, self.template_name, {'form': form})
+                    questions_data.append({
+                        'question_text': question_text,
+                        'answers': answers,
+                        'correct_answer': data.get(f'correct_answer_{question_id}')
+                    })
 
+            # Now save the questions and answers
+            for question_data in questions_data:
+                question = Question.objects.create(
+                    quiz=quiz,
+                    text=question_data['question_text'],
+                    question_type='MCQ'  # Assuming 'MCQ' type
+                )
 
+                # Save answers
+                correct_answer_index = int(question_data['correct_answer'])
+                for idx, answer_text in enumerate(question_data['answers']):
+                    is_correct = (idx == correct_answer_index)
+                    Answer.objects.create(
+                        question=question,
+                        text=answer_text,
+                        is_correct=is_correct
+                    )
+
+            messages.success(request, "Quiz created successfully!")
+            return redirect('quiz_detail', pk=quiz.id)
+
+        else:
+            messages.error(request, "Error creating quiz.")
+            print(f"Quiz form errors: {quiz_form.errors}")
+
+        return render(request, self.template_name, {'quiz_form': quiz_form})
 
 
 @login_required
 def add_questions(request, quiz_id):
-    quiz = Quiz.objects.get(id=quiz_id)
+    quiz = get_object_or_404(Quiz, id=quiz_id)
     if request.method == "POST":
         question_form = QuestionForm(request.POST)
         if question_form.is_valid():
             question = question_form.save(commit=False)
-            question.quiz = quiz
+            question.quiz = quiz  # Associate the question with the current quiz
             question.save()
+            print(f"Question added: {question.id} - {question.text}")
             return redirect('add_answers', question_id=question.id)
+        else:
+            print(f"Question form errors: {question_form.errors}")
     else:
         question_form = QuestionForm()
     return render(request, 'quiz_structure/add_questions.html', {'quiz': quiz, 'question_form': question_form})
@@ -159,14 +201,17 @@ def add_questions(request, quiz_id):
 
 @login_required
 def add_answers(request, question_id):
-    question = Question.objects.get(id=question_id)
+    question = get_object_or_404(Question, id=question_id)
     if request.method == "POST":
         answer_form = AnswerForm(request.POST)
         if answer_form.is_valid():
             answer = answer_form.save(commit=False)
-            answer.question = question
+            answer.question = question  # Associate the answer with the current question
             answer.save()
-            return redirect('add_answers', question_id=question.id)  # Reload for another answer
+            print(f"Answer added: {answer.id} - {answer.text}")
+            return redirect('add_answers', question_id=question.id)
+        else:
+            print(f"Answer form errors: {answer_form.errors}")
     else:
         answer_form = AnswerForm()
     return render(request, 'quiz_structure/add_answers.html', {'question': question, 'answer_form': answer_form})
@@ -183,7 +228,6 @@ class QuizSearchAPIView(APIView):
             quizzes = quizzes.filter(subject__icontains=subject)
         if grade:
             quizzes = quizzes.filter(grade__icontains=grade)
-
 
         quiz_data = [
             {
@@ -203,7 +247,6 @@ class QuizSearchAPIView(APIView):
 
 
 class QuizAPIView(APIView):
-
     def get(self, request, quiz_id, *args, **kwargs):
         quiz = get_object_or_404(Quiz, id=quiz_id)
         questions = quiz.questions.all()

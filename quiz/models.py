@@ -38,14 +38,7 @@ class Question(models.Model):
 
     text = models.TextField()
 
-    question_type = models.CharField(
-        max_length=50,
-        choices=[
-            ('MCQ', 'Multiple Choice'),
-            ('TF', 'True/False'),
-            ('SA', 'Short Answer')
-        ]
-    )
+    question_type = models.CharField(max_length=50)
 
     class Meta:
         unique_together = ('quiz', 'text')
