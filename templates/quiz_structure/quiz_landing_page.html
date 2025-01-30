@@ -1,80 +1,94 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="col-md-12 mb-5">
-        <h1 class="text-center">Изберете опция за генериране на тест!</h1>
-    </div>
-
-    <div class="row justify-content-center mb-4">
+    <div class="container py-5">
         <div class="col-md-12 mb-5">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h4 class="card-title text-center">Качете файл и позволете на изкуствения интелект да генерира тест!</h4>
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form-group mb-3">
-                            <label for="fileUpload" class="form-label">Изберете файл</label>
-                            <input type="file" id="fileUpload" name="file" class="form-control" required>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg">Генерирайте тест</button>
-                        </div>
-                    </form>
+            <h1 class="text-center">Изберете опция за генериране на тест!</h1>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-12 mb-5">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Качете файл и позволете на изкуствения интелект да генерира
+                            тест!</h4>
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group mb-3">
+                                <label for="fileUpload" class="form-label">Изберете файл</label>
+                                <input type="file" id="fileUpload" name="file" class="form-control" required>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Генерирайте тест</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-12 mb-5">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h4 class="card-title text-center">Изберете предмет и клас</h4>
-                    <form id="quizForm" action="" method="POST">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="subject" class="form-label">Предмет</label>
-                                <input type="text" id="subject" name="subject" class="form-control" placeholder="Пример: Математика" required>
+        <div class="row justify-content-center">
+            <div class="col-md-12 mb-5">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Изберете предмет и клас</h4>
+                        <form id="quizForm" action="" method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+
+                                <div class="col-md-5 mb-3">
+                                    <label for="subject" class="form-label">Предмет</label>
+                                    <input type="text" id="subject" name="subject" class="form-control"
+                                           placeholder="Пример: Математика" required>
+                                </div>
+
+                                <div class="col-md-5 mb-3">
+                                    <label for="grade" class="form-label">Клас</label>
+                                    <input type="text" id="grade" name="grade" class="form-control"
+                                           placeholder="Пример: 8 клас" required>
+                                </div>
+                                
+                                <div class="col-md-2 d-flex align-items-center mt-3">
+                                    <button id="searchBtn" type="submit" class="btn btn-primary btn-block">Търси
+                                    </button>
+                                    <button id="clearBtn" type="button"  onclick="window.location.href='{% url 'quiz_home' %}';"
+                                            class="btn btn-primary btn-block"
+                                            style="background-color: #e74c3c; color: white; border: none; border-radius: 5px; padding: 8px 12px; font-size: 16px; transition: background-color 0.3s ease;">
+                                        Изчисти
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="grade" class="form-label">Клас</label>
-                                <input type="text" id="grade" name="grade" class="form-control" placeholder="Пример: 8 клас" required>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg">Генерирайте тест</button>
-                        </div>
-                    </form>
+                        </form>
+
+
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Results Section (Optional) -->
+        <div id="quizResults" class="row mb-5"></div>
+
     </div>
 
-    <!-- Results Section (Optional) -->
-    <div id="quizResults" class="row mb-5"></div>
+    <script>
+        document.getElementById("quizForm").addEventListener("submit", function (event) {
+            event.preventDefault();
 
-</div>
+            var subject = document.getElementById("subject").value;
+            var grade = document.getElementById("grade").value;
 
-<script>
-    document.getElementById("quizForm").addEventListener("submit", function (event) {
-        event.preventDefault();
+            fetch(`/quizzes/api/quiz/search/?subject=${subject}&grade=${grade}`)
+                .then(response => response.json())
+                .then(data => {
+                    var resultsContainer = document.getElementById("quizResults");
+                    resultsContainer.innerHTML = '';
 
-        var subject = document.getElementById("subject").value;
-        var grade = document.getElementById("grade").value;
-
-        fetch(`/quizzes/api/quiz/search/?subject=${subject}&grade=${grade}`)
-            .then(response => response.json())
-            .then(data => {
-                var resultsContainer = document.getElementById("quizResults");
-                resultsContainer.innerHTML = '';
-
-                if (data.length === 0) {
-                    resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени тестове за зададените критерии.</div>';
-                } else {
-                    data.forEach(quiz => {
-                        var quizCard = `
+                    if (data.length === 0) {
+                        resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени тестове за зададените критерии.</div>';
+                    } else {
+                        data.forEach(quiz => {
+                            var quizCard = `
                             <div class="col-md-4 mb-4">
                                 <div class="card h-100 shadow-sm">
                                     <div class="card-body">
@@ -89,20 +103,20 @@
                                 </div>
                             </div>
                         `;
-                        resultsContainer.innerHTML += quizCard;
-                    });
-                     document.querySelectorAll("#quizResults .btn-primary").forEach(button => {
-                        button.addEventListener("click", function (e) {
-                            var quizId = e.target.getAttribute("data-id");
-                           window.location.href = `/quizzes/quiz/${quizId}/`
+                            resultsContainer.innerHTML += quizCard;
                         });
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching quiz search results:', error);
-            });
-    });
-</script>
+                        document.querySelectorAll("#quizResults .btn-primary").forEach(button => {
+                            button.addEventListener("click", function (e) {
+                                var quizId = e.target.getAttribute("data-id");
+                                window.location.href = `/quizzes/quiz/${quizId}/`
+                            });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching quiz search results:', error);
+                });
+        });
+    </script>
 
 {% endblock %}
