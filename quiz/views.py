@@ -206,7 +206,7 @@ def add_answers(request, question_id):
         answer_form = AnswerForm(request.POST)
         if answer_form.is_valid():
             answer = answer_form.save(commit=False)
-            answer.question = question  # Associate the answer with the current question
+            answer.question = question
             answer.save()
             print(f"Answer added: {answer.id} - {answer.text}")
             return redirect('add_answers', question_id=question.id)
