@@ -187,6 +187,7 @@ def add_questions(request, quiz_id):
     if request.method == "POST":
         question_form = QuestionForm(request.POST)
         if question_form.is_valid():
+
             question = question_form.save(commit=False)
             question.quiz = quiz
             question.save()
