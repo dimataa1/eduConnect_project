@@ -260,9 +260,13 @@ class QuizAPIView(APIView):
                     "id": question.id,
                     "text": question.text,
                     "answers": [
-                        {"id": answer.id, "text": answer.text}
+                        {"id": answer.id, "text": answer.text, "is_correct": answer.is_correct}
                         for answer in question.answers.all()
                     ],
+                    "correct_answer_text": next(
+                        (answer.text for answer in question.answers.all() if answer.is_correct),
+                        None
+                    )
                 }
                 for question in questions
             ],
@@ -277,13 +281,20 @@ class QuizAPIView(APIView):
 
         total_questions = questions.count()
         correct_count = 0
+        correct_answers = {}
 
         for question in questions:
             correct_answer = question.answers.filter(is_correct=True).first()
             user_answer_id = user_answers.get(str(question.id))
 
-            if correct_answer and str(correct_answer.id) == user_answer_id:
-                correct_count += 1
+            if correct_answer:
+                correct_answers[str(question.id)] = {
+                    "id": correct_answer.id,
+                    "text": correct_answer.text
+                }
+
+                if str(correct_answer.id) == user_answer_id:
+                    correct_count += 1
 
         grade = round((correct_count / total_questions) * 4 + 2, 2) if total_questions > 0 else 2
 
@@ -293,15 +304,13 @@ class QuizAPIView(APIView):
                 "total_questions": total_questions,
                 "grade": grade,
                 "percentage": (correct_count / total_questions) * 100 if total_questions > 0 else 0,
+                "correct_answers": correct_answers,  # Sending correct answers to frontend
             },
             status=status.HTTP_200_OK,
         )
 
 
 class QuizDetailView(View):
-
     def get(self, request, pk, *args, **kwargs):
         quiz = get_object_or_404(Quiz, pk=pk)
         return render(request, 'quiz_structure/quiz_detail.html', {'quiz': quiz})
-
-# test

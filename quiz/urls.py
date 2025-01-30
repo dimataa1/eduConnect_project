@@ -3,7 +3,7 @@ from quiz.views import (
     QuizView,
     CreateQuizView,
     QuizSearchAPIView,
-    QuizDetailView,
+    QuizDetailView, QuizAPIView,
 )
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('api/quiz/search/', QuizSearchAPIView.as_view(), name='search_quizzes'),
     path('quiz/<int:pk>/', QuizDetailView.as_view(), name='quiz_detail'),
     path('quiz_home/', QuizView.as_view(), name='quiz_home'),
+    path('api/quiz/<int:quiz_id>/', QuizAPIView.as_view(), name='quiz_api'),
 ]

@@ -1,92 +1,113 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-<div class="container py-5">
-    <h1 class="text-center mb-5">{{ quiz.title }}</h1>
-    <p class="text-muted text-center">{{ quiz.description }}</p>
-
-    <form id="quizForm">
-        {% csrf_token %}
-        <div class="row">
-            {% for question in quiz.questions.all %}
-            <div class="col-md-12 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ question.text }}</h5>
-                        <div class="form-group">
-                            {% for answer in question.answers.all %}
-                            <div class="form-check">
-                                <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    name="question-{{ question.id }}"
-                                    id="answer-{{ answer.id }}"
-                                    value="{{ answer.id }}"
-                                    required
-                                />
-                                <label class="form-check-label" for="answer-{{ answer.id }}">
-                                    {{ answer.text }}
-                                </label>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
+    <div class="container py-5">
         <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-lg">Потвърди отговорите</button>
+            <h1 class="mb-4 text-primary">{{ quiz.title }}</h1>
+            <p class="text-muted lead">{{ quiz.description }}</p>
         </div>
-    </form>
 
-    <div id="quizResults" class="mt-5"></div>
-</div>
-
-<script>
-    // Adding debugging to see if the event listener is working
-    document.getElementById("quizForm").addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent page reload on form submit
-        console.log('Form submitted'); // Debug: check if form submission is being triggered
-
-        const formData = new FormData(event.target);
-        const userAnswers = {};
-        const quizId = "{{ quiz.id }}";
-
-        formData.forEach((value, key) => {
-            const questionId = key.split("-")[1];
-            userAnswers[questionId] = value;
-        });
-
-        console.log('Form Data:', userAnswers); // Debug: check the form data being captured
-
-        fetch(`/api/quiz/${quizId}/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ answers: userAnswers }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                const resultsDiv = document.getElementById("quizResults");
-                console.log('API Response:', data); // Debug: check API response
-
-                resultsDiv.innerHTML = `
-                    <div class="card shadow-lg">
-                        <div class="card-body">
-                            <h3 class="card-title text-center">Резултати</h3>
-                            <p><strong>Верни отговори:</strong> ${data.correct_count} / ${data.total_questions}</p>
-                            <p><strong>Процент:</strong> ${data.percentage.toFixed(2)}%</p>
-                            <p><strong>Оценка:</strong> ${data.grade.toFixed(2)}</p>
+        <form id="quizForm" class="mt-4">
+            {% csrf_token %}
+            <div class="row">
+                {% for question in quiz.questions.all %}
+                    <div class="col-md-12 mb-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="card-title text-dark">{{ forloop.counter }}. {{ question.text }}</h5>
+                                <div class="form-group">
+                                    {% for answer in question.answers.all %}
+                                        <div class="form-check">
+                                            <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="question-{{ question.id }}"
+                                                id="answer-{{ answer.id }}"
+                                                value="{{ answer.id }}"
+                                                required
+                                            />
+                                            <label class="form-check-label text-secondary" for="answer-{{ answer.id }}">
+                                                {{ answer.text }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                `;
-            })
-            .catch(error => {
-                console.error("Error submitting answers:", error); // Debug: log any errors
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg px-5">Потвърди отговорите</button>
+            </div>
+        </form>
+
+        <div id="quizResults" class="mt-5"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("quizForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                const formData = new FormData(event.target);
+                const userAnswers = {};
+                const quizId = "{{ quiz.id }}";
+
+                formData.forEach((value, key) => {
+                    const questionId = key.split("-")[1];
+                    userAnswers[questionId] = value;
+                });
+
+                fetch(`/quizzes/api/quiz/${quizId}/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                    },
+                    body: JSON.stringify({answers: userAnswers}),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById("quizResults");
+                    let progressColor = data.percentage >= 70 ? "bg-success" : "bg-danger";
+                    let resultHTML = `
+                        <div class="card shadow-lg border-0">
+                            <div class="card-body text-center">
+                                <h3 class="card-title text-primary">Резултати</h3>
+                                <p class="lead"><strong>Верни отговори:</strong> ${data.correct_count} / ${data.total_questions}</p>
+                                
+                                <div class="progress mb-3" style="height: 20px;">
+                                    <div class="progress-bar ${progressColor}  d-flex align-items-center justify-content-center" role="progressbar" 
+                                        style="width: ${data.percentage}%; font-size: 14px;" 
+                                        aria-valuenow="${data.percentage}" 
+                                        aria-valuemin="0" 
+                                        aria-valuemax="100">
+                                        ${data.percentage.toFixed(2)}%
+                                    </div>
+                                </div>
+
+                                <h2 class="text-dark"><strong>Оценка:</strong> ${data.grade.toFixed(2)}</h2>
+                            </div>
+                        </div>
+                        <h4 class="mt-4 text-center text-success">Правилни отговори:</h4>
+                        <div class="list-group mt-3">
+                    `;
+
+                    Object.keys(data.correct_answers).forEach(questionId => {
+                        const correctAnswer = data.correct_answers[questionId];
+                        resultHTML += `
+                            <div class="list-group-item list-group-item-success">
+                                <strong>Въпрос ${questionId - 1}:</strong> ${correctAnswer.text}
+                            </div>
+                        `;
+                    });
+
+                    resultHTML += "</div>";
+                    resultsDiv.innerHTML = resultHTML;
+                })
+                .catch(error => console.error("Error submitting answers:", error));
             });
-    });
-</script>
+        });
+    </script>
 {% endblock %}
