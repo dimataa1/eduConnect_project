@@ -188,7 +188,7 @@ def add_questions(request, quiz_id):
         question_form = QuestionForm(request.POST)
         if question_form.is_valid():
             question = question_form.save(commit=False)
-            question.quiz = quiz  # Associate the question with the current quiz
+            question.quiz = quiz
             question.save()
             print(f"Question added: {question.id} - {question.text}")
             return redirect('add_answers', question_id=question.id)
