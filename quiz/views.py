@@ -1,22 +1,27 @@
 import json
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .forms import QuizSearchForm, FileUploadForm, QuizForm, QuestionForm, AnswerForm
-from .models import Quiz, Question
-from django.shortcuts import render, redirect
-from .forms import QuestionFormSet, AnswerFormSet
+from .forms import (
+    QuizSearchForm,
+    FileUploadForm,
+    QuizForm,
+    QuestionForm,
+    AnswerForm
+)
 from .models import Quiz, Question, Answer
-from django.contrib.auth.decorators import login_required
+
+import openai, os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class QuizView(View):
@@ -101,14 +106,6 @@ class QuizView(View):
 
 
 # views.py
-
-
-import json
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.views import View
-from .forms import QuizForm
-from .models import Quiz, Question, Answer
 
 
 class CreateQuizView(View):
@@ -315,3 +312,38 @@ class QuizDetailView(View):
     def get(self, request, pk, *args, **kwargs):
         quiz = get_object_or_404(Quiz, pk=pk)
         return render(request, 'quiz_structure/quiz_detail.html', {'quiz': quiz})
+
+
+api_key = os.getenv('OPENAI_KEY', None)
+
+
+def textChatBot(request):
+    chatbot_response = None
+
+    if api_key is not None and request.method == 'POST':
+        openai.api_key = api_key
+        user_input = request.POST.get('user_input')
+        if user_input:
+            prompt = f"Въз основа на следното описание: '{user_input}', предостави кратко описание на най-важните точки по темата. След това генерирай между 6 и 15 въпроса с отговори на български, които могат да бъдат използвани за тест върху темата."
+
+            try:
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=500,
+                    temperature=0.7,
+                )
+
+                chatbot_response = response['choices'][0]['message']['content'].strip()
+                print("Generated Response:", chatbot_response)
+
+            except Exception as e:
+                print("Error with OpenAI API:", e)
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'chatbot_response': chatbot_response})
+
+    return render(request, 'quiz_structure/quiz_landing_page.html', {'chatbot_response': chatbot_response})
