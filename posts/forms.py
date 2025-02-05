@@ -99,6 +99,7 @@ class TourDeleteConfirmationForm(forms.Form):
         required=True,
     )
 
+
 class TourUpdateForm(forms.ModelForm):
     class Meta:
         model = Tour

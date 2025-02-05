@@ -80,11 +80,12 @@ def profile_update_view(request):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'age', 'grade', 'subject', 'profile_picture']
+        fields = ['first_name', 'last_name','description', 'age', 'grade', 'subject', 'profile_picture' ]
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "write a short description about you"}),
             'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "e.g., 10th Grade"}),
             'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "e.g., Mathematics"}),
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),

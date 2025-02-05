@@ -103,7 +103,6 @@ input:focus, textarea:focus, select:focus {
     border-color: #003366;
 }
 
-/* Image preview container */
 #image-preview-container {
     margin-top: 10px;
     border: 1px solid #ddd;

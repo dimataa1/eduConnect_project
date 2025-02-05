@@ -14,10 +14,10 @@
                             Въведете кратко описание на темата, а изкуственият интелект ще генерира план за тест!
                         </h4>
 
-                        <form id="chatbotForm" method="POST">
+                        <form id="chatbotForm" method="POST" action="{% url 'chat_text_response' %}">
                             {% csrf_token %}
                             <div class="form-group mb-3">
-                                <label for="user_input" class="form-label">Описание на теста</label>
+                                <label for="user_input" class="form-label">Описание на теста (изисква повече технологично време)</label>
                                 <input type="text" id="user_input" name="user_input" class="form-control"
                                        placeholder="Опишете накратко съдържанието на теста" required>
                             </div>

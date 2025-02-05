@@ -20,7 +20,7 @@ from .models import Quiz, Question, Answer
 
 import openai, os
 from dotenv import load_dotenv
-
+from groq import Client
 load_dotenv()
 
 
@@ -319,9 +319,9 @@ api_key = os.getenv('OPENAI_KEY', None)
 
 def textChatBot(request):
     chatbot_response = None
-
     if api_key is not None and request.method == 'POST':
         openai.api_key = api_key
+
         user_input = request.POST.get('user_input')
         if user_input:
             prompt = f"Въз основа на следното описание: '{user_input}', предостави кратко описание на най-важните точки по темата. След това генерирай между 6 и 15 въпроса с отговори на български, които могат да бъдат използвани за тест върху темата."
@@ -333,7 +333,7 @@ def textChatBot(request):
                         {"role": "system", "content": "You are a helpful assistant."},
                         {"role": "user", "content": prompt}
                     ],
-                    max_tokens=500,
+                    max_tokens=2000,
                     temperature=0.7,
                 )
 
@@ -347,3 +347,6 @@ def textChatBot(request):
         return JsonResponse({'chatbot_response': chatbot_response})
 
     return render(request, 'quiz_structure/quiz_landing_page.html', {'chatbot_response': chatbot_response})
+
+
+# client = Client(api_key='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 ')

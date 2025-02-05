@@ -30,8 +30,7 @@
                                     <h5 class="card-title">{{ school.name }}</h5>
                                     <p class="card-text town-name"><strong>Town:</strong> {{ school.town }}</p>
                                     <p class="card-text">{{ school.description|truncatechars:150 }}</p>
-                                    <a href="{% url 'school_detail' school.id %}" class="btn btn-primary btn-sm">View
-                                        Details</a>
+                                    <a href="{% url 'school_detail' school.id %}" class="btn btn-primary btn-sm">Виж повече</a>
                                 </div>
                             </div>
                         </div>

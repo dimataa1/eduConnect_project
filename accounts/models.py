@@ -85,6 +85,11 @@ class Profile(models.Model):
         help_text="Applicable for students. Example: '10'",
     )
 
+    description = models.TextField(
+        blank=True,
+        null=True,
+    )
+
     subject = models.CharField(
         max_length=100,
         blank=True,

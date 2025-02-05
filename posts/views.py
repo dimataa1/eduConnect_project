@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import F, Value, DateTimeField
 from django.db.models.functions import Cast
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.decorators.csrf import csrf_exempt
@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.serializers import PostSerializer
+from quiz.models import Quiz
 from .forms import PostForm, CommentForm, SchoolForm, ScheduleTourForm
 from django.contrib import messages
 
@@ -34,9 +35,8 @@ class CreatePostView(LoginRequiredMixin, View):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            messages.success(request, "Post created successfully!")
-            return redirect('home')
-        messages.error(request, "There was an error creating the post.")
+            return HttpResponseRedirect(reverse('dashboard'))
+
         return render(request, self.template_name, {'form': form})
 
 
@@ -65,27 +65,28 @@ class DashBoardListView(ListView):
     context_object_name = 'items_with_type'
 
     def get_queryset(self):
-        posts = Post.objects.filter(author=self.request.user)
-        tours = Tour.objects.filter(teacher=self.request.user)
-        # Combine both querysets into one list
-        combined = list(posts) + list(tours)
+        user = self.request.user
+        posts = Post.objects.filter(author=user)
+        tours = Tour.objects.filter(teacher=user)
+        quizzes = Quiz.objects.filter(creator=user)
+
+        combined = list(posts) + list(tours) + list(quizzes)
         return combined
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         items_list = context['items_with_type']
-        paginator = Paginator(items_list, 3)  # Paginate with 3 items per page
+        paginator = Paginator(items_list, 3)
 
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
         context['page_obj'] = page_obj
 
-        # Add the 'type' field back to each item for the template
         context['items_with_type'] = [
-            {'item': item, 'type': 'Post' if isinstance(item, Post) else 'Tour'}
-            for item in page_obj.object_list  # Use the paginated list of items
+            {'item': item, 'type': 'Post' if isinstance(item, Post) else 'Tour' if isinstance(item, Tour) else 'Quiz'}
+            for item in page_obj.object_list
         ]
         return context
 
@@ -156,7 +157,6 @@ class TourEditView(LoginRequiredMixin, UpdateView):
     context_object_name = 'tour'
 
     def get_queryset(self):
-
         return Tour.objects.filter(teacher=self.request.user)
 
     def form_valid(self, form):

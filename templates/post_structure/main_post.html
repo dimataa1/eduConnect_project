@@ -1,15 +1,72 @@
-
 {% extends 'common/base.html' %}
+{% load form_helpers %}
 
-{% block title %}CREATE YOUR NEW POST{% endblock %}
+{% block title %}Създайте новата си публикация{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="mb-4">Create a new post</h1>
-    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary mt-3">Save</button>
-    </form>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center text-success" style="font-family: 'Poppins', sans-serif;">🎉 Създайте новата си публикация 🎉</h1>
+
+    <div class="card shadow-lg rounded bounceInUp">
+        <div class="card-header text-white bg-primary text-center" style="font-family: 'Poppins', sans-serif;">
+            <h2 class="mb-0">📝 Детайли на публикацията</h2>
+        </div>
+
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                <div class="form-group mb-3">
+                    <label for="title" class="text-dark">Заглавие на публикацията 🌟</label>
+                    {{ form.title|add_class:"form-control" }}
+                    {% for error in form.title.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                    <small class="form-text text-muted">Дайте на публикацията си привлекателно заглавие!</small>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="image" class="text-dark">Качете изображение 📸</label>
+                    {{ form.image|add_class:"form-control" }}
+                    {% for error in form.image.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                    <small class="form-text text-muted">Качете забавно изображение за публикацията!</small>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="description" class="text-dark">Описание на публикацията ✏️</label>
+                    {{ form.description|add_class:"form-control" }}
+                    {% for error in form.description.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                    <small class="form-text text-muted">Опишете публикацията си в детайли! Бъдете креативни!</small>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="grade" class="text-dark">Клас 🎓</label>
+                    {{ form.grade|add_class:"form-control" }}
+                    {% for error in form.grade.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                    <small class="form-text text-muted">Само за ученици. Пример: '10-ти клас'.</small>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="subject" class="text-dark">Предмет 📚</label>
+                    {{ form.subject|add_class:"form-control" }}
+                    {% for error in form.subject.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                    <small class="form-text text-muted">Само за учители. Пример: 'Математика'.</small>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-lg btn-success text-white">Запази публикацията 📝</button>
+                    <a href="{% url 'home' %}" class="btn btn-lg btn-outline-danger">Откажи ❌</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
