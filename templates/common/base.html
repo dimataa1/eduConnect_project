@@ -40,13 +40,13 @@
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'dashboard' %}">
-                                <i class="bi bi-speedometer2"></i> Dashboard
+                                <i class="bi bi-speedometer2"></i> Дашборд
                             </a>
                         </li>
 
                         <li class="nav-item ms-0">
                             <a class="nav-link px-3 py-2 d-flex align-items-center me-0" href="{% url 'quiz_home' %}">
-                                <i class="bi bi-question-circle me-1"></i> Quiz
+                                <i class="bi bi-question-circle me-1"></i> Куиз
                             </a>
                         </li>
 
@@ -59,17 +59,17 @@
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                             >
-                                <span class="me-1">➕</span> Add
+                                <span class="me-1">➕</span> Доваби
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="addDropdown">
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center" href="{% url 'new_post' %}">
-                                        <i class="bi bi-pencil-square me-2"></i> Add Post
+                                        <i class="bi bi-pencil-square me-2"></i> Добави Пост
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center" href="{% url 'create_quiz' %}">
-                                        <i class="bi bi-journal-text me-2"></i> Add Quiz
+                                        <i class="bi bi-journal-text me-2"></i> Добави Куиз
                                     </a>
                                 </li>
                             </ul>
@@ -85,17 +85,17 @@
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
                                 >
-                                    <i class="bi bi-building me-2"></i> Represent Your School
+                                    <i class="bi bi-building me-2"></i> Представете Училището си
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="representDropdown">
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center" href="{% url 'add_school' %}">
-                                            <i class="bi bi-pencil-square me-2"></i> Add Description
+                                            <i class="bi bi-pencil-square me-2"></i> Добави описание
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center" href="{% url 'create_tour' %}">
-                                            <i class="bi bi-calendar-check me-2"></i> Add Tour
+                                            <i class="bi bi-calendar-check me-2"></i> Добави Тур
                                         </a>
                                     </li>
                                 </ul>
@@ -106,23 +106,23 @@
 
                         <li class="nav-item ms-4">
                             <a class="nav-link" href="{% url 'profile_details' %}">
-                                <i class="bi bi-person"></i> Profile
+                                <i class="bi bi-person"></i> Профил
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-danger" href="{% url 'logout' %}">
-                                <i class="bi bi-box-arrow-right"></i> Logout
+                                <i class="bi bi-box-arrow-right"></i> Излез
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'register' %}">
-                                <i class="bi bi-person-plus"></i> Register
+                                <i class="bi bi-person-plus"></i> Регистрирай се
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">
-                                <i class="bi bi-box-arrow-in-right"></i> Login
+                                <i class="bi bi-box-arrow-in-right"></i> Влез
                             </a>
                         </li>
                     {% endif %}
@@ -142,7 +142,7 @@
 
     <footer class="bg-dark text-light py-3 mt-auto">
         <div class="container text-center">
-            <p>&copy; Dimitar Dimov - 2025 EduConnect. All rights reserved.</p>
+            <p>&copy; Димитър Димов - 2025 EduConnect. Всички права запазени.</p>
         </div>
     </footer>
 </div>

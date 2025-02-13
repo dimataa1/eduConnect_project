@@ -82,7 +82,7 @@ class Profile(models.Model):
         max_length=50,
         blank=True,
         null=True,
-        help_text="Applicable for students. Example: '10'",
+        help_text="",
     )
 
     description = models.TextField(
@@ -94,14 +94,14 @@ class Profile(models.Model):
         max_length=100,
         blank=True,
         null=True,
-        help_text="Applicable for teachers. Example: 'Mathematics'.",
+        help_text="",
     )
 
     profile_picture = models.ImageField(
         upload_to='static/profile_images/',
         blank=True,
         null=True,
-        help_text="Upload a profile picture.",
+        help_text="",
         default='default/default_pfp'
     )
 

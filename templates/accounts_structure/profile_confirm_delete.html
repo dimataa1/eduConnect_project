@@ -3,14 +3,14 @@
     <div class="container mt-5 text-center">
         <div class="card shadow">
             <div class="card-header bg-danger text-white">
-                <h2>🚨 Confirm Profile Deletion</h2>
+                <h2>🚨 Потвърждение за изтриване на профил</h2>
             </div>
             <div class="card-body">
-                <p class="text-muted">Are you sure you want to delete your profile? This action cannot be undone.</p>
+                <p class="text-muted">Сигурни ли сте, че искате да изтриете профила си? Това действие не може да бъде отменено.</p>
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Yes, Delete My Profile</button>
-                    <a href="{% url 'profile_details' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-danger">Да, изтрий профила ми</button>
+                    <a href="{% url 'profile_details' %}" class="btn btn-secondary">Отказ</a>
                 </form>
             </div>
         </div>

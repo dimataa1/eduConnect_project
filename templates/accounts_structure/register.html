@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="card shadow-sm p-5 w-100" style="max-width: 600px;">
-        <h2 class="text-center mb-4">Register</h2>
+        <h2 class="text-center mb-4">Регистрация</h2>
         <form method="post" class="needs-validation" novalidate>
             {% csrf_token %}
         
@@ -50,11 +50,11 @@
             </div>
         
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                <button type="submit" class="btn btn-primary btn-lg">Регистрирай се</button>
             </div>
             
             <div class="text-center mt-4">
-                <p class="mb-0">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+                <p class="mb-0">Вече имаш акаунт? <a href="{% url 'login' %}">Влез оттук!</a></p>
             </div>
         </form>
     </div>

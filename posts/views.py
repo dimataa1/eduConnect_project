@@ -66,9 +66,9 @@ class DashBoardListView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        posts = Post.objects.filter(author=user)
-        tours = Tour.objects.filter(teacher=user)
-        quizzes = Quiz.objects.filter(creator=user)
+        posts = Post.objects.filter(author=user).order_by('-created_at')
+        tours = Tour.objects.filter(teacher=user).order_by('-created_at')
+        quizzes = Quiz.objects.filter(creator=user).order_by('-created_at')
 
         combined = list(posts) + list(tours) + list(quizzes)
         return combined

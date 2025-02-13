@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container my-5">
-    <h1 class="text-center mb-4">All Posts</h1>
+    <h1 class="text-center mb-4">Всички Постове</h1>
 
 
     <div class="mb-4">
@@ -10,7 +10,7 @@
             type="text" 
             id="postSearch" 
             class="form-control" 
-            placeholder="Search by title..."
+            placeholder="Търси по заглавие..."
             onkeyup="filterPosts()"
         >
     </div>
@@ -32,10 +32,10 @@
                                 <p class="card-text">{{ post.description|truncatechars:150 }}</p>
                                 
                                 <div class="text-muted mb-4">
-                                    <small>Created on: {{ post.created_at|date:"F j, Y, g:i a" }}</small>
+                                    <small>Създадено на: {{ post.created_at|date:"F j, Y, g:i a" }}</small>
                                 </div>
                                 
-                                <a href="{% url 'post_detail' post.id %}" class="btn btn-primary btn-sm">View Details</a>
+                                <a href="{% url 'post_detail' post.id %}" class="btn btn-primary btn-sm">Виж повече</a>
                             </div>
                         </div>
                     </div>
@@ -48,12 +48,12 @@
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1" aria-label="First">
+                    <a class="page-link" href="?page=1" aria-label="Първа">
                         <span aria-hidden="true">&laquo;&laquo;</span>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Предишна">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
@@ -71,12 +71,12 @@
             {% endfor %}
             {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Следваща">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Последна">
                         <span aria-hidden="true">&raquo;&raquo;</span>
                     </a>
                 </li>

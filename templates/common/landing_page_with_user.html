@@ -1,72 +1,72 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-    <div class="container py-5">
-        <h1 class="text-center">Добре дошли обратно, {{ username }}!</h1>
-        <p class="text-center">Използвайте функционалностите за търсене на постове и училища.</p>
+<div class="container py-5">
+    <h1 class="text-center">Добре дошли обратно, {{ username }}!</h1>
+    <p class="text-center">Използвайте функционалностите за търсене на постове и училища.</p>
 
-        <div class="text-center mt-4 mb-4">
-            <a href="{% url 'dashboard' %}" class="btn btn-success btn-lg">
-                Вижте вашия Dashboard
-            </a>
-        </div>
-
-        <div class="card shadow-lg mb-4">
-            <div class="card-body">
-                <h4 class="card-title">Търсене на постове</h4>
-                <form id="searchPostForm">
-                    <div class="row">
-                        <div class="col-md-5 mb-3">
-                            <input type="text" id="subject" name="subject" class="form-control"
-                                   placeholder="Търсене по предмет">
-                        </div>
-                        <div class="col-md-5 mb-3">
-                            <input type="text" id="grade" name="grade" class="form-control"
-                                   placeholder="Търсене по клас">
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary btn-block">Търси</button>
-                            <button type="button" class="btn btn-danger btn-block" id="clearPostSearch">
-                                Изчисти
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <div class="text-center mt-4">
-                    <a href="{% url 'post_list' %}" class="btn btn-secondary">Всички Постове</a>
-                </div>
-            </div>
-        </div>
-
-        <div id="postResults" class="row mb-5"></div>
-
-        <div class="card shadow-lg">
-            <div class="card-body">
-                <h4 class="card-title">Търсене на училища и турове</h4>
-                <form id="searchSchoolForm">
-                    <div class="row">
-                        <div class="col-md-10 mb-3">
-                            <input type="text" id="town" name="town" class="form-control"
-                                   placeholder="Въведете град за търсене">
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary btn-block">Търси</button>
-                            <button type="button" class="btn btn-danger btn-block" id="clearSchoolSearch">
-                                Изчисти
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="text-center mb-4">
-                <a href="{% url 'school_list' %}" class="btn btn-secondary">Всички училища</a>
-            </div>
-        </div>
-
-        <div id="schoolResults" class="row"></div>
+    <div class="text-center mt-4 mb-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-success btn-lg">
+            Вижте вашия Dashboard
+        </a>
     </div>
 
-    <script>
+    <div class="card shadow-lg mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Търсене на постове</h4>
+            <form id="searchPostForm">
+                <div class="row">
+                    <div class="col-md-5 mb-3">
+                        <input type="text" id="subject" name="subject" class="form-control"
+                               placeholder="Търсене по предмет">
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <input type="text" id="grade" name="grade" class="form-control"
+                               placeholder="Търсене по клас">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-block">Търси</button>
+                        <button type="button" class="btn btn-danger btn-block" id="clearPostSearch">
+                            Изчисти
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <a href="{% url 'post_list' %}" class="btn btn-secondary">Всички Постове</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="postResults" class="row mb-5"></div>
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h4 class="card-title">Търсене на училища и турове</h4>
+            <form id="searchSchoolForm">
+                <div class="row">
+                    <div class="col-md-10 mb-3">
+                        <input type="text" id="town" name="town" class="form-control"
+                               placeholder="Въведете град за търсене">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-block">Търси</button>
+                        <button type="button" class="btn btn-danger btn-block" id="clearSchoolSearch">
+                            Изчисти
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="text-center mb-4">
+            <a href="{% url 'school_list' %}" class="btn btn-secondary">Всички училища</a>
+        </div>
+    </div>
+
+    <div id="schoolResults" class="row"></div>
+</div>
+
+<script>
         document.getElementById("searchPostForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
@@ -97,7 +97,7 @@
                                 <div class="card-footer text-muted">
                                     Създадено на ${new Date(post.created_at).toLocaleDateString()}
                                 </div>
-                                <a href="/post/${post.id}/" class="btn btn-primary mt-3">Виж повече</a>
+                                <a href="post/post/${post.id}/" class="btn btn-primary mt-3">Виж повече</a>
                             </div>
                         </div>
                     `;
@@ -189,5 +189,6 @@
             document.getElementById("town").value = '';
             document.getElementById("schoolResults").innerHTML = '';
         });
-    </script>
+
+</script>
 {% endblock %}

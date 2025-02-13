@@ -29,11 +29,11 @@ class CustomUserChangeForm(UserChangeForm):
 
 class CustomLoginForm(forms.Form):
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Въведи своя имейл'}),
         label="Email"
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Въведи паролата си'}),
         label="Password",
 
     )
@@ -46,7 +46,7 @@ class CustomLoginForm(forms.Form):
         if email and password:
             user = authenticate(email=email, password=password)
             if not user:
-                raise forms.ValidationError("Invalid email or password")
+                raise forms.ValidationError("Невалиден имейл или парола")
         return cleaned_data
 
 
@@ -80,14 +80,15 @@ def profile_update_view(request):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name','description', 'age', 'grade', 'subject', 'profile_picture' ]
+        fields = ['first_name', 'last_name', 'description', 'age', 'grade', 'subject', 'profile_picture']
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'age': forms.NumberInput(attrs={'class': 'form-control'}),
-            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "write a short description about you"}),
-            'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "e.g., 10th Grade"}),
-            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "e.g., Mathematics"}),
+            'description': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': "Напиши кратко описание за себе си"}),
+            'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "пример: 10"}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "пример: Математика"}),
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
@@ -106,16 +107,16 @@ class ProfileUpdateForm(forms.ModelForm):
 
 class CustomPasswordChangeForm(forms.Form):
     current_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your current password'}),
-        label="Current Password"
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Въведете текущата си парола'}),
+        label="Текуща парола"
     )
     new_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your new password'}),
-        label="New Password"
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Въведете новата си парола'}),
+        label="Нова парола"
     )
     confirm_new_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm your new password'}),
-        label="Confirm New Password"
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Потвърдете новата си парола'}),
+        label="Потвърдете новата парола"
     )
 
     def clean(self):
@@ -124,7 +125,7 @@ class CustomPasswordChangeForm(forms.Form):
         confirm_new_password = cleaned_data.get("confirm_new_password")
 
         if new_password != confirm_new_password:
-            raise forms.ValidationError("The new passwords do not match.")
+            raise forms.ValidationError("Двете нови пароли не съвпадат!")
 
         return cleaned_data
 

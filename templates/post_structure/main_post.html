@@ -4,69 +4,178 @@
 {% block title %}Създайте новата си публикация{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="mb-4 text-center text-success" style="font-family: 'Poppins', sans-serif;">🎉 Създайте новата си публикация 🎉</h1>
-
-    <div class="card shadow-lg rounded bounceInUp">
-        <div class="card-header text-white bg-primary text-center" style="font-family: 'Poppins', sans-serif;">
-            <h2 class="mb-0">📝 Детайли на публикацията</h2>
-        </div>
-
-        <div class="card-body">
-            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-                {% csrf_token %}
-
-                <div class="form-group mb-3">
-                    <label for="title" class="text-dark">Заглавие на публикацията 🌟</label>
-                    {{ form.title|add_class:"form-control" }}
-                    {% for error in form.title.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                    <small class="form-text text-muted">Дайте на публикацията си привлекателно заглавие!</small>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="card shadow-lg rounded-5">
+                <div class="card-header bg-gradient-primary text-white text-center py-4 rounded-5">
+                    <h4 class="mb-0">🎉 Създайте новата си публикация</h4>
+                    <p class="lead mb-0">Лесно и бързо, започнете сега!</p>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label for="image" class="text-dark">Качете изображение 📸</label>
-                    {{ form.image|add_class:"form-control" }}
-                    {% for error in form.image.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                    <small class="form-text text-muted">Качете забавно изображение за публикацията!</small>
-                </div>
+                <div class="card-body px-5 py-4">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
 
-                <div class="form-group mb-3">
-                    <label for="description" class="text-dark">Описание на публикацията ✏️</label>
-                    {{ form.description|add_class:"form-control" }}
-                    {% for error in form.description.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                    <small class="form-text text-muted">Опишете публикацията си в детайли! Бъдете креативни!</small>
-                </div>
+                        <div class="mb-4">
+                            <label for="title" class="form-label">Заглавие на публикацията 🌟</label>
+                            {{ form.title|add_class:"form-control shadow-sm" }}
+                            {% for error in form.title.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text text-muted">Привлекателно заглавие, което да привлича вниманието.</small>
+                        </div>
 
-                <div class="form-group mb-3">
-                    <label for="grade" class="text-dark">Клас 🎓</label>
-                    {{ form.grade|add_class:"form-control" }}
-                    {% for error in form.grade.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                    <small class="form-text text-muted">Само за ученици. Пример: '10-ти клас'.</small>
-                </div>
+                        <div class="mb-4">
+                            <label for="image" class="form-label">Качете изображение 📸</label>
+                            {{ form.image|add_class:"form-control shadow-sm" }}
+                            {% for error in form.image.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text text-muted">Изберете изображение, което пасва на публикацията ви.</small>
+                        </div>
 
-                <div class="form-group mb-3">
-                    <label for="subject" class="text-dark">Предмет 📚</label>
-                    {{ form.subject|add_class:"form-control" }}
-                    {% for error in form.subject.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                    <small class="form-text text-muted">Само за учители. Пример: 'Математика'.</small>
-                </div>
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Описание на публикацията ✏️</label>
+                            <!-- Custom Description Field for Smaller Size -->
+                            {{ form.description|add_class:"form-control shadow-sm" }}
+                            {% for error in form.description.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text text-muted">Опишете публикацията си по начин, който вдъхновява.</small>
+                        </div>
 
-                <div class="d-flex justify-content-center gap-3">
-                    <button type="submit" class="btn btn-lg btn-success text-white">Запази публикацията 📝</button>
-                    <a href="{% url 'home' %}" class="btn btn-lg btn-outline-danger">Откажи ❌</a>
+                        <div class="mb-4">
+                            <label for="grade" class="form-label">Клас 🎓</label>
+                            {{ form.grade|add_class:"form-control shadow-sm" }}
+                            {% for error in form.grade.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text text-muted">Пример: '10-ти клас'.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="subject" class="form-label">Предмет 📚</label>
+                            {{ form.subject|add_class:"form-control shadow-sm" }}
+                            {% for error in form.subject.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text text-muted">Пример: 'Математика'.</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between gap-2">
+                            <button type="submit" class="btn btn-success btn-lg w-48">Запази публикацията 📝</button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-danger btn-lg w-48">Откажи ❌</a>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card {
+        border: none;
+        border-radius: 30px;
+    }
+
+    .card-header {
+        background: linear-gradient(90deg, rgba(60,141,188,1) 0%, rgba(26,134,207,1) 100%);
+        border-radius: 30px 30px 0 0;
+    }
+
+    .card-header h4 {
+        font-size: 1.5rem;  /* Reduced size */
+        font-weight: 600;
+    }
+
+    .card-body {
+        background-color: #fff;
+        padding: 30px 50px; /* Adjusted padding for a more compact look */
+        border-radius: 0 0 30px 30px;
+    }
+
+    .form-control {
+        font-size: 1.2rem;
+        padding: 12px;  /* Adjusted padding for form controls */
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        transition: border 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Specifically target the description field to reduce its size */
+    textarea.form-control {
+        height: 80px;  /* Reduced height */
+        padding: 8px 10px;  /* Adjusted padding to make it more compact */
+        font-size: 0.95rem;  /* Smaller font size for a neater look */
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 12px rgba(0, 123, 255, 0.5);
+    }
+
+    .form-text {
+        font-size: 0.95rem;
+        color: #6c757d;
+    }
+
+    .text-muted {
+        color: #6c757d;
+    }
+
+    .btn {
+        border-radius: 30px;
+        font-weight: 600;
+        padding: 12px 20px; /* Adjusted padding for buttons */
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-outline-danger {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .container {
+        max-width: 1000px; /* Wider container */
+    }
+
+    .mb-4 {
+        margin-bottom: 1.25rem; /* Reduced margin between form fields */
+    }
+
+    @media (max-width: 576px) {
+        .container {
+            max-width: 90%;
+        }
+    }
+</style>
 {% endblock %}

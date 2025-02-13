@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
     <div class="card shadow-sm p-5 w-100" style="max-width: 600px;">
-        <h3 class="text-center mb-4">Login</h3>
+        <h3 class="text-center mb-4">Влез в акаунта си</h3>
 
         {% if form.errors %}
         <div class="alert alert-danger d-flex align-items-center" role="alert">
@@ -51,10 +51,10 @@
             </div>
 
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                <button type="submit" class="btn btn-primary btn-lg">Влез</button>
             </div>
             <div class="text-center mt-4">
-                <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+                <p class="mb-0">Нямаш акаунт? <a href="{% url 'register' %}">Регистрирай се оттук!</a></p>
             </div>
         </form>
     </div>

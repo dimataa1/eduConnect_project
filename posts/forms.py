@@ -7,11 +7,11 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['title', 'description', 'image', 'subject', 'grade']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Заглавие'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Описание'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
-            'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Grade'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Предмет'}),
+            'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Клас'}),
         }
 
 
@@ -25,12 +25,12 @@ class PostSearchForm(forms.Form):
     subject = forms.CharField(
         max_length=100,
         required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Search by Subject'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Търси по предмет'})
     )
     grade = forms.CharField(
         max_length=50,
         required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Search by Grade'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Търси по клас'})
     )
 
 
@@ -64,9 +64,9 @@ class ScheduleTourForm(forms.ModelForm):
         fields = ['name', 'description', 'date', 'location', 'image', 'school']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tour Name'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Описание'}),
             'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
-            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Локация'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'school': forms.Select(attrs={'class': 'form-control'}),
         }

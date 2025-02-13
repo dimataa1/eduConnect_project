@@ -1,10 +1,19 @@
 {% extends 'common/base.html' %}
-{% block title %}Pending Approval{% endblock %}
+{% block title %}Очаква одобрение{% endblock %}
 
 {% block content %}
 <div class="container mt-5 text-center">
-    <h1>Account Pending Approval</h1>
-    <p>Your teacher account is currently awaiting approval from an admin.</p>
-    <p>Please check back later.</p>
+    <div class="card shadow-lg">
+        <div class="card-header bg-warning text-dark">
+            <h2>⏳ Профилът ви очаква одобрение</h2>
+        </div>
+        <div class="card-body">
+            <p class="lead">Вашият учителски акаунт е в процес на преглед от администратор.</p>
+            <p>Моля, проверете отново по-късно.</p>
+            <div class="mt-4">
+                <a href="{% url 'home' %}" class="btn btn-primary">🏠 Обратно към началната страница</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
