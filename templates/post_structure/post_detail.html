@@ -2,108 +2,96 @@
 
 {% block content %}
     <div class="container py-5">
-
-        <div class="card shadow-lg mb-4 border-info">
-            <div class="card-body">
-
-                <h3 class="card-title text-primary">{{ post.title }}</h3>
-                <p class="card-text">{{ post.description }}</p>
-
+        <div class="card shadow-lg mb-4 border-0">
+            <div class="card-body p-4">
+                <h2 class="card-title text-primary fw-bold">{{ post.title }}</h2>
+                <p class="text-muted">📅 {{ post.created_at|date:"F j, Y, g:i a" }}</p>
 
                 {% if post.image %}
-                    <img src="{{ post.image.url }}" class="img-fluid mb-3 border rounded" alt="{{ post.title }}"
-                         style="max-width: 150px; height: auto;">
+                    <div class="text-center mb-4">
+                        <img src="{{ post.image.url }}" class="img-fluid rounded shadow"
+                             alt="{{ post.title }}" style="max-width: 500px; height: auto;">
+                    </div>
                 {% endif %}
 
-
-                <div class="text-muted mb-4">
-                    <small>Created on: {{ post.created_at|date:"F j, Y, g:i a" }}</small>
-                </div>
+                <p class="card-text lead">{{ post.description }}</p>
 
                 {% if post.author == request.user %}
                     <div class="mt-4">
-                        <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-warning btn-lg mr-2">
-                            <i class="fas fa-edit"></i> Edit Post
+                        <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-warning me-2">
+                            ✏️ Редактирай
                         </a>
-                        <a href="{% url 'post_delete' pk=post.pk %}" class="btn btn-danger btn-lg"
-                           onclick="return confirm('Are you sure you want to delete this post?');">
-                            <i class="fas fa-trash-alt"></i> Delete Post
+                        <a href="{% url 'post_delete' pk=post.pk %}" class="btn btn-danger"
+                           onclick="return confirm('Сигурни ли сте, че искате да изтриете тази публикация?');">
+                            🗑️ Изтрий
                         </a>
                     </div>
                 {% endif %}
             </div>
         </div>
 
+        <!-- Секция с коментарите -->
         <div class="comments-section">
-            <h4 class="text-info">Comments</h4>
+            <h3 class="text-info fw-bold">💬 Коментари</h3>
 
-            {% if post.comments %}
+            {% if post.comments.exists %}
                 {% for comment in post.comments.all|dictsortreversed:"rating" %}
-                    <div class="comment mb-4 p-3 border rounded bg-light">
-                        <strong class="text-primary">{{ comment.author.username }}</strong>
-                        <p class="text-muted small">Posted on: {{ comment.created_at|date:"F j, Y, g:i a" }}</p>
-                        <p>{{ comment.content }}</p>
+                    <div class="comment mb-4 p-3 border rounded bg-light shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="text-primary">@{{ comment.author.username }}</strong>
+                            <small class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
+                        </div>
+                        <p class="mt-2">{{ comment.content }}</p>
 
                         <div class="d-flex align-items-center mt-3">
-                            <button class="btn btn-sm btn-outline-success mr-4"
-                                    onclick="vote('{{ comment.id }}', 'upvote')">👍
-                            </button>
+                            <button class="btn btn-sm btn-outline-success me-3"
+                                    onclick="vote('{{ comment.id }}', 'upvote')">👍</button>
+                            <button class="btn btn-sm btn-outline-danger me-3"
+                                    onclick="vote('{{ comment.id }}', 'downvote')">👎</button>
 
-                            <button class="btn btn-sm btn-outline-danger mr-4"
-                                    onclick="vote('{{ comment.id }}', 'downvote')">👎
-                            </button>
-
-                            <span id="rating-{{ comment.id }}" class="font-weight-bold text-dark ml-3">
-                                Rating: {{ comment.rating|default:"No rating yet" }}
+                            <span id="rating-{{ comment.id }}" class="fw-bold text-dark ms-2">
+                                Рейтинг: {{ comment.rating|default:"Няма оценка" }}
                             </span>
-
                         </div>
-
                     </div>
                 {% endfor %}
             {% else %}
-                <p>No comments yet. Be the first to comment!</p>
+                <p class="text-muted">Все още няма коментари. Бъдете първи!</p>
             {% endif %}
 
-            <h5 class="text-info">Add a Comment</h5>
+            <h4 class="text-info mt-4">📝 Добави коментар</h4>
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="id_content" class="font-weight-bold">Your Comment</label>
                     <textarea name="content" id="id_content" rows="4" class="form-control"
-                              placeholder="Write your comment here...">{{ form.content.value|default:'' }}</textarea>
+                              placeholder="Напишете своя коментар тук...">{{ form.content.value|default:'' }}</textarea>
                 </div>
-                <button type="submit" class="btn btn-primary btn-lg mt-3">
-                    <i class="fas fa-comment"></i> Submit Comment
-                </button>
+                <button type="submit" class="btn btn-primary mt-3">💬 Публикувай</button>
             </form>
         </div>
     </div>
 
     <script>
         function vote(comment_id, vote_action) {
-            // Construct the URL for the vote action
             let url = `/post/post/{{ post.id }}/vote/${comment_id}/${vote_action}/`;
 
-            // Send the AJAX request to the server
             fetch(url, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': '{{ csrf_token }}', // Include CSRF token for POST requests
+                    'X-CSRFToken': '{{ csrf_token }}',
                 },
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.new_rating !== undefined) {
-                        // Update the rating on the page
-                        document.getElementById('rating-' + comment_id).innerText = `Rating: ${data.new_rating}`;
-                    } else {
-                        alert(data.error);  // Show an error if something goes wrong
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            .then(response => response.json())
+            .then(data => {
+                if (data.new_rating !== undefined) {
+                    document.getElementById('rating-' + comment_id).innerText = `Рейтинг: ${data.new_rating}`;
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     </script>
 {% endblock %}

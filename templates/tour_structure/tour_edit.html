@@ -2,11 +2,93 @@
 
 {% block content %}
     <div class="container py-5">
-        <h1>Edit Tour</h1>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
+        <div class="card shadow-lg border-0">
+
+            <!-- Card Header -->
+            <div class="card-header bg-primary text-white text-center">
+                <h2 class="fw-bold">✏️ Редактиране на Тур</h2>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Tour Name -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Име на тура</label>
+                        {{ form.name }}
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Описание</label>
+                        {{ form.description }}
+                    </div>
+
+                    <div class="row">
+                        <!-- Date -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Дата</label>
+                            {{ form.date }}
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Локация</label>
+                            {{ form.location }}
+                        </div>
+                    </div>
+
+                    <!-- School Selection -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Училище</label>
+                        {{ form.school }}
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Снимка</label>
+                        <input type="file" class="form-control" id="id_image" name="image" onchange="previewImage(event)">
+                        {% if form.instance.image %}
+                            <div class="mt-3">
+                                <p class="text-muted">Текущо изображение:</p>
+                                <img src="{{ form.instance.image.url }}" id="imagePreview" class="img-fluid rounded shadow"
+                                     alt="Текущо изображение" style="max-width: 300px; height: auto;">
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'tour_detail' pk=tour.pk %}" class="btn btn-secondary">
+                            🔙 Отказ
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            💾 Запази промените
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <!-- Image Preview Script -->
+    <script>
+        function previewImage(event) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                let preview = document.getElementById('imagePreview');
+                if (!preview) {
+                    preview = document.createElement('img');
+                    preview.id = 'imagePreview';
+                    preview.className = 'img-fluid rounded shadow mt-3';
+                    preview.style = 'max-width: 300px; height: auto;';
+                    document.getElementById('id_image').insertAdjacentElement('afterend', preview);
+                }
+                preview.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 {% endblock %}

@@ -8,12 +8,12 @@
 
             <div class="mb-3">
                 <label for="quiz-title" class="form-label">Заглавие</label>
-                <input type="text" name="title" id="quiz-title" class="form-control" placeholder="Enter quiz title" required>
+                <input type="text" name="title" id="quiz-title" class="form-control" placeholder="Въведете името на куиза" required>
             </div>
 
             <div class="mb-3">
                 <label for="quiz-description" class="form-label">Описание</label>
-                <textarea name="description" id="quiz-description" class="form-control" rows="2" placeholder="Short description"></textarea>
+                <textarea name="description" id="quiz-description" class="form-control" rows="2" placeholder="Кратко описание"></textarea>
             </div>
 
             <div class="mb-3 select-dropdown">
@@ -93,7 +93,7 @@
                         <input type="text" name="questions[${questionId}]" id="question-${questionId}" class="form-control" placeholder="Въведи условието на въпроса" required>
                     </div>
                     <div class="form-group mt-3">
-                        <label for="answers-${questionId}">Possible Answers</label>
+                        <label for="answers-${questionId}">Възможни отговори</label>
                         <div id="answers-${questionId}" class="d-flex flex-column gap-2">
                             <input type="text" name="answers_${questionId}_1" class="form-control" placeholder="Въведи отговор 1" required>
                             <input type="text" name="answers_${questionId}_2" class="form-control" placeholder="Въведи отговор 2" required>

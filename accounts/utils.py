@@ -20,8 +20,8 @@ def send_welcome_email(email, username):
                         "Name": username
                     }
                 ],
-                "Subject": "Welcome to EduConnect!",
-                "TextPart": "Greetings from our platform!",
+                "Subject": "Добре дошъл в EduConnect!",
+                "TextPart": "Поздрави!",
                 "HTMLPart": html_content
             }
         ]
@@ -50,8 +50,8 @@ def send_teacher_approval_email(email, username):
                         "Name": username
                     }
                 ],
-                "Subject": "Your Teacher Account Has Been Approved!",
-                "TextPart": "We are pleased to inform you that your teacher account has been approved.",
+                "Subject": "Твоят учителски акаунт бе одобрен!",
+                "TextPart": "Радваме се да Ви съобщим, е вашият учотелски акаунт бе одобрен!",
                 "HTMLPart": html_content
             }
         ]

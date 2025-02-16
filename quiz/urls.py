@@ -3,7 +3,7 @@ from quiz.views import (
     QuizView,
     CreateQuizView,
     QuizSearchAPIView,
-    QuizDetailView, QuizAPIView, textChatBot,
+    QuizDetailView, QuizAPIView, textChatBot, QuizListView,
 )
 
 urlpatterns = [
@@ -13,4 +13,6 @@ urlpatterns = [
     path('quiz_home/', QuizView.as_view(), name='quiz_home'),
     path('api/quiz/<int:quiz_id>/', QuizAPIView.as_view(), name='quiz_api'),
     path('quiz/chat_text_response/', textChatBot, name='chat_text_response'),
+
+    path('quiz/list/', QuizListView.as_view(), name='quiz_list'),
 ]

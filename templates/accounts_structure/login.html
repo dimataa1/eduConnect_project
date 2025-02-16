@@ -29,7 +29,8 @@
         <form method="post">
             {% csrf_token %}
             <div class="mb-4 position-relative">
-                {{ form.email.label_tag }}
+{#                {{ form.email.label_tag }}#}
+                <div class="mb-1">Имейл</div>
                 {{ form.email|add_class:"form-control form-control-lg" }}
                 {% for error in form.email.errors %}
                 <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
@@ -37,7 +38,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="password">{{ form.password.label }}</label>
+                <label for="password" class="mb-1">Парола</label>
                 <div class="d-flex align-items-center position-relative">
                     {{ form.password|add_class:"form-control form-control-lg toggled" }}
                     <div class="position-absolute toggle-password" id="togglePassword" style="margin-left: 92%; top: 50%; transform: translateY(-50%); cursor: pointer;">

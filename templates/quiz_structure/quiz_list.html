@@ -1,0 +1,93 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Всички Тестове</h1>
+
+    <div class="mb-4">
+        <input 
+            type="text" 
+            id="quizSearch" 
+            class="form-control" 
+            placeholder="Търсене по заглавие..."
+            onkeyup="filterQuizzes()"
+        >
+    </div>
+
+    <div id="quizList" class="row justify-content-center">
+        <div class="col-lg-8">
+            {% for quiz in page_obj %}
+                <div class="card mb-4 shadow-sm quiz-card">
+                    <div class="card-body">
+                        <h3 class="card-title text-primary">{{ quiz.title }}</h3>
+                        <p class="card-text">{{ quiz.description|truncatechars:150 }}</p>
+
+                        <div class="text-muted mb-4">
+                            <small>Предмет: {{ quiz.subject }}</small><br>
+                            <small>Клас: {{ quiz.grade }}</small>
+                        </div>
+
+                        <a href="{% url 'quiz_detail' quiz.id %}" class="btn btn-primary btn-sm">Вижте детайли</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <nav aria-label="Навигация по страници">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="Първа">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Предишна">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Следваща">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Последна">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+<script>
+    function filterQuizzes() {
+        const searchInput = document.getElementById("quizSearch").value.toLowerCase();
+        const quizCards = document.querySelectorAll(".quiz-card");
+
+        quizCards.forEach(card => {
+            const quizTitle = card.querySelector(".card-title").innerText.toLowerCase();
+            if (quizTitle.includes(searchInput)) {
+                card.style.display = "block"; 
+            } else {
+                card.style.display = "none"; 
+            }
+        });
+    }
+</script>
+{% endblock %}

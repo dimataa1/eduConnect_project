@@ -2,9 +2,11 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.views.generic import ListView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -350,3 +352,38 @@ def textChatBot(request):
 
 
 # client = Client(api_key='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 ')
+
+class QuizListView(ListView):
+    model = Quiz
+    template_name = 'quiz_structure/quiz_list.html'
+    context_object_name = 'quizzes'
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', '')
+        subject = self.request.GET.get('subject', '')
+        grade = self.request.GET.get('grade', '')
+
+        queryset = Quiz.objects.all()
+
+        if query:
+            queryset = queryset.filter(title__icontains=query)
+        if subject:
+            queryset = queryset.filter(subject__icontains=subject)
+        if grade:
+            queryset = queryset.filter(grade__icontains=grade)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        paginator = Paginator(self.get_queryset(), 5)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        context['search_query'] = self.request.GET.get('search', '')
+        context['subject_query'] = self.request.GET.get('subject', '')
+        context['grade_query'] = self.request.GET.get('grade', '')
+
+        return context

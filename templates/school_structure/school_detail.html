@@ -7,8 +7,8 @@
             <h2>{{ school.name }}</h2>
         </div>
         <div class="card-body">
-            <h5 class="card-title"><strong>Town:</strong> {{ school.town }}</h5>
-            <p class="card-text"><strong>Description:</strong> {{ school.description }}</p>
+            <h5 class="card-title"><strong>Град:</strong> {{ school.town }}</h5>
+            <p class="card-text"><strong>Описание:</strong> {{ school.description }}</p>
 
             {% if school.image %}
                 <div class="text-center my-4">
@@ -21,7 +21,7 @@
             {% endif %}
 
             <div class="text-center">
-                <a href="{% url 'school_list' %}" class="btn btn-primary">Back to School List</a>
+                <a href="{% url 'school_list' %}" class="btn btn-primary">Виж всички училища</a>
             </div>
         </div>
     </div>

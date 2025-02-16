@@ -10,7 +10,7 @@
             {% csrf_token %}
         
             <div class="mb-3">
-                {{ form.username.label_tag }}
+                <div class="mb-1">Потребителско име</div>
                 {{ form.username|add_class:"form-control" }}
                 {% for error in form.username.errors %}
                     <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
@@ -18,7 +18,7 @@
             </div>
         
             <div class="mb-3">
-                {{ form.email.label_tag }}
+                <div class="mb-1">Имейл</div>
                 {{ form.email|add_class:"form-control" }}
                 {% for error in form.email.errors %}
                     <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
@@ -26,7 +26,7 @@
             </div>
         
             <div class="mb-3">
-                {{ form.role.label_tag }}
+                <div class="mb-1">Роля - Ученик / Учител</div>
                 {{ form.role|add_class:"form-control" }}
                 {% for error in form.role.errors %}
                     <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
@@ -34,29 +34,68 @@
             </div>
         
             <div class="mb-3">
-                {{ form.password1.label_tag }}
-                {{ form.password1|add_class:"form-control" }}
+                <div class="mb-1">Парола</div>
+                <div class="d-flex align-items-center position-relative">
+                    {{ form.password1|add_class:"form-control form-control-lg toggled" }}
+                    <div class="position-absolute toggle-password" style="margin-left: 92%; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                        <i class="fa-solid fa-eye-slash" id="toggle-slash1"></i>
+                        <i class="fa-solid fa-eye d-none" id="toggle-eye1"></i>
+                    </div>
+                </div>
                 {% for error in form.password1.errors %}
                     <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
                 {% endfor %}
             </div>
-        
+
             <div class="mb-3">
-                {{ form.password2.label_tag }}
-                {{ form.password2|add_class:"form-control" }}
+                <div class="mb-1">Потвърди паролата си</div>
+                <div class="d-flex align-items-center position-relative">
+                    {{ form.password2|add_class:"form-control form-control-lg toggled" }}
+                    <div class="position-absolute toggle-password" style="margin-left: 92%; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                        <i class="fa-solid fa-eye-slash" id="toggle-slash2"></i>
+                        <i class="fa-solid fa-eye d-none" id="toggle-eye2"></i>
+                    </div>
+                </div>
                 {% for error in form.password2.errors %}
                     <div class="text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
                 {% endfor %}
             </div>
-        
+
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary btn-lg">Регистрирай се</button>
             </div>
-            
+
             <div class="text-center mt-4">
                 <p class="mb-0">Вече имаш акаунт? <a href="{% url 'login' %}">Влез оттук!</a></p>
             </div>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function setupToggle(toggleId, passwordField) {
+            const toggleSlash = $(`#toggle-slash${toggleId}`);
+            const toggleEye = $(`#toggle-eye${toggleId}`);
+
+            $(`#toggle-slash${toggleId}, #toggle-eye${toggleId}`).on('click', function () {
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                    toggleSlash.addClass('d-none');
+                    toggleEye.removeClass('d-none');
+                } else {
+                    passwordField.attr('type', 'password');
+                    toggleEye.addClass('d-none');
+                    toggleSlash.removeClass('d-none');
+                }
+            });
+        }
+
+        setupToggle(1, $('input[name="password1"]'));
+        setupToggle(2, $('input[name="password2"]'));
+    });
+</script>
 {% endblock %}

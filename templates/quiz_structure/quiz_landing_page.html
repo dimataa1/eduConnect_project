@@ -17,7 +17,8 @@
                         <form id="chatbotForm" method="POST" action="{% url 'chat_text_response' %}">
                             {% csrf_token %}
                             <div class="form-group mb-3">
-                                <label for="user_input" class="form-label">Описание на теста (изисква повече технологично време)</label>
+                                <label for="user_input" class="form-label">Описание на теста (изисква повече
+                                    технологично време)</label>
                                 <input type="text" id="user_input" name="user_input" class="form-control"
                                        placeholder="Опишете накратко съдържанието на теста" required>
                             </div>
@@ -45,7 +46,6 @@
                         <form id="quizForm" action="" method="POST">
                             {% csrf_token %}
                             <div class="row">
-
                                 <div class="col-md-5 mb-3">
                                     <label for="subject" class="form-label">Предмет</label>
                                     <input type="text" id="subject" name="subject" class="form-control"
@@ -70,12 +70,15 @@
                                 </div>
                             </div>
                         </form>
-
-
+                    </div>
+                    <div class="text-center mb-4">
+                        <a href="{% url 'quiz_list' %}" class="btn btn-secondary">Всички Кузизове</a>
                     </div>
                 </div>
+
             </div>
         </div>
+
 
         <!-- Results Section (Optional) -->
         <div id="quizResults" class="row mb-5"></div>
@@ -128,7 +131,7 @@
                     console.error('Error fetching quiz search results:', error);
                 });
         });
-        
+
     </script>
 
 {% endblock %}

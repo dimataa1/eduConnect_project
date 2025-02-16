@@ -37,10 +37,10 @@ class QuizForm(forms.ModelForm):
         model = Quiz
         fields = ['title', 'description', 'subject', 'grade']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}),
-            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
-            'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Grade'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Заглавие'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Описание'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Предмет'}),
+            'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Клас'}),
         }
 
     def __init__(self, *args, **kwargs):

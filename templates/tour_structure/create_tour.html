@@ -1,98 +1,65 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-lg border-0 rounded-lg">
-                    <div class="card-header bg-gradient-primary text-white text-center py-4">
-                        <h2 class="mb-0">✨ Schedule a Tour</h2>
-                        <p class="mb-0">Fill out the form below to organize an unforgettable school tour!</p>
-                    </div>
-                    <div class="card-body px-5">
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="mb-4">
-                                <label for="id_name" class="form-label font-weight-bold">Tour Name</label>
-                                <input type="text" class="form-control" id="id_name" name="name" value="{{ form.name.value|default:'' }}" placeholder="Enter the name of the tour">
-                                {% if form.name.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.name.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="mb-4">
-                                <label for="id_description" class="form-label font-weight-bold">Tour Description</label>
-                                <textarea class="form-control" id="id_description" name="description" rows="3" placeholder="Provide a short description for the tour">{{ form.description.value|default:'' }}</textarea>
-                                {% if form.description.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.description.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="mb-4">
-                                <label for="id_date" class="form-label font-weight-bold">Tour Date</label>
-                                <input type="date" class="form-control" id="id_date" name="date" value="{{ form.date.value|default:'' }}">
-                                {% if form.date.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.date.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="mb-4">
-                                <label for="id_location" class="form-label font-weight-bold">Location</label>
-                                <input type="text" class="form-control" id="id_location" name="location" value="{{ form.location.value|default:'' }}" placeholder="Enter the location of the tour">
-                                {% if form.location.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.location.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="mb-4">
-                                <label for="id_school" class="form-label font-weight-bold">Select School</label>
-                                <select class="form-control" id="id_school" name="school">
-                                    <option value="">Choose a school</option>
-                                    {% for school in form.school.field.queryset %}
-                                        <option value="{{ school.id }}" {% if form.school.value == school.id %}selected{% endif %}>{{ school.name }}</option>
-                                    {% endfor %}
-                                </select>
-                                {% if form.school.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.school.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="mb-4">
-                                <label for="id_image" class="form-label font-weight-bold">Tour Image</label>
-                                <input type="file" class="form-control" id="id_image" name="image">
-                                {% if form.image.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.image.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-lg btn-gradient-primary text-white px-5 py-2 rounded-pill">
-                                    Create Tour 🚀
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="card-footer bg-light text-center py-3">
-                        <small class="text-muted">Make sure the details are accurate before submitting!</small>
-                    </div>
+    <div class="container py-5 d-flex justify-content-center align-items-center min-vh-100"
+         style="background: linear-gradient(135deg, #f8f9fa, #e3e6ed);">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4"
+                 style="background: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+                <div class="card-header text-center py-4"
+                     style="background: linear-gradient(90deg, #6a11cb, #2575fc); border-radius: 20px 20px 0 0; color: white;">
+                    <h2 class="mb-1 fw-bold">✨ Запази Обиколка</h2>
+                    <p class="mb-0">Попълнете формата, за да организирате незабравима училищна обиколка!</p>
+                </div>
+                <div class="card-body px-5">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="id_name" class="form-label fw-semibold text-dark">Име на обиколката</label>
+                            <input type="text" class="form-control neomorph-input" id="id_name" name="name"
+                                   placeholder="Въведете име">
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_description" class="form-label fw-semibold text-dark">Описание</label>
+                            <textarea class="form-control neomorph-input" id="id_description" name="description"
+                                      rows="3"
+                                      placeholder="Опишете обиколката"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_date" class="form-label fw-semibold text-dark">Дата</label>
+                            <input type="date" class="form-control neomorph-input" id="id_date" name="date">
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_location" class="form-label fw-semibold text-dark">Локация</label>
+                            <input type="text" class="form-control neomorph-input" id="id_location" name="location"
+                                   placeholder="Въведете локация">
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_school" class="form-label fw-semibold text-dark">Изберете училище</label>
+                            <select class="form-control neomorph-input" id="id_school" name="school">
+                                <option value="">Изберете училище</option>
+                                {% for school in form.school.field.queryset %}
+                                    <option value="{{ school.id }}"
+                                            {% if form.school.value == school.id %}selected{% endif %}>
+                                        {{ school.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_image" class="form-label fw-semibold text-dark">Качете изображение</label>
+                            <input type="file" class="form-control neomorph-input" id="id_image" name="image">
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-lg btn-gradient text-white px-5 py-2 rounded-pill">
+                                Създай обиколка 🚀
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3 text-muted">
+                    <small>Проверете детайлите преди да изпратите!</small>
                 </div>
             </div>
         </div>
@@ -101,32 +68,44 @@
 
 {% block extra_styles %}
     <style>
-        .bg-gradient-primary {
-            background: linear-gradient(45deg, #007bff, #6c63ff);
-        }
-
-        .btn-gradient-primary {
-            background: linear-gradient(90deg, #6c63ff, #007bff);
+        /* Градиентен бутон */
+        .btn-gradient {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
             border: none;
             transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
         }
 
-        .btn-gradient-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        .btn-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
+        /* Neumorphism ефект за инпутите */
+        .neomorph-input {
+            background: #f0f0f3;
+            border-radius: 12px;
+            border: none;
+            padding: 10px;
+            box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #ffffff;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .neomorph-input:focus {
+            box-shadow: inset 3px 3px 8px #d1d9e6, inset -3px -3px 8px #ffffff;
+            outline: none;
+        }
+
+        /* Карта с меко осветление */
         .card {
-            border-radius: 15px;
-            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
+        /* Градиент в хедъра */
         .card-header {
-            border-bottom: none;
-        }
-
-        .card-footer {
-            font-size: 0.9rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
         }
     </style>
 {% endblock %}

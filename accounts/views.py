@@ -55,7 +55,7 @@ class LoginView(FormView):
 
             return super().form_valid(form)
         else:
-            messages.error(self.request, "Invalid email or password.")
+            messages.error(self.request, "Невалиден имейл или парола!")
             return self.form_invalid(form)
 
 
@@ -73,7 +73,7 @@ class LogoutView(View):
 def delete_profile_picture(request):
     profile = get_object_or_404(Profile, user=request.user)
     profile.delete_profile_picture()
-    messages.success(request, "Profile picture deleted successfully.")
+    messages.success(request, "Успешно изтрита профилна снимка!")
     return redirect('profile_details')
 
 
@@ -98,10 +98,10 @@ def change_password(request):
             user = request.user
             form.save(user)
             update_session_auth_hash(request, user)
-            messages.success(request, 'Your password has been successfully updated!')
+            messages.success(request, 'Паролата бе сменена успешно!')
             return redirect('profile_details')
         else:
-            messages.error(request, 'Please correct the errors below.')
+            messages.error(request, 'Моля, поправете грешките, показани на екрана!')
     else:
         form = CustomPasswordChangeForm()
 

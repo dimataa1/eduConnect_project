@@ -2,11 +2,74 @@
 
 {% block content %}
     <div class="container py-5">
-        <h1>Edit Post</h1>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-primary text-white text-center">
+                <h2 class="fw-bold">✏️ Редактирай публикация</h2>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="id_title" class="form-label fw-semibold">Заглавие</label>
+                        <input type="text" class="form-control" id="id_title" name="title"
+                               value="{{ form.title.value|default:'' }}" placeholder="Въведете заглавие">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label fw-semibold">Описание</label>
+                        <textarea class="form-control" id="id_description" name="description" rows="5"
+                                  placeholder="Напишете съдържанието на публикацията">{{ form.description.value|default:'' }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_subject" class="form-label fw-semibold">Предмет</label>
+                        <input type="text" class="form-control" id="id_subject" name="subject"
+                               value="{{ form.subject.value|default:'' }}" placeholder="Въведете предмет">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_grade" class="form-label fw-semibold">Клас</label>
+                        <input type="number" class="form-control" id="id_grade" name="grade"
+                               value="{{ form.grade.value|default:'' }}" placeholder="Въведете клас">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_image" class="form-label fw-semibold">Снимка</label>
+                        <input type="file" class="form-control" id="id_image" name="image" onchange="previewImage(event)">
+                        {% if form.instance.image %}
+                            <div class="mt-3">
+                                <p class="text-muted">Текущо изображение:</p>
+                                <img src="{{ form.instance.image.url }}" id="imagePreview" class="img-fluid rounded shadow"
+                                     alt="Текущо изображение" style="max-width: 300px; height: auto;">
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-secondary">🔙 Отказ</a>
+                        <button type="submit" class="btn btn-success">💾 Запази промените</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <script>
+        function previewImage(event) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                let preview = document.getElementById('imagePreview');
+                if (!preview) {
+                    preview = document.createElement('img');
+                    preview.id = 'imagePreview';
+                    preview.className = 'img-fluid rounded shadow mt-3';
+                    preview.style = 'max-width: 300px; height: auto;';
+                    document.getElementById('id_image').insertAdjacentElement('afterend', preview);
+                }
+                preview.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 {% endblock %}
