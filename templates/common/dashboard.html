@@ -1,63 +1,71 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-<div class="container py-5">
-    <h1 class="mb-4 text-center text-uppercase font-weight-bold">Табло за управление</h1>
+    <div class="container py-5">
+        <h1 class="mb-4 text-center text-uppercase font-weight-bold">Табло за управление</h1>
 
-    <div class="row justify-content-center">
-        {% for item_data in items_with_type %}
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm border-0">
-                {% with item=item_data.item %}
-                <div class="card-body">
-                    <h5 class="card-title font-weight-bold">
-                        {% if item_data.type == 'Post' %}
-                            {{ item.title }} <span class="text-muted">(Пост)</span>
-                        {% elif item_data.type == 'Tour' %}
-                            {{ item.name }} <span class="text-muted">(Тур)</span>
-                        {% elif item_data.type == 'Quiz' %}
-                            {{ item.title }} <span class="text-muted">(Куиз)</span>
-                        {% endif %}
-                    </h5>
+        <div class="row justify-content-center">
+            {% for item_data in items_with_type %}
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm border-0">
+                        {% with item=item_data.item %}
+                            <div class="card-body">
+                                <h5 class="card-title font-weight-bold">
+                                    {% if item_data.type == 'Post' %}
+                                        {{ item.title }} <span class="text-muted">(Пост)</span>
+                                    {% elif item_data.type == 'School' %}
+                                        {{ item.name }} <span class="text-muted">(Училище)</span>
+                                    {% elif item_data.type == 'Tour' %}
+                                        {{ item.name }} <span class="text-muted">(Тур)</span>
+                                    {% elif item_data.type == 'Quiz' %}
+                                        {{ item.title }} <span class="text-muted">(Куиз)</span>
+                                    {% endif %}
+                                </h5>
 
-                    <p class="card-text text-secondary">{{ item.description|truncatewords:20 }}</p>
-                    <small class="text-muted">📅 {{ item.created_at|date:"F j, Y, g:i a" }}</small>
+                                <p class="card-text text-secondary">{{ item.description|truncatewords:20 }}</p>
+                                <small class="text-muted">📅 {{ item.created_at|date:"F j, Y, g:i a" }}</small>
 
-                    <div class="mt-3">
-                        {% if item_data.type == 'Post' %}
-                            <a href="{% url 'post_detail' pk=item.pk %}" class="btn btn-outline-primary btn-sm">Виж поста</a>
-                        {% elif item_data.type == 'Tour' %}
-                            <a href="{% url 'tour_detail' pk=item.pk %}" class="btn btn-outline-secondary btn-sm">Виж тура</a>
-                        {% elif item_data.type == 'Quiz' %}
-                            <a href="{% url 'quiz_detail' pk=item.pk %}" class="btn btn-outline-dark btn-sm">Виж куиза</a>
-                        {% endif %}
+                                <div class="mt-3 text-left">
+                                    {% if item_data.type == 'Post' %}
+                                        <a href="{% url 'post_detail' pk=item.pk %}"
+                                           class="btn btn-outline-primary btn-sm">Виж детайли</a>
+                                    {% elif item_data.type == 'School' %}
+                                        <a href="{% url 'school_detail' school_id=item.pk %}"
+                                           class="btn btn-outline-primary btn-sm">Виж детайли</a>
+                                    {% elif item_data.type == 'Tour' %}
+                                        <a href="{% url 'tour_detail' pk=item.pk %}"
+                                           class="btn btn-outline-primary btn-sm">Виж детайли</a>
+                                    {% elif item_data.type == 'Quiz' %}
+                                        <a href="{% url 'quiz_detail' pk=item.pk %}"
+                                           class="btn btn-outline-primary btn-sm">Виж детайли</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endwith %}
                     </div>
                 </div>
-                {% endwith %}
-            </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-light text-center">
+                        Няма налични постове, училища, турове или куизове.
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <div class="col-12">
-            <div class="alert alert-light text-center">
-                Няма налични постове, турове или куизове.
-            </div>
+
+        <!-- Pagination -->
+        <div class="pagination mt-4 d-flex justify-content-center">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="btn btn-outline-secondary mx-1">Първа</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-secondary mx-1">Предишна</a>
+            {% endif %}
+
+            <span class="mx-2 mt-2">Страница {{ page_obj.number }} от {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-secondary mx-1">Следваща</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-secondary mx-1">Последна</a>
+            {% endif %}
         </div>
-        {% endfor %}
     </div>
-
-    <!-- Pagination -->
-    <div class="pagination mt-4 d-flex justify-content-center">
-        {% if page_obj.has_previous %}
-            <a href="?page=1" class="btn btn-outline-secondary mx-1">Първа</a>
-            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-secondary mx-1">Предишна</a>
-        {% endif %}
-
-        <span class="mx-2 mt-2">Страница {{ page_obj.number }} от {{ page_obj.paginator.num_pages }}</span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-secondary mx-1">Следваща</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-secondary mx-1">Последна</a>
-        {% endif %}
-    </div>
-</div>
 {% endblock %}

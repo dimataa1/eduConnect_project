@@ -79,6 +79,11 @@ class Comment(models.Model):
 
 
 class School(models.Model):
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="schools",
+    )
     name = models.CharField(
         max_length=255
     )
@@ -94,6 +99,10 @@ class School(models.Model):
         blank=True,
         null=True,
         default="static/default/default.png"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
     )
 
     def __str__(self):

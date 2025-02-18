@@ -67,10 +67,11 @@ class DashBoardListView(ListView):
     def get_queryset(self):
         user = self.request.user
         posts = Post.objects.filter(author=user).order_by('-created_at')
+        schools = School.objects.filter(author=user).order_by('-created_at')
         tours = Tour.objects.filter(teacher=user).order_by('-created_at')
         quizzes = Quiz.objects.filter(creator=user).order_by('-created_at')
 
-        combined = list(posts) + list(tours) + list(quizzes)
+        combined = list(posts) + list(schools) + list(tours) + list(quizzes)
         return combined
 
     def get_context_data(self, **kwargs):
@@ -85,7 +86,15 @@ class DashBoardListView(ListView):
         context['page_obj'] = page_obj
 
         context['items_with_type'] = [
-            {'item': item, 'type': 'Post' if isinstance(item, Post) else 'Tour' if isinstance(item, Tour) else 'Quiz'}
+            {
+                'item': item,
+                'type': (
+                    'Post' if isinstance(item, Post)
+                    else 'School' if isinstance(item, School)
+                    else 'Tour' if isinstance(item, Tour)
+                    else 'Quiz'
+                )
+            }
             for item in page_obj.object_list
         ]
         return context
@@ -237,8 +246,10 @@ def add_school(request):
     if request.method == 'POST':
         form = SchoolForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('school_list')
+            school = form.save(commit=False)
+            school.author = request.user
+            school.save()
+            return redirect('dashboard')
     else:
         form = SchoolForm()
     return render(request, 'school_structure/add_school.html', {'form': form})
