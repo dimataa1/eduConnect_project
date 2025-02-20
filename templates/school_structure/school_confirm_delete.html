@@ -1,0 +1,12 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+    <div class="container py-5">
+        <h1>Сигурни ли сте, че искате да изтриете това описание на училище?</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Да, изтрий</button>
+            <a href="{{ school.get_absolute_url }}" class="btn btn-secondary">Отказ</a>
+        </form>
+    </div>
+{% endblock %}

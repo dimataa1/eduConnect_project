@@ -30,7 +30,6 @@
             </div>
         </div>
 
-        <!-- Секция с коментарите -->
         <div class="comments-section">
             <h3 class="text-info fw-bold">💬 Коментари</h3>
 
@@ -44,7 +43,7 @@
                         <p class="mt-2">{{ comment.content }}</p>
 
                         <div class="d-flex align-items-center mt-3">
-                            <button class="btn btn-sm btn-outline-success me-3"
+                            <button class="btn btn-sm btn-outline-success me-2"
                                     onclick="vote('{{ comment.id }}', 'upvote')">👍</button>
                             <button class="btn btn-sm btn-outline-danger me-3"
                                     onclick="vote('{{ comment.id }}', 'downvote')">👎</button>

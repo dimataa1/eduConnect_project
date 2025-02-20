@@ -112,3 +112,15 @@ class TourUpdateForm(forms.ModelForm):
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'school': forms.Select(attrs={'class': 'form-control'}),
         }
+
+
+class SchoolEditForm(forms.ModelForm):
+    class Meta:
+        model = School
+        fields = ['name', 'town', 'description', 'image']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Описание на училището'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Име на училището'}),
+            'town': forms.TextInput(attrs={'placeholder': 'Град'}),
+            'image': forms.ClearableFileInput(attrs={'accept': 'image/*'}),
+        }

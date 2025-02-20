@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import F, Value, DateTimeField
 from django.db.models.functions import Cast
-from django.http import HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -15,7 +15,7 @@ from rest_framework.views import APIView
 
 from common.serializers import PostSerializer
 from quiz.models import Quiz
-from .forms import PostForm, CommentForm, SchoolForm, ScheduleTourForm
+from .forms import PostForm, CommentForm, SchoolForm, ScheduleTourForm, SchoolEditForm
 from django.contrib import messages
 
 from .models import Post, School, Comment, Vote, Tour
@@ -159,6 +159,22 @@ class PostEditView(UpdateView):
         return reverse_lazy('dashboard')
 
 
+class SchoolEditView(LoginRequiredMixin, UpdateView):
+    model = School
+    form_class =  SchoolEditForm
+    template_name = 'school_structure/school_edit.html'
+    context_object_name = 'school'
+
+    def get_queryset(self):
+        return School.objects.filter(author=self.request.user)
+    def form_valid(self, form):
+        messages.success(self.request, "Описанието бе редактирано успешно!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard')
+
+
 class TourEditView(LoginRequiredMixin, UpdateView):
     model = Tour
     form_class = ScheduleTourForm
@@ -180,6 +196,14 @@ class PostDeleteView(DeleteView):
     model = Post
     template_name = 'post_structure/post_confirm_delete.html'
     context_object_name = 'post'
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard')
+
+class SchoolDeleteView(DeleteView):
+    model = School
+    template_name = 'school_structure/school_confirm_delete.html'
+    context_object_name = 'school'
 
     def get_success_url(self):
         return reverse_lazy('dashboard')
