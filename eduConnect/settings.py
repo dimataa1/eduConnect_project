@@ -81,7 +81,6 @@ DATABASES = {
     }
 }
 
-database_url = os.getenv('DATABASE_URL', config('DATABASE_URL')),
 DATABASES["default"] = dj_database_url.parse('postgresql://educonnect_akwl_user:cxNdJBpbeqVdFnCR3bQy5idCdWJL3hrh@dpg-cus93s2n91rc73djj87g-a.oregon-postgres.render.com/educonnect_akwl')
 
 AUTH_PASSWORD_VALIDATORS = [
