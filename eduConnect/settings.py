@@ -13,7 +13,8 @@ CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', config('CSRF_TRUSTED_OR
 
 DEBUG = os.getenv('DEBUG', config('DEBUG')) == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", config("ALLOWED_HOSTS", default="localhost,127.0.0.1")).split(",")
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "educonnect-project.onrender.com"]
+
 
 AUTH_USER_MODEL = 'accounts.AppUser'
 
