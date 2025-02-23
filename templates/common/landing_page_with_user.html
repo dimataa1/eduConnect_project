@@ -86,7 +86,7 @@
                             var postCard = `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
-                                <img src="${post.img_url}" class="card-img-top" alt="${post.name}" style="max-height: 200px; object-fit: cover;">
+                                <img src="${post.img.url}" class="card-img-top" alt="${post.name}" style="max-height: 200px; object-fit: cover;">
 
                                 <div class="card-body">
                                     <h5 class="card-title">${post.title}</h5>
@@ -134,7 +134,7 @@
                                 var schoolCard = `
                                   <div class="col-md-4 mb-4">
                                     <div class="card h-100 shadow-sm">
-                                      <img src="${school.image_url}" class="card-img-top" alt="${school.name}" style="max-height: 200px; object-fit: cover;">
+                                      <img src="${school.image.url}" class="card-img-top" alt="${school.name}" style="max-height: 200px; object-fit: cover;">
                                       <div class="card-body">
                                         <h5 class="card-title">${school.name}</h5>
                                         <p class="card-text text-muted">${school.description.substring(0, 100)}...</p>
@@ -156,7 +156,7 @@
                                 var tourCard = `
                                   <div class="col-md-4 mb-4">
                                     <div class="card h-100 shadow-sm">
-                                      <img src="${tour.image_url}" class="card-img-top" alt="${tour.name}" style="max-height: 200px; object-fit: cover;">
+                                      <img src="${tour.image.url}" class="card-img-top" alt="${tour.name}" style="max-height: 200px; object-fit: cover;">
                                       <div class="card-body">
                                         <h5 class="card-title">${tour.name}</h5>
                                         <p class="card-text text-muted">${tour.description.substring(0, 100)}...</p>

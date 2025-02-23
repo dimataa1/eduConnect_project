@@ -119,7 +119,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'https://res.cloudinary.com/your_cloud_name/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
