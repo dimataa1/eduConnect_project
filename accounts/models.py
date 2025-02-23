@@ -102,7 +102,7 @@ class Profile(models.Model):
         'profile_picture_image',
         blank=True,
         null=True,
-        default="static/default/default_pfp.png",
+        default="https://res.cloudinary.com/dmsakestc/image/upload/v1740333445/Default_pfp.svg_gavlli.png",
     )
 
     def __str__(self):
@@ -135,5 +135,5 @@ class Profile(models.Model):
     def restore_default_picture(self):
 
         self.delete_profile_picture()
-        self.profile_picture = 'default/default_pfp.jpg'
+        self.profile_picture = 'https://res.cloudinary.com/dmsakestc/image/upload/v1740333445/Default_pfp.svg_gavlli.png'
         self.save()
