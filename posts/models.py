@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 
 class Post(models.Model):
@@ -15,13 +16,12 @@ class Post(models.Model):
 
     description = models.TextField()
 
-    image = models.ImageField(
-        upload_to="static/post_images/",
+    image = CloudinaryField(
+        'post_image',
         blank=True,
         null=True,
-        default="static/default/default.png"
+        default="static/default/default.png",
     )
-
     subject = models.CharField(
         max_length=100
     )
@@ -94,11 +94,11 @@ class School(models.Model):
 
     description = models.TextField()
 
-    image = models.ImageField(
-        upload_to='static/school_images/',
+    image = CloudinaryField(
+        'school_image',
         blank=True,
         null=True,
-        default="static/default/default.png"
+        default="static/default/default.png",
     )
 
     created_at = models.DateTimeField(
@@ -141,8 +141,8 @@ class Tour(models.Model):
         max_length=255,
         help_text="The location of the tour.",
     )
-    image = models.ImageField(
-        upload_to='static/tour_images/',
+    image = CloudinaryField(
+        'tour_image',
         blank=True,
         null=True,
         default="static/default/default.png",
