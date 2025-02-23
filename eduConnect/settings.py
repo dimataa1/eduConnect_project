@@ -124,9 +124,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUD_NAME'),
-    'API_KEY': config('CLOUD_API_KEY'),
-    'API_SECRET': config('CLOUD_API_SECRET'),
+    'cloud_name': config('CLOUD_NAME'),
+    'api_key': config('CLOUD_API_KEY'),
+    'api_secret': config('CLOUD_API_SECRET'),
 }
 
 
