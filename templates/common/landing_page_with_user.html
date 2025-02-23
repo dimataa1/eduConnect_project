@@ -77,7 +77,7 @@
                 .then(response => response.json())
                 .then(data => {
                     var resultsContainer = document.getElementById("postResults");
-                    resultsContainer.innerHTML = ''; // Clear previous results
+                    resultsContainer.innerHTML = '';
 
                     if (data && data.length === 0) {
                         resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени постове за зададените критерии.</div>';
@@ -86,7 +86,8 @@
                             var postCard = `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
-                                <img src="${post.image.id}" class="card-img-top" alt="${post.title}" style="max-height: 200px; object-fit: cover;">
+                               <img src="${post.image ? post.image.url : 'default-image.jpg'}" class="card-img-top" alt="${post.title}" style="max-height: 200px; object-fit: cover;">
+
                                 <div class="card-body">
                                     <h5 class="card-title">${post.title}</h5>
                                     <p class="card-text text-muted">${post.description.substring(0, 100)}...</p>
