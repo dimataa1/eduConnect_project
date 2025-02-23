@@ -20,7 +20,7 @@ class Post(models.Model):
         'post_image',
         blank=True,
         null=True,
-        default="static/default/default.png",
+        default="https://res.cloudinary.com/dmsakestc/image/upload/v1740333648/default_pic_ouvlzx.png",
     )
     subject = models.CharField(
         max_length=100
@@ -98,7 +98,7 @@ class School(models.Model):
         'school_image',
         blank=True,
         null=True,
-        default="static/default/default.png",
+        default="https://res.cloudinary.com/dmsakestc/image/upload/v1740333648/default_pic_ouvlzx.png",
     )
 
     created_at = models.DateTimeField(
@@ -145,7 +145,7 @@ class Tour(models.Model):
         'tour_image',
         blank=True,
         null=True,
-        default="static/default/default.png",
+        default="https://res.cloudinary.com/dmsakestc/image/upload/v1740333648/default_pic_ouvlzx.png",
     )
     teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL,
