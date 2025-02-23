@@ -86,6 +86,8 @@
                             var postCard = `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
+                                console.log("Image URL:", post.image.url);
+
                                <img src="${post.image ? post.image : 'default-image.jpg'}" class="card-img-top" alt="${post.title}" style="max-height: 200px; object-fit: cover;">
 
                                 <div class="card-body">
