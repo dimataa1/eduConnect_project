@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'rest_framework',
     "quiz.apps.QuizConfig",
     'crispy_forms',
-    'cloudinary', 'cloudinary_storage'
+    'cloudinary',
+    'cloudinary_storage'
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,7 @@ DATABASES = {
     }
 }
 
-DATABASES["default"] = dj_database_url.parse('postgresql://educonnect_akwl_user:cxNdJBpbeqVdFnCR3bQy5idCdWJL3hrh@dpg-cus93s2n91rc73djj87g-a.oregon-postgres.render.com/educonnect_akwl')
+# DATABASES["default"] = dj_database_url.parse('postgresql://educonnect_akwl_user:cxNdJBpbeqVdFnCR3bQy5idCdWJL3hrh@dpg-cus93s2n91rc73djj87g-a.oregon-postgres.render.com/educonnect_akwl')
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -123,9 +124,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME':os.getenv('CLOUD_NAME', config('CLOUD_NAME')),
-    'API_KEY': os.getenv('CLOUD_API_KEY', config('CLOUD_API_KEY')),
-    'API_SECRET': os.getenv('CLOUD_API_SECRET', config('CLOUD_API_SECRET')),
+    'CLOUD_NAME': config('CLOUD_NAME'),
+    'API_KEY': config('CLOUD_API_KEY'),
+    'API_SECRET': config('CLOUD_API_SECRET'),
 }
+print(config('CLOUD_API_KEY'))  # Test if the key is loaded properly
+
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
