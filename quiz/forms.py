@@ -10,14 +10,14 @@ class QuizSearchForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Search by subject'
+            'placeholder': 'Търси по предмет'
         })
     )
     grade = forms.IntegerField(
         required=True,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Search by grade'
+            'placeholder': 'Търси по клас'
         })
     )
 
