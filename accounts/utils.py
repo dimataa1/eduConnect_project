@@ -11,7 +11,7 @@ def send_welcome_email(email, username):
         'Messages': [
             {
                 "From": {
-                    "Email": "dimitar200720@gmail.com",
+                    "Email": "educt2025@gmail.com",
                     "Name": "eduConnect"
                 },
                 "To": [
@@ -41,7 +41,7 @@ def send_teacher_approval_email(email, username):
         "Messages": [
             {
                 "From": {
-                    "Email": "dimitar200720@gmail.com",
+                    "Email": "educt2025@gmail.com",
                     "Name": "eduConnect"
                 },
                 "To": [
