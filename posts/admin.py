@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import School, Post
-
+from .models import School, Post, Tour
 
 
 @admin.register(Post)
@@ -31,3 +30,12 @@ class SchoolAdmin(admin.ModelAdmin):
     list_filter = ('town',)
     search_fields = ('name', 'town', 'description')
     ordering = ('name',)
+
+
+@admin.register(Tour)
+class TourAdmin(admin.ModelAdmin):
+    list_display = ('name', 'school', 'location', 'date', 'teacher', 'image')
+    list_filter = ('school', 'location', 'date')
+    search_fields = ('name', 'school__name', 'location', 'description')
+    ordering = ('date',)
+    date_hierarchy = 'date'
