@@ -19,12 +19,12 @@
                                     {% for answer in question.answers.all %}
                                         <div class="form-check">
                                             <input
-                                                class="form-check-input"
-                                                type="radio"
-                                                name="question-{{ question.id }}"
-                                                id="answer-{{ answer.id }}"
-                                                value="{{ answer.id }}"
-                                                required
+                                                    class="form-check-input"
+                                                    type="radio"
+                                                    name="question-{{ question.id }}"
+                                                    id="answer-{{ answer.id }}"
+                                                    value="{{ answer.id }}"
+                                                    required
                                             />
                                             <label class="form-check-label text-secondary" for="answer-{{ answer.id }}">
                                                 {{ answer.text }}
@@ -67,11 +67,11 @@
                     },
                     body: JSON.stringify({answers: userAnswers}),
                 })
-                .then(response => response.json())
-                .then(data => {
-                    const resultsDiv = document.getElementById("quizResults");
-                    let progressColor = data.percentage >= 70 ? "bg-success" : "bg-danger";
-                    let resultHTML = `
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsDiv = document.getElementById("quizResults");
+                        let progressColor = data.percentage >= 70 ? "bg-success" : "bg-danger";
+                        let resultHTML = `
                         <div class="card shadow-lg border-0">
                             <div class="card-body text-center">
                                 <h3 class="card-title text-primary">Резултати</h3>
@@ -94,19 +94,20 @@
                         <div class="list-group mt-3">
                     `;
 
-                    Object.keys(data.correct_answers).forEach(questionId => {
-                        const correctAnswer = data.correct_answers[questionId];
-                        resultHTML += `
-                            <div class="list-group-item list-group-item-success">
-                                <strong>Въпрос ${questionId}:</strong> ${correctAnswer.text}
-                            </div>
-                        `;
-                    });
+                        data.questions.forEach((question, index) => {
+                            if (data.correct_answers[question.id]) {
+                                resultHTML += `
+            <div class="list-group-item list-group-item-success">
+                <strong>${index + 1}. ${question.text}:</strong> ${data.correct_answers[question.id].text}
+            </div>
+        `;
+                            }
+                        });
 
-                    resultHTML += "</div>";
-                    resultsDiv.innerHTML = resultHTML;
-                })
-                .catch(error => console.error("Error submitting answers:", error));
+                        resultHTML += "</div>";
+                        resultsDiv.innerHTML = resultHTML;
+                    })
+                    .catch(error => console.error("Error submitting answers:", error));
             });
         });
     </script>
