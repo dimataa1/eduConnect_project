@@ -54,7 +54,7 @@ class CreateTourView(LoginRequiredMixin, View):
             tour.teacher = request.user
             tour.save()
             messages.success(request, "Tour scheduled successfully!")
-            return redirect('home')
+            return redirect('dashboard')
         else:
             messages.error(request, "There was an error scheduling the tour.")
         return render(request, self.template_name, {'form': form})
