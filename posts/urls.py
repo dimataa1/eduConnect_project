@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from .views import CreatePostView, PostEditView, PostDeleteView, PostDetailView, school_detail, add_school, school_list, \
     post_list, vote_comment, TourListView, TourDetailView, TourEditView, TourDeleteView, SchoolEditView, \
-    SchoolDeleteView
+    SchoolDeleteView, tour_signup, tour_unsubscribe
 
 urlpatterns = [
     path('new-post/', CreatePostView.as_view(), name='new_post'),
@@ -24,4 +24,6 @@ urlpatterns = [
     path('tour/<int:pk>/', TourDetailView.as_view(), name='tour_detail'),
     path('tour/<int:pk>/edit/', TourEditView.as_view(), name='tour_edit'),
     path('tour/<int:pk>/delete/', TourDeleteView.as_view(), name='tour_delete'),
+    path('tour/<int:pk>/signup/', tour_signup, name='tour_signup'),
+    path('tour/<int:pk>/unsubscribe/', tour_unsubscribe, name='tour_unsubscribe'),
 ]

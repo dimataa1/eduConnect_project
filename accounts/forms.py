@@ -55,8 +55,11 @@ class LogoutForm(forms.Form):
 
 
 @login_required
-def profile_details_view(request):
-    profile = request.user.profile
+def profile_details_view(request, username):
+    User = get_user_model()
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Profile, user=user)
+
     return render(request, 'accounts_structure/profile_details.html', {'profile': profile})
 
 

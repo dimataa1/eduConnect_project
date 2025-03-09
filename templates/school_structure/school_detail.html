@@ -13,14 +13,18 @@
 
             {% if school.image %}
                 <div class="text-center my-4">
-                    <img src="{{ school.image.url }}" alt="{{ school.name }}"
-                         class="img-fluid rounded shadow" width="450">
+{#                    <img src="{{ school.image.url }}" alt="{{ school.name }}"#}
+{#                         class="img-fluid rounded shadow" width="450">#}
                 </div>
             {% endif %}
 
             <div class="text-center mt-4">
                 <a href="{% url 'school_list' %}" class="btn btn-outline-primary">📋 Виж всички училища</a>
             </div>
+        </div>
+
+        <div class="card-footer bg-white text-center">
+            <p><strong>Автор:</strong> <a href="{% url 'profile_details' username=school.author.username %}" class="text-primary">{{ school.author.username }}</a></p>
         </div>
 
         {% if school.author == request.user %}

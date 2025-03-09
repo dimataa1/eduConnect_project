@@ -105,7 +105,7 @@
 
 
                         <li class="nav-item ms-4">
-                            <a class="nav-link" href="{% url 'profile_details' %}">
+                            <a class="nav-link" href="{% url 'profile_details'  username=request.user.username %}">
                                 <i class="bi bi-person"></i> Профил
                             </a>
                         </li>

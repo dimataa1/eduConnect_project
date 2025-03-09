@@ -110,7 +110,11 @@ class School(models.Model):
 
 
 class Vote(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
     vote_type = models.CharField(
         max_length=10,
@@ -154,6 +158,12 @@ class Tour(models.Model):
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
+    )
+
+    participants = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='tours_joined',
+        blank=True
     )
 
     def __str__(self):

@@ -6,11 +6,17 @@
             <div class="card-body p-4">
                 <h2 class="card-title text-primary fw-bold">{{ post.title }}</h2>
                 <p class="text-muted">📅 {{ post.created_at|date:"F j, Y, g:i a" }}</p>
+                <p class="text-muted">
+                    <strong>Автор:</strong>
+                    <a href="{% url 'profile_details' username=post.author.username %}" class="text-primary">
+                        {{ post.author.username }}
+                    </a>
+                </p>
 
                 {% if post.image %}
                     <div class="text-center mb-4">
-                        <img src="{{ post.image.url }}" class="img-fluid rounded shadow"
-                             alt="{{ post.title }}" style="max-width: 500px; height: auto;">
+                        {#                        <img src="{{ post.image.url }}" class="img-fluid rounded shadow"#}
+                        {#                             alt="{{ post.title }}" style="max-width: 500px; height: auto;">#}
                     </div>
                 {% endif %}
 
@@ -37,16 +43,21 @@
                 {% for comment in post.comments.all|dictsortreversed:"rating" %}
                     <div class="comment mb-4 p-3 border rounded bg-light shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
-                            <strong class="text-primary">@{{ comment.author.username }}</strong>
+                            <a href="{% url 'profile_details' username=comment.author.username %}"
+                               class="text-primary fw-bold">
+                                @{{ comment.author.username }}
+                            </a>
                             <small class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
                         </div>
                         <p class="mt-2">{{ comment.content }}</p>
 
                         <div class="d-flex align-items-center mt-3">
                             <button class="btn btn-sm btn-outline-success me-2"
-                                    onclick="vote('{{ comment.id }}', 'upvote')">👍</button>
+                                    onclick="vote('{{ comment.id }}', 'upvote')">👍
+                            </button>
                             <button class="btn btn-sm btn-outline-danger me-3"
-                                    onclick="vote('{{ comment.id }}', 'downvote')">👎</button>
+                                    onclick="vote('{{ comment.id }}', 'downvote')">👎
+                            </button>
 
                             <span id="rating-{{ comment.id }}" class="fw-bold text-dark ms-2">
                                 Рейтинг: {{ comment.rating|default:"Няма оценка" }}
@@ -80,17 +91,17 @@
                     'X-CSRFToken': '{{ csrf_token }}',
                 },
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.new_rating !== undefined) {
-                    document.getElementById('rating-' + comment_id).innerText = `Рейтинг: ${data.new_rating}`;
-                } else {
-                    alert(data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.new_rating !== undefined) {
+                        document.getElementById('rating-' + comment_id).innerText = `Рейтинг: ${data.new_rating}`;
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
     </script>
 {% endblock %}

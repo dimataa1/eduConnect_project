@@ -327,3 +327,24 @@ def vote_comment(request, post_id, comment_id, vote_action):
     existing_vote.save()
 
     return JsonResponse({'new_rating': comment.rating})
+
+
+@login_required
+def tour_signup(request, pk):
+    tour = get_object_or_404(Tour, pk=pk)
+    if request.user not in tour.participants.all():
+        tour.participants.add(request.user)
+        messages.success(request, "Успешно се записахте за тура!")
+    else:
+        messages.warning(request, "Вече сте записан за този тур.")
+    return redirect('tour_detail', pk=tour.pk)
+
+@login_required
+def tour_unsubscribe(request, pk):
+    tour = get_object_or_404(Tour, pk=pk)
+    if request.user in tour.participants.all():
+        tour.participants.remove(request.user)
+        messages.success(request, "Вие успешно се отписахте от събитието!")
+    else:
+        messages.warning(request, "Не сте записан за този тур.")
+    return redirect('tour_detail', pk=tour.pk)

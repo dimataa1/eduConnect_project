@@ -42,7 +42,7 @@
 
     <div class="card shadow-lg">
         <div class="card-body">
-            <h4 class="card-title">Търсене на училища и обиколки</h4>
+            <h4 class="card-title">Търсене на училища и техните събития</h4>
             <form id="searchSchoolForm">
                 <div class="row">
                     <div class="col-md-10 mb-3">
@@ -125,7 +125,7 @@
                     resultsContainer.innerHTML = '';
 
                     if (data.schools.length === 0 && data.tours.length === 0) {
-                        resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища или обиколки за зададения град.</div>';
+                        resultsContainer.innerHTML = '<div class="alert alert-info" role="alert">Няма намерени училища или събития за зададения град.</div>';
                     } else {
                         if (data.schools.length > 0) {
                             resultsContainer.innerHTML += '<h2>Училища</h2>';
@@ -149,7 +149,7 @@
                         }
 
                         if (data.tours.length > 0) {
-                            resultsContainer.innerHTML += '<h2>Обиколки</h2>';
+                            resultsContainer.innerHTML += '<h2>Събития</h2>';
                             data.tours.forEach(tour => {
                                 var tourCard = `
                                   <div class="col-md-4 mb-4">
