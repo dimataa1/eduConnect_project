@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-md-4 text-center">
                                 {% if profile.profile_picture %}
-                                    {# <img src="{{ profile.profile_picture.url }}" class="img-fluid mb-3 border rounded"> #}
+                                     <img src="{{ profile.profile_picture.url }}" class="img-fluid mb-3 border rounded">
                                 {% else %}
                                     <img src="{% static 'profile_images/../../static/default/default_pfp.jpg' %}"
                                          class="img-fluid mb-3 border rounded">
@@ -73,7 +73,7 @@
 `
                 {% if request.user != profile.user %}
                     <div class="text-center mt-4">
-                        <a href="{https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTR7p7FurnsVhAR-krK_yCO-f6wCrE5Cac-Mg&s" class="btn btn-success btn-lg px-4 py-3 shadow-lg rounded-pill">
+                        <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTR7p7FurnsVhAR-krK_yCO-f6wCrE5Cac-Mg&s" class="btn btn-success btn-lg px-4 py-3 shadow-lg rounded-pill">
                             <i class="bi bi-chat-dots-fill me-2" ></i> Започни чат
                         </a>
                     </div>
