@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'cloudinary',
     'cloudinary_storage',
-    "channels",
-    "chat",
+    # "channels",
+    # "chat",
 ]
 
 MIDDLEWARE = [
