@@ -16,7 +16,7 @@
                                     {% elif item_data.type == 'School' %}
                                         {{ item.name }} <span class="text-muted">(Училище)</span>
                                     {% elif item_data.type == 'Tour' %}
-                                        {{ item.name }} <span class="text-muted">(Обиколка)</span>
+                                        {{ item.name }} <span class="text-muted">(Събитие)</span>
                                     {% elif item_data.type == 'Quiz' %}
                                         {{ item.title }} <span class="text-muted">(Тест)</span>
                                     {% endif %}
@@ -47,7 +47,7 @@
             {% empty %}
                 <div class="col-12">
                     <div class="alert alert-light text-center">
-                        Няма налични постове, училища, обиколки или тестове.
+                        Няма налични постове, училища, събития или тестове.
                     </div>
                 </div>
             {% endfor %}

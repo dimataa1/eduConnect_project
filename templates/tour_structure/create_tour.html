@@ -8,14 +8,14 @@
                  style="background: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
                 <div class="card-header text-center py-4"
                      style="background: linear-gradient(90deg, #6a11cb, #2575fc); border-radius: 20px 20px 0 0; color: white;">
-                    <h2 class="mb-1 fw-bold">✨ Запази Обиколка</h2>
-                    <p class="mb-0">Попълнете формата, за да организирате незабравима училищна обиколка!</p>
+                    <h2 class="mb-1 fw-bold">✨ Организирай Събитие</h2>
+                    <p class="mb-0">Попълнете формата, за да организирате незабравима училищно събитие!</p>
                 </div>
                 <div class="card-body px-5">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mb-4">
-                            <label for="id_name" class="form-label fw-semibold text-dark">Име на обиколката</label>
+                            <label for="id_name" class="form-label fw-semibold text-dark">Име на събитието</label>
                             <input type="text" class="form-control neomorph-input" id="id_name" name="name"
                                    placeholder="Въведете име">
                         </div>
@@ -23,7 +23,7 @@
                             <label for="id_description" class="form-label fw-semibold text-dark">Описание</label>
                             <textarea class="form-control neomorph-input" id="id_description" name="description"
                                       rows="3"
-                                      placeholder="Опишете обиколката"></textarea>
+                                      placeholder="Опишете събитието"></textarea>
                         </div>
                         <div class="mb-4">
                             <label for="id_date" class="form-label fw-semibold text-dark">Дата</label>
@@ -53,7 +53,7 @@
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-lg btn-gradient text-white px-5 py-2 rounded-pill">
-                                Създай обиколка 🚀
+                                Създай събитие 🚀
                             </button>
                         </div>
                     </form>

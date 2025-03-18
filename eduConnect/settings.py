@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     "quiz.apps.QuizConfig",
     'crispy_forms',
     'cloudinary',
-    'cloudinary_storage'
+    'cloudinary_storage',
+    "channels",
+    "chat",
 ]
 
 MIDDLEWARE = [
