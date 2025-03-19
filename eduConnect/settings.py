@@ -86,7 +86,7 @@ DATABASES = {
     }
 }
 
-DATABASES["default"] = dj_database_url.parse('postgresql://educonnect_akwl_user:cxNdJBpbeqVdFnCR3bQy5idCdWJL3hrh@dpg-cus93s2n91rc73djj87g-a.oregon-postgres.render.com/educonnect_akwl')
+DATABASES["default"] =os.getenv('RENDER_DATABASE_URL', config('RENDER_DATABASE_URL'))
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
