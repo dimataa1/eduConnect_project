@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'cloudinary',
     'cloudinary_storage',
-    # "channels",
-    # "chat",
+    "channels",
+    # 'corsheaders',
+    "chat"
 ]
 
 MIDDLEWARE = [
@@ -75,6 +76,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'eduConnect.wsgi.application'
 
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -86,8 +88,7 @@ DATABASES = {
     }
 }
 
-DATABASES["default"] = dj_database_url.parse('postgresql://educonnect_akwl_user:cxNdJBpbeqVdFnCR3bQy5idCdWJL3hrh@dpg-cus93s2n91rc73djj87g-a.oregon-postgres.render.com/educonnect_akwl')
-
+# DATABASES["default"] = dj_database_url.parse('postgresql://educonnect_akwl_user:cxNdJBpbeqVdFnCR3bQy5idCdWJL3hrh@dpg-cus93s2n91rc73djj87g-a.oregon-postgres.render.com/educonnect_akwl')
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -134,3 +135,13 @@ CLOUDINARY_STORAGE = {
 
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+ASGI_APPLICATION = 'eduConnect.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
