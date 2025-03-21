@@ -66,20 +66,20 @@ def profile_details_view(request, username):
 
 @login_required
 def profile_update_view(request):
-    profile = get_object_or_404(Profile, user=request.user)
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Profile, user=user)
 
     if request.method == 'POST':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('profile_details', username=request.user.username)
+            return redirect('profile_details', username=user.username)  # Redirect to the updated profile details page
         else:
             print(form.errors)
     else:
         form = ProfileUpdateForm(instance=profile)
 
     return render(request, 'accounts_structure/profile_update.html', {'form': form})
-
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
