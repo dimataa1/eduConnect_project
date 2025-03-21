@@ -72,7 +72,7 @@ def profile_update_view(request):
         form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('profile_details')
+            return redirect('profile_details', username=request.user.username)
         else:
             print(form.errors)
     else:
