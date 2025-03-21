@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'cloudinary',
     'cloudinary_storage',
-    "channels",
-    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -52,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'accounts.middleware.CheckTeacherApprovalMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+
 
 ]
 
