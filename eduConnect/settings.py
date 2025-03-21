@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     "channels",
     'corsheaders',
-    "chat"
 ]
 
 MIDDLEWARE = [
@@ -137,16 +136,9 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-ASGI_APPLICATION = 'eduConnect.asgi.application'
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
 ]
+
+ASGI_APPLICATION = 'eduConnect.asgi.application'

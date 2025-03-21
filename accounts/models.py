@@ -12,7 +12,7 @@ from accounts.managers import AppUserManager
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
 
-    userId = ShortUUIDField()
+
 
     ROLE_CHOICES = (
         ('student', 'Student'),
