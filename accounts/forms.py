@@ -1,5 +1,6 @@
 
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
@@ -65,17 +66,24 @@ def profile_details_view(request, username):
 
 
 @login_required
-def profile_update_view(request):
+def profile_update_view(request, username):
+    User = get_user_model()
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
+
+    if request.user != user:
+        messages.error(request, "You cannot update another user's profile.")
+        return redirect('profile_details', username=request.user.username)
 
     if request.method == 'POST':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('profile_details', username=user.username)  # Redirect to the updated profile details page
+            messages.success(request, "Your profile has been updated successfully!")
+            return redirect('profile_details', username=username)
         else:
             print(form.errors)
+            messages.error(request, "There were some errors in your form. Please fix them below.")
     else:
         form = ProfileUpdateForm(instance=profile)
 
