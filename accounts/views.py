@@ -98,7 +98,7 @@ def delete_profile(request, username):
         return redirect('profile_details', username=request.user.username)
 
     profile = get_object_or_404(Profile, user=user)
-    profile.delete_profile_picture()  #
+    profile.delete_profile_picture()
 
     user.delete()
 

@@ -137,7 +137,7 @@ def profile_update_view(request, username):
         if form.is_valid():
             form.save()
             messages.success(request, "Your profile has been updated successfully!")
-            return redirect('profile_details', username=username)
+            return redirect('profile_details', username=request.user.username)
         else:
             print(form.errors)
             messages.error(request, "There were some errors in your form. Please fix them below.")
@@ -161,7 +161,7 @@ def change_password_view(request, username):
         if form.is_valid():
             form.save(user)
             messages.success(request, "Паролата ви беше успешно променена!")
-            return redirect('profile_details', username=username)
+            return redirect('profile_details', username=request.user.username)
         else:
             messages.error(request, "Имаше грешки в формата. Моля, коригирайте ги.")
     else:
