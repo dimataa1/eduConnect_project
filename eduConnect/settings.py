@@ -1,3 +1,4 @@
+
 from pathlib import Path
 import os
 from decouple import config
@@ -36,9 +37,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "quiz.apps.QuizConfig",
     'crispy_forms',
-    'cloudinary',
-    'cloudinary_storage',
-
+    'cloudinary', 'cloudinary_storage'
 ]
 
 MIDDLEWARE = [
@@ -51,7 +50,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'accounts.middleware.CheckTeacherApprovalMiddleware',
-
 
 ]
 
@@ -75,7 +73,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'eduConnect.wsgi.application'
 
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -87,7 +84,8 @@ DATABASES = {
     }
 }
 
-# DATABASES["default"] = dj_database_url.parse('postgresql://educonnect_akwl_user:cxNdJBpbeqVdFnCR3bQy5idCdWJL3hrh@dpg-cus93s2n91rc73djj87g-a.oregon-postgres.render.com/educonnect_akwl')
+DATABASES["default"] = dj_database_url.parse('postgresql://educonnect_akwl_user:cxNdJBpbeqVdFnCR3bQy5idCdWJL3hrh@dpg-cus93s2n91rc73djj87g-a.oregon-postgres.render.com/educonnect_akwl')
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -126,18 +124,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUD_NAME'),
-    'API_KEY': config('CLOUD_API_KEY'),
-    'API_SECRET': config('CLOUD_API_SECRET'),
+    'CLOUD_NAME':os.getenv('CLOUD_NAME', config('CLOUD_NAME')),
+    'API_KEY': os.getenv('CLOUD_API_KEY', config('CLOUD_API_KEY')),
+    'API_SECRET': os.getenv('CLOUD_API_SECRET', config('CLOUD_API_SECRET')),
 }
 
-
-
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000",
-]
-
-ASGI_APPLICATION = 'eduConnect.asgi.application'
