@@ -75,7 +75,7 @@ def delete_profile_picture(request):
     profile = get_object_or_404(Profile, user=request.user)
     profile.delete_profile_picture()
     messages.success(request, "Успешно изтрита профилна снимка!")
-    return redirect('profile_details')
+    return redirect('profile_details', username=request.user.username)
 
 
 class ProfileDeleteView(LoginRequiredMixin, DeleteView):
@@ -100,7 +100,7 @@ def change_password(request):
             form.save(user)
             update_session_auth_hash(request, user)
             messages.success(request, 'Паролата бе сменена успешно!')
-            return redirect('profile_details')
+            return redirect('profile_details', username=request.user.username)
         else:
             messages.error(request, 'Моля, поправете грешките, показани на екрана!')
     else:
