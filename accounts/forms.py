@@ -145,3 +145,26 @@ def profile_update_view(request, username):
         form = ProfileUpdateForm(instance=profile)
 
     return render(request, 'accounts_structure/profile_update.html', {'form': form})
+
+
+@login_required
+def change_password_view(request, username):
+    User = get_user_model()
+    user = get_object_or_404(User, username=username)
+
+    if request.user != user:
+        messages.error(request, "Не можете да променяте паролата на друг потребител.")
+        return redirect('profile_details', username=request.user.username)
+
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(request.POST)
+        if form.is_valid():
+            form.save(user)
+            messages.success(request, "Паролата ви беше успешно променена!")
+            return redirect('profile_details', username=username)
+        else:
+            messages.error(request, "Имаше грешки в формата. Моля, коригирайте ги.")
+    else:
+        form = CustomPasswordChangeForm()
+
+    return render(request, 'accounts_structure/change_password.html', {'form': form, 'user': user})

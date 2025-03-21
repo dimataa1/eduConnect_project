@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout, update_session_auth_hash
+from django.contrib.auth import login, logout, update_session_auth_hash, get_user_model
 from django.views import View
 from django.views.generic import DetailView, DeleteView
 
@@ -72,39 +72,37 @@ class LogoutView(View):
 
 
 @login_required
-def delete_profile_picture(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    profile.delete_profile_picture()
-    messages.success(request, "Успешно изтрита профилна снимка!")
-    return redirect('profile_details', username=request.user.username)
+def delete_profile_picture(request, username):
+    user = get_object_or_404(get_user_model(), username=username)
+    profile = get_object_or_404(Profile, user=user)
 
+    if request.user != user:
+        messages.error(request, "You cannot delete another user's profile picture.")
+        return redirect('profile_details', username=request.user.username)
 
-class ProfileDeleteView(LoginRequiredMixin, DeleteView):
-    model = User
-    template_name = 'accounts_structure/profile_confirm_delete.html'
-    context_object_name = 'user'
+    if profile.profile_picture:
+        profile.delete_profile_picture()
+        messages.success(request, "Successfully deleted your profile picture!")
+    else:
+        messages.warning(request, "No profile picture to delete.")
 
-    def get_object(self, queryset=None):
-        return self.request.user
-
-    def get_success_url(self):
-        return reverse_lazy('logout')
+    return redirect('profile_details', username=username)
 
 
 @login_required
-def change_password(request):
-    if request.method == 'POST':
-        form = CustomPasswordChangeForm(request.POST)
+def delete_profile(request, username):
+    user = get_object_or_404(get_user_model(), username=username)
 
-        if form.is_valid():
-            user = request.user
-            form.save(user)
-            update_session_auth_hash(request, user)
-            messages.success(request, 'Паролата бе сменена успешно!')
-            return redirect('profile_details', username=request.user.username)
-        else:
-            messages.error(request, 'Моля, поправете грешките, показани на екрана!')
-    else:
-        form = CustomPasswordChangeForm()
+    if request.user != user:
+        messages.error(request, "You cannot delete another user's profile.")
+        return redirect('profile_details', username=request.user.username)
 
-    return render(request, 'accounts_structure/change_password.html', {'form': form})
+    profile = get_object_or_404(Profile, user=user)
+    profile.delete_profile_picture()  #
+
+    user.delete()
+
+    messages.success(request, "Your profile has been successfully deleted!")
+
+    return redirect('logout')
+
