@@ -6,11 +6,14 @@ from django.contrib.auth.models import PermissionsMixin
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from shortuuidfield import ShortUUIDField
 from accounts.managers import AppUserManager
 
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
+
+    userId = ShortUUIDField()
+
     ROLE_CHOICES = (
         ('student', 'Student'),
         ('teacher', 'Teacher'),

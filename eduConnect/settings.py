@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     "channels",
-    # 'corsheaders',
+    'corsheaders',
     "chat"
 ]
 
@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'accounts.middleware.CheckTeacherApprovalMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 
 ]
 
@@ -145,3 +146,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+]
