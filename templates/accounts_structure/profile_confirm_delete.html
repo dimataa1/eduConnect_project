@@ -10,7 +10,7 @@
                 <form method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger">Да, изтрий профила ми</button>
-                    <a href="{% url 'profile_details' %}" class="btn btn-secondary">Отказ</a>
+                    <a href="{% url 'profile_details' username=profile.user.username %}" class="btn btn-secondary">Отказ</a>
                 </form>
             </div>
         </div>

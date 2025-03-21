@@ -37,7 +37,6 @@ class CustomLoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Въведи паролата си'}),
         label="Password",
-
     )
 
     def clean(self):
@@ -55,39 +54,6 @@ class CustomLoginForm(forms.Form):
 class LogoutForm(forms.Form):
     confirm = forms.BooleanField(required=True, label="Confirm Logout")
 
-
-@login_required
-def profile_details_view(request, username):
-    User = get_user_model()
-    user = get_object_or_404(User, username=username)
-    profile = get_object_or_404(Profile, user=user)
-
-    return render(request, 'accounts_structure/profile_details.html', {'profile': profile})
-
-
-@login_required
-def profile_update_view(request, username):
-    User = get_user_model()
-    user = get_object_or_404(User, username=username)
-    profile = get_object_or_404(Profile, user=user)
-
-    if request.user != user:
-        messages.error(request, "You cannot update another user's profile.")
-        return redirect('profile_details', username=request.user.username)
-
-    if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Your profile has been updated successfully!")
-            return redirect('profile_details', username=username)
-        else:
-            print(form.errors)
-            messages.error(request, "There were some errors in your form. Please fix them below.")
-    else:
-        form = ProfileUpdateForm(instance=profile)
-
-    return render(request, 'accounts_structure/profile_update.html', {'form': form})
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
@@ -146,3 +112,36 @@ class CustomPasswordChangeForm(forms.Form):
         if commit:
             user.save()
         return user
+
+@login_required
+def profile_details_view(request, username):
+    User = get_user_model()
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Profile, user=user)
+
+    return render(request, 'accounts_structure/profile_details.html', {'profile': profile})
+
+
+@login_required
+def profile_update_view(request, username):
+    User = get_user_model()
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Profile, user=user)
+
+    if request.user != user:
+        messages.error(request, "You cannot update another user's profile.")
+        return redirect('profile_details', username=request.user.username)
+
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile has been updated successfully!")
+            return redirect('profile_details', username=username)
+        else:
+            print(form.errors)
+            messages.error(request, "There were some errors in your form. Please fix them below.")
+    else:
+        form = ProfileUpdateForm(instance=profile)
+
+    return render(request, 'accounts_structure/profile_update.html', {'form': form})

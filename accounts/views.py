@@ -19,6 +19,7 @@ from django.contrib import messages
 from .models import Profile, AppUser
 
 
+
 def register(request):
     if request.method == 'POST':
         form = CustomUserForm(request.POST)
