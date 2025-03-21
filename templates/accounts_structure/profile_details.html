@@ -54,32 +54,32 @@
                     <div class="card-footer text-center">
                         {% if request.user == profile.user %}
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{% url 'profile_update  username=profile.user.username '  %}" class="btn btn-outline-primary">
+                                <!-- Updated URL with correct username parameter -->
+                                <a href="{% url 'profile_update' username=profile.user.username %}" class="btn btn-outline-primary">
                                     ✏️ Редактиране на профила
                                 </a>
-                                <a href="{% url 'change_password  username=profile.user.username ' %}" class="btn btn-outline-warning">
+                                <a href="{% url 'change_password' username=profile.user.username %}" class="btn btn-outline-warning">
                                     🔒 Смяна на парола
                                 </a>
-                                <a href="{% url 'delete_profile_picture  username=profile.user.username ' %}" class="btn btn-outline-danger">
+                                <a href="{% url 'delete_profile_picture' username=profile.user.username %}" class="btn btn-outline-danger">
                                     🗑️ Изтрий снимка
                                 </a>
-                                <a href="{% url 'delete_profile  username=profile.user.username ' %}" class="btn btn-danger">
+                                <a href="{% url 'delete_profile' username=profile.user.username %}" class="btn btn-danger">
                                     🚨 Изтрий профилa
                                 </a>
                             </div>
                         {% endif %}
                     </div>
                 </div>
-`
                 {% if request.user != profile.user %}
                     <div class="text-center mt-4">
                         <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTR7p7FurnsVhAR-krK_yCO-f6wCrE5Cac-Mg&s" class="btn btn-success btn-lg px-4 py-3 shadow-lg rounded-pill">
-                            <i class="bi bi-chat-dots-fill me-2" ></i> Започни чат
+                            <i class="bi bi-chat-dots-fill me-2"></i> Започни чат
                         </a>
                     </div>
                 {% endif %}
-
             </div>
         </div>
     </div>
+
 {% endblock %}
