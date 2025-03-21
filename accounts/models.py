@@ -11,7 +11,6 @@ from accounts.managers import AppUserManager
 
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
-
     ROLE_CHOICES = (
         ('student', 'Student'),
         ('teacher', 'Teacher'),
