@@ -54,16 +54,16 @@
                     <div class="card-footer text-center">
                         {% if request.user == profile.user %}
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{% url 'profile_update' %}" class="btn btn-outline-primary">
+                                <a href="{% url 'profile_update  username=profile.user.username '  %}" class="btn btn-outline-primary">
                                     ✏️ Редактиране на профила
                                 </a>
-                                <a href="{% url 'change_password' %}" class="btn btn-outline-warning">
+                                <a href="{% url 'change_password  username=profile.user.username ' %}" class="btn btn-outline-warning">
                                     🔒 Смяна на парола
                                 </a>
-                                <a href="{% url 'delete_profile_picture' %}" class="btn btn-outline-danger">
+                                <a href="{% url 'delete_profile_picture  username=profile.user.username ' %}" class="btn btn-outline-danger">
                                     🗑️ Изтрий снимка
                                 </a>
-                                <a href="{% url 'delete_profile' %}" class="btn btn-danger">
+                                <a href="{% url 'delete_profile  username=profile.user.username ' %}" class="btn btn-danger">
                                     🚨 Изтрий профилa
                                 </a>
                             </div>
