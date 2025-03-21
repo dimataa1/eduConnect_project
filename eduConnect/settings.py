@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'rest_framework',
     "quiz.apps.QuizConfig",
     'crispy_forms',
-    'cloudinary', 'cloudinary_storage'
+    'cloudinary',
+    'cloudinary_storage',
+    # "channels",
+    # "chat",
 ]
 
 MIDDLEWARE = [
@@ -124,9 +127,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME':os.getenv('CLOUD_NAME', config('CLOUD_NAME')),
-    'API_KEY': os.getenv('CLOUD_API_KEY', config('CLOUD_API_KEY')),
-    'API_SECRET': os.getenv('CLOUD_API_SECRET', config('CLOUD_API_SECRET')),
+    'CLOUD_NAME': config('CLOUD_NAME'),
+    'API_KEY': config('CLOUD_API_KEY'),
+    'API_SECRET': config('CLOUD_API_SECRET'),
 }
+
+
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

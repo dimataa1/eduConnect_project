@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 from django.urls import path
 
@@ -16,4 +17,3 @@ urlpatterns = [
     path('profile/change-password/', change_password, name='change_password'),
 
 ]
-

@@ -1,3 +1,4 @@
+
 import os
 
 from cloudinary.models import CloudinaryField
@@ -137,10 +138,3 @@ class Profile(models.Model):
         self.delete_profile_picture()
         self.profile_picture = 'https://res.cloudinary.com/dmsakestc/image/upload/v1740333445/Default_pfp.svg_gavlli.png'
         self.save()
-
-
-class OnlineUser(models.Model):
-    user = models.OneToOneField(AppUser, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
