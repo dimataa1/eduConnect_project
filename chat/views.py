@@ -7,17 +7,22 @@ from django.shortcuts import render, get_object_or_404, redirect
 from chat.models import Thread
 
 
+
 @login_required
 def messages_page(request):
+    User = get_user_model()
+
     threads = Thread.objects.by_user(user=request.user).prefetch_related('chatmessage_thread').order_by('timestamp')
     context = {
-        'Threads': threads
+        'Threads': threads,
+        'users': User.objects.all()
     }
     return render(request, 'chat_structure/messages.html', context)
 
 
 @login_required
 def chat_room(request, thread_id):
+
     thread = get_object_or_404(Thread, id=thread_id)
 
     # Ensure the current user is part of this thread
@@ -27,11 +32,13 @@ def chat_room(request, thread_id):
         # Determine the other user in the chat
     other_user = thread.first_person if thread.second_person == request.user else thread.second_person
     messages = thread.chatmessage_thread.all().order_by('timestamp')
-
+    User = get_user_model()
     context = {
+
         'thread': thread,
         'other_user': other_user,
         'messages': messages,
+        'users': User.objects.all()
     }
     return render(request, 'chat_structure/messages.html', context)
 

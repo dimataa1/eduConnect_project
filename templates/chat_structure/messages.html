@@ -1,101 +1,122 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Chat</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
+<head>
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
 
-        <link rel="stylesheet" href="{% static 'messages.css' %}">
-    </head>
-	<body>
-    {% if user.is_authenticated %}
-        <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.username }}</h1>
-        <input type="hidden" id="logged-in-user" value="{{ user.id }}">
-    {% endif %}
-		<div class="container-fluid h-100">
-			<div class="row justify-content-center h-100">
-				<div class="col-md-4 col-xl-3 chat h-100 mt-4">
-                    <div class="card mb-sm-3 mb-md-0 contacts_card">
-					<div class="card-header">
-						<div class="input-group">
-							<input type="text" placeholder="Search..." name="search" class="form-control search" id="search-input">
-							<div class="input-group-prepend">
-								<span class="input-group-text search_btn" id="search-btn"><i class="fas fa-search"></i></span>
-							</div>
-						</div>
-					</div>
-					<div class="card-body contacts_body">
-						<ul class="contacts" id="contacts-list">
-                            {% for thread in Threads %}
-                                <li class="{% if forloop.first %}active{% endif %} contact-li" chat-id="chat_{{ thread.id }}" style="cursor: pointer">
+    <link rel="stylesheet" href="{% static 'messages.css' %}">
+</head>
+<body>
+{% if user.is_authenticated %}
+    <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.username }}</h1>
+    <input type="hidden" id="logged-in-user" value="{{ user.id }}">
+{% endif %}
+<div class="container-fluid h-100">
+    <div class="row justify-content-center h-100">
+        <div class="col-md-4 col-xl-3 chat h-100 mt-4">
+            <div class="card mb-sm-3 mb-md-0 contacts_card">
+                <div class="card-header">
+                    <div class="input-group">
+                        <input type="text" placeholder="Search..." name="search" class="form-control search"
+                               id="search-input">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text search_btn" id="search-btn"><i
+                                    class="fas fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body contacts_body">
+                    <ul class="contacts" id="contacts-list">
+                        {% for user in users %}
+                            {% if user != request.user %}
+                                <li class="contact-li" data-user-id="{{ user.id }}" style="cursor: pointer">
                                     <div class="d-flex bd-highlight">
                                         <div class="img_cont">
-                                            <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
+                                            <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
+                                                 class="rounded-circle user_img">
                                             <span class="online_icon"></span>
                                         </div>
                                         <div class="user_info">
-                                            {% if thread.first_person == user %}
-                                                <span>{{ thread.second_person.username }}</span>
-                                            {% else %}
-                                                <span>{{ thread.first_person.username }}</span>
-                                            {% endif %}
+                                            <span>{{ user.username }}</span>
                                         </div>
                                     </div>
                                 </li>
-                            {% endfor %}
-						</ul>
-					</div>
-					<div class="card-footer"></div>
-				</div></div>
-				<!-- Chat section code here -->
-			</div>
-		</div>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer"></div>
+            </div>
+        </div>
+        <!-- Chat section code here -->
+        <div class="col-md-8 col-xl-6 chat h-100 mt-4">
+            <div class="card">
+                <div class="messages-wrapper hide is_active" id="chat-1">
+                    <div class="card-header msg_head">
+                        <div class="d-flex bd-highlight">
+                            <div class="img_cont">
+                                <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
+                                <span class="online_icon"></span>
+                            </div>
+                            <div class="user_info">
+                                <span>Chat with User 2</span>
+                                <p>3 messages</p>
+                            </div>
+                            <div class="video_cam">
+                                <span><i class="fas fa-video"></i></span>
+                                <span><i class="fas fa-phone"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body msg_card_body">
+                        <div class="d-flex mb-4 replied">
+                            <div class="msg_cotainer_send">
+                                Hello, how are you doing today?
+                                <span class="msg_time_send">12:00</span>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4 received">
+                            <div class="img_cont_msg">
+                                <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
+                            </div>
+                            <div class="msg_cotainer">
+                                I'm good, thanks for asking.
+                                <span class="msg_time">12:01</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <form id="send-message-form">
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
+                                </div>
+                                <input type="text" name="message" id="input-message" class="form-control type_msg" placeholder="Type your message...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-secondary" type="submit">
+                                        <span class="input-group-text send_btn">
+                                            <i class="fas fa-location-arrow"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <script>
-            $(document).ready(function() {
-                console.log("Search bar script loaded");
-
-                // Trigger search when typing in the search field
-                $('#search-input').on('input', function() {
-                    console.log('Input detected');
-                    var searchText = $(this).val().toLowerCase();
-                    console.log('Search Text: ', searchText);
-
-                    // Filter contacts based on search text
-                    $('#contacts-list li').each(function() {
-                        var contactName = $(this).find('.user_info span').text().toLowerCase();
-                        console.log('Contact Name: ', contactName);
-
-                        if (contactName.indexOf(searchText) !== -1) {
-                            $(this).show();
-                        } else {
-                            $(this).hide();
-                        }
-                    });
-                });
-
-                // Optional: trigger the search on button click as well
-                $('#search-btn').on('click', function() {
-                    console.log('Search button clicked');
-                    var searchText = $('#search-input').val().toLowerCase();
-                    console.log('Search Text: ', searchText);
-
-                    $('#contacts-list li').each(function() {
-                        var contactName = $(this).find('.user_info span').text().toLowerCase();
-                        console.log('Contact Name: ', contactName);
-
-                        if (contactName.indexOf(searchText) !== -1) {
-                            $(this).show();
-                        } else {
-                            $(this).hide();
-                        }
-                    });
-                });
-            });
-        </script>
-    </body>
+<script src="{% static 'messages.js' %}"></script>
+</body>
 </html>

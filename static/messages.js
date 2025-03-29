@@ -117,3 +117,37 @@ function get_active_thread_id(){
     let thread_id = chat_id.replace('chat_', '')
     return thread_id
 }
+
+
+$(document).ready(function() {
+        console.log("Search bar script loaded");
+        $('#contacts-list').hide();
+
+        $('#search-input').on('input', function() {
+            var searchText = $(this).val().toLowerCase();
+
+            if (searchText.trim() === '') {
+                $('#contacts-list').show(); // Show all contacts if search is cleared
+                return;
+            }
+
+            $('#contacts-list').show(); // Show when searching
+
+            $('#contacts-list li').each(function() {
+                var contactName = $(this).find('.user_info span').text().toLowerCase();
+
+                if (contactName.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        // Simulating switching between chats
+        $('#contacts-list li').on('click', function() {
+            var chatId = "chat-" + $(this).data('user-id');
+            $('.messages-wrapper').removeClass('is_active').addClass('hide');
+            $("#" + chatId).removeClass('hide').addClass('is_active');
+        });
+    });
