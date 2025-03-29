@@ -39,10 +39,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'cloudinary',
     'cloudinary_storage',
-    # "channels",
-    # "chat",
+    'chat',
+    "channels",
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -73,6 +72,7 @@ TEMPLATES = [
         },
     },
 ]
+ASGI_APPLICATION = 'eduConnect.asgi.application'
 
 WSGI_APPLICATION = 'eduConnect.wsgi.application'
 
@@ -132,6 +132,14 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': config('CLOUD_API_SECRET'),
 }
 
-
-
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        # 'CONFIG': {
+        #     'hosts': [('127.0.0.1', 6379)],
+        # }
+    }
+}
