@@ -86,7 +86,7 @@ function newMessage(message, sent_by_id, thread_id) {
 
     }
 
-    let message_body = $('.messages-wrapper[chat-id="' + chat_id + '"] .msg_card_body')
+    let message_body = $('.messages-wrapper[chat_structure-id="' + chat_id + '"] .msg_card_body')
 	message_body.append($(message_element))
     message_body.animate({
         scrollTop: $(document).height()
@@ -100,9 +100,9 @@ $('.contact-li').on('click', function (){
     $(this).addClass('active')
 
     // message wrappers
-    let chat_id = $(this).attr('chat-id')
+    let chat_id = $(this).attr('chat_structure-id')
     $('.messages-wrapper.is_active').removeClass('is_active')
-    $('.messages-wrapper[chat-id="' + chat_id +'"]').addClass('is_active')
+    $('.messages-wrapper[chat_structure-id="' + chat_id +'"]').addClass('is_active')
 
 })
 
@@ -113,7 +113,7 @@ function get_active_other_user_id(){
 }
 
 function get_active_thread_id(){
-    let chat_id = $('.messages-wrapper.is_active').attr('chat-id')
+    let chat_id = $('.messages-wrapper.is_active').attr('chat_structure-id')
     let thread_id = chat_id.replace('chat_', '')
     return thread_id
 }
