@@ -19,14 +19,19 @@ def messages_page(request):
 @login_required
 def chat_room(request, thread_id):
     thread = get_object_or_404(Thread, id=thread_id)
+
     # Ensure the current user is part of this thread
     if request.user != thread.first_person and request.user != thread.second_person:
-        # Redirect if user is not part of the thread
         return redirect('home')
+
+        # Determine the other user in the chat
+    other_user = thread.first_person if thread.second_person == request.user else thread.second_person
+    messages = thread.chatmessage_thread.all().order_by('timestamp')
 
     context = {
         'thread': thread,
-        'other_user': thread.first_person if thread.second_person == request.user else thread.second_person,
+        'other_user': other_user,
+        'messages': messages,
     }
     return render(request, 'chat_structure/messages.html', context)
 
