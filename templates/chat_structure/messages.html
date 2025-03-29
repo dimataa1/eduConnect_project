@@ -132,5 +132,33 @@
             </div>
         </div>
     </div>
+ <script>
+            $(document).ready(function() {
+                $('#search-input').on('input', function() {
+                    var searchText = $(this).val().toLowerCase();
+                    $('#contacts-list li').each(function() {
+                        var contactName = $(this).find('.user_info span').text().toLowerCase();
+                        if (contactName.indexOf(searchText) !== -1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                });
+
+                // Optional: trigger the search on button click as well
+                $('#search-btn').on('click', function() {
+                    var searchText = $('#search-input').val().toLowerCase();
+                    $('#contacts-list li').each(function() {
+                        var contactName = $(this).find('.user_info span').text().toLowerCase();
+                        if (contactName.indexOf(searchText) !== -1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                });
+            });
+        </script>
 </body>
 </html>
