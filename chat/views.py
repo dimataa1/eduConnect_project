@@ -13,3 +13,4 @@ def messages_page(request):
         'Threads': threads
     }
     return render(request, 'chat_structure/messages.html', context)
+#
