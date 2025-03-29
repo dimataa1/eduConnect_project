@@ -71,9 +71,9 @@
                         {% endif %}
                     </div>
                 </div>
-                {% if request.user != profile.user %}
+                 {% if request.user != profile.user %}
                     <div class="text-center mt-4">
-                        <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTR7p7FurnsVhAR-krK_yCO-f6wCrE5Cac-Mg&s" class="btn btn-success btn-lg px-4 py-3 shadow-lg rounded-pill">
+                        <a href="{% url 'start_chat' user_id=profile.user.id %}" class="btn btn-success btn-lg px-4 py-3 shadow-lg rounded-pill">
                             <i class="bi bi-chat-dots-fill me-2"></i> Започни чат
                         </a>
                     </div>
