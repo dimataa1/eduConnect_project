@@ -6,156 +6,198 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}EduConnect{% endblock %}</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{% static 'styles/style.css' %}?v=1" rel="stylesheet">
+    <link href="{% static 'styles/style.css' %}?v=5" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        /* Global Body */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top left, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* WOW Navbar */
+        .wow-navbar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+            border-radius: 16px;
+            margin: 20px auto;
+            padding: 0.7rem 2rem;
+            max-width: 1100px;
+            position: sticky;
+            top: 20px;
+            z-index: 999;
+        }
+
+        .wow-navbar .navbar-brand {
+            color: #00ffff;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .wow-navbar .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+            filter: drop-shadow(0 0 4px #00ffff);
+        }
+
+        .wow-navbar .nav-link {
+            color: #fff;
+            font-weight: 500;
+            position: relative;
+            margin: 0 10px;
+            transition: 0.3s ease;
+        }
+
+        .wow-navbar .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00ffff;
+            transition: 0.3s ease;
+        }
+
+        .wow-navbar .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .wow-navbar .nav-link:hover {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .dropdown-menu {
+            background: rgba(0, 0, 0, 0.9);
+            border: none;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .dropdown-item {
+            color: #fff;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #00ffff22;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        footer {
+            background: #0a0a0a;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: auto;
+        }
+    </style>
+
     {% block extra_head %}{% endblock %}
     {% block extra_styles %}{% endblock %}
 </head>
 <body>
-<div id="wrapper" class="d-flex flex-column min-vh-100">
+<div class="d-flex flex-column min-vh-100">
 
-    <header class="bg-light py-3 shadow-sm">
-        <div class="container d-flex justify-content-between align-items-center">
-                {% if request.user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'chat' %}">
-                        <i class="bi bi-chat-left-dots"></i> Чат
-                     </a>
-
-                {% endif %}
-
-
-            <a href="{% url 'academic_calendar' %}" class="celendar navbar-brand d-flex align-items-center">
-                <i class="bi bi-calendar me-2" style="font-size: 1.5rem;"></i>
+    <!-- 🤯 WOW NAVBAR -->
+    <nav class="navbar navbar-expand-lg wow-navbar">
+        <div class="container-fluid justify-content-between">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/logo.webp' %}" alt="Logo">
+                EduConnect
             </a>
+            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center">
-                <img src="{% static 'images/logo.webp' %}" alt="Logo" width="40" height="40" class="me-2">
-                <span class="fw-bold">EduConnect</span>
-            </a>
-            <nav>
-                <ul class="nav">
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <ul class="navbar-nav align-items-center gap-2">
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'dashboard' %}">
-                                <i class="bi bi-speedometer2"></i> Табло
-                            </a>
+                            <a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2"></i> Табло</a>
                         </li>
-
-                        <li class="nav-item ms-0">
-                            <a class="nav-link px-3 py-2 d-flex align-items-center me-0" href="{% url 'quiz_home' %}">
-                                <i class="bi bi-question-circle me-1"></i> Тест
-                            </a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'quiz_home' %}"><i class="bi bi-question-circle"></i> Тест</a>
                         </li>
-
-                        <li class="nav-item dropdown me-2">
-                            <a
-                                    class="nav-link dropdown-toggle d-flex align-items-center"
-                                    href="#"
-                                    id="addDropdown"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                            >
-                                <span class="me-1">➕</span> Добави
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="addDropdown" data-bs-toggle="dropdown">
+                                ➕ Добави
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="addDropdown">
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="{% url 'new_post' %}">
-                                        <i class="bi bi-pencil-square me-2"></i> Добави пост
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="{% url 'create_quiz' %}">
-                                        <i class="bi bi-journal-text me-2"></i> Добави тест
-                                    </a>
-                                </li>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'new_post' %}"><i class="bi bi-pencil-square me-2"></i> Пост</a></li>
+                                <li><a class="dropdown-item" href="{% url 'create_quiz' %}"><i class="bi bi-journal-text me-2"></i> Тест</a></li>
                             </ul>
                         </li>
-
                         {% if request.user.role == 'teacher' %}
-                            <li class="nav-item dropdown me-2">
-                                <a
-                                        class="nav-link dropdown-toggle d-flex align-items-center"
-                                        href="#"
-                                        id="representDropdown"
-                                        role="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                >
-                                    <i class="bi bi-building me-2"></i> Представете училището си
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="schoolDropdown" data-bs-toggle="dropdown">
+                                    <i class="bi bi-building"></i> Училище
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="representDropdown">
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center"
-                                           href="{% url 'add_school' %}">
-                                            <i class="bi bi-pencil-square me-2"></i> Добави описание
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center"
-                                           href="{% url 'create_tour' %}">
-                                            <i class="bi bi-calendar-check me-2"></i> Добави събитие
-                                        </a>
-                                    </li>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'add_school' %}"><i class="bi bi-pencil-square me-2"></i> Описание</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'create_tour' %}"><i class="bi bi-calendar-check me-2"></i> Тур</a></li>
                                 </ul>
                             </li>
                         {% endif %}
-
-
-
-                        <li class="nav-item ms-4">
-                            <a class="nav-link" href="{% url 'profile_details' username=request.user.username %}">
-                                <i class="bi bi-person"></i> Профил
-                            </a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'chat' %}"><i class="bi bi-chat-dots"></i> Чат</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-danger" href="{% url 'logout' %}">
-                                <i class="bi bi-box-arrow-right"></i> Излез
-                            </a>
+                            <a class="nav-link" href="{% url 'profile_details' username=request.user.username %}"><i class="bi bi-person-circle"></i> Профил</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Излез</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">
-                                <i class="bi bi-person-plus"></i> Регистрирай се
-                            </a>
+                            <a class="nav-link" href="{% url 'register' %}"><i class="bi bi-person-plus"></i> Регистрация</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">
-                                <i class="bi bi-box-arrow-in-right"></i> Влез
-                            </a>
+                            <a class="nav-link" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right"></i> Вход</a>
                         </li>
                     {% endif %}
                 </ul>
-            </nav>
+            </div>
         </div>
-    </header>
+    </nav>
 
+    <!-- Main Content -->
     <main class="flex-grow-1">
-        <div class="container py-4">
-
-            {% block content %}
-
-            {% endblock %}
+        <div class="container py-5">
+            {% block content %}{% endblock %}
         </div>
     </main>
 
-    <footer class="bg-dark text-light py-3 mt-auto">
-        <div class="container text-center">
-            <p>&copy; Димитър Димов - 2025 EduConnect. Всички права запазени.</p>
-        </div>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Димитър Димов – EduConnect. Всички права запазени.</p>
     </footer>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>
