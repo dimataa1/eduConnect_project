@@ -18,7 +18,6 @@
 
     <link rel="stylesheet" href="{% static 'messages.css' %}">
     <style>
-        /* Basic customization for chat UI */
         .contact-li.active {
             background-color: #f1f1f1;
             border-radius: 8px;
@@ -216,20 +215,25 @@
     }
 
     $('.contact-li').on('click', function () {
-        $('.contact-li.active').removeClass('active');
-        $(this).addClass('active');
-
         const otherUserId = $(this).data('user-id');
         const threadId = $(this).attr('chat_structure-id').replace('chat_', '');
 
+        // Make the clicked contact active
+        $('.contact-li.active').removeClass('active');
+        $(this).addClass('active');
+
+        // Update chat window info
         $('#chat-window').attr('chat_structure-id', `chat_${threadId}`);
         $('#chat-window').attr('other-user-id', otherUserId);
         $('#chat-window').addClass('is_active').show();
 
+        // Set username of the other user in the chat window
         $('#chat-username').text('Chat with ' + $(this).find('.user_info span').text());
 
+        // Load previous messages
         loadPreviousMessages(threadId, USER_ID);
 
+        // Close previous WebSocket connection if open
         if (socket) socket.close();
 
         let loc = window.location;
@@ -239,4 +243,46 @@
         socket = new WebSocket(endpoint);
 
         socket.onopen = function () {
-            console.log('[WebSocket
+            console.log('[WebSocket] Connected to', endpoint);
+        };
+
+        socket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const msg = data.message;
+            const sentBy = data.sent_by;
+            const isSentByUser = sentBy == USER_ID;
+
+            const msgHtml = isSentByUser
+                ? `<div class="d-flex mb-4 replied">
+                    <div class="msg_cotainer_send">
+                        ${msg}
+                        <span class="msg_time_send">Just now</span>
+                    </div>
+                </div>`
+                : `<div class="d-flex mb-4 received">
+                    <div class="img_cont_msg">
+                        <img src="https://via.placeholder.com/50" class="rounded-circle user_img_msg">
+                    </div>
+                    <div class="msg_cotainer">
+                        ${msg}
+                        <span class="msg_time">Just now</span>
+                    </div>
+                </div>`;
+
+            const container = $('#chat-window .msg_card_body');
+            container.append(msgHtml);
+            container.scrollTop(container[0].scrollHeight);
+        };
+
+        socket.onerror = function (e) {
+            console.error('[WebSocket] Error', e);
+        };
+
+        socket.onclose = function (e) {
+            console.log('[WebSocket] Closed', e.code);
+        };
+    });
+</script>
+
+</body>
+</html>
