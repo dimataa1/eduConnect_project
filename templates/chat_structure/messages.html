@@ -5,11 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
 
     <link rel="stylesheet" href="{% static 'messages.css' %}">
     <style>
@@ -59,247 +63,193 @@
     </style>
 </head>
 <body>
-    {% if user.is_authenticated %}
-        <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.username }}</h1>
-        <input type="hidden" id="logged-in-user" value="{{ user.id }}">
-    {% endif %}
+{% if user.is_authenticated %}
+    <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.username }}</h1>
+    <input type="hidden" id="logged-in-user" value="{{ user.id }}">
+{% endif %}
 
-    <div class="container-fluid h-100">
-        <div class="row justify-content-center h-100">
-            <!-- Contacts Section -->
-            <div class="col-md-4 col-xl-3 chat h-100 mt-4">
-                <div class="card mb-sm-3 mb-md-0 contacts_card">
-                    <div class="card-header">
-                        <div class="input-group">
-                            <input type="text" placeholder="Search..." name="search" class="form-control search" id="search-input">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text search_btn" id="search-btn"><i class="fas fa-search"></i></span>
-                            </div>
+<div class="container-fluid h-100">
+    <div class="row justify-content-center h-100">
+        <!-- Contacts Section -->
+        <div class="col-md-4 col-xl-3 chat h-100 mt-4">
+            <div class="card mb-sm-3 mb-md-0 contacts_card">
+                <div class="card-header">
+                    <div class="input-group">
+                        <input type="text" placeholder="Search..." name="search" class="form-control search"
+                               id="search-input">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text search_btn" id="search-btn"><i
+                                    class="fas fa-search"></i></span>
                         </div>
-                    </div>
-                    <div class="card-body contacts_body">
-                        <ul class="contacts" id="contacts-list">
-                            {% for user in users %}
-                                {% if user != request.user %}
-                                    <li class="contact-li" data-user-id="{{ user.id }}" chat_structure-id="chat_{{ user.id }}">
-                                        <div class="d-flex bd-highlight">
-                                            <div class="img_cont">
-                                                <img src="https://via.placeholder.com/50" class="rounded-circle user_img">
-                                                <span class="online_icon"></span>
-                                            </div>
-                                            <div class="user_info">
-                                                <span>{{ user.username }}</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
                     </div>
                 </div>
+                <div class="card-body contacts_body">
+                    <ul class="contacts" id="contacts-list">
+                        {% for user in users %}
+                            {% if user != request.user %}
+                                <li class="contact-li" data-user-id="{{ user.id }}"
+                                    chat_structure-id="chat_{{ user.id }}">
+                                    <div class="d-flex bd-highlight">
+                                        <div class="img_cont">
+                                            <img src="https://via.placeholder.com/50" class="rounded-circle user_img">
+                                            <span class="online_icon"></span>
+                                        </div>
+                                        <div class="user_info">
+                                            <span>{{ user.username }}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
+        </div>
 
-            <!-- Chat Section -->
-            <div class="col-md-8 col-xl-6 chat h-100 mt-4">
-                <div class="card">
-                    <div class="messages-wrapper" id="chat-window">
-                        <div class="card-header msg_head">
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img id="chat-user-img" src="https://via.placeholder.com/50" class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span id="chat-username">Chat with</span>
-                                    <p>Messages</p>
-                                </div>
-                                <div class="video_cam">
-                                    <span><i class="fas fa-video"></i></span>
-                                    <span><i class="fas fa-phone"></i></span>
-                                </div>
+        <!-- Chat Section -->
+        <div class="col-md-8 col-xl-6 chat h-100 mt-4">
+            <div class="card">
+                <div class="messages-wrapper" id="chat-window">
+                    <div class="card-header msg_head">
+                        <div class="d-flex bd-highlight">
+                            <div class="img_cont">
+                                <img id="chat-user-img" src="https://via.placeholder.com/50"
+                                     class="rounded-circle user_img">
+                                <span class="online_icon"></span>
+                            </div>
+                            <div class="user_info">
+                                <span id="chat-username">Chat with</span>
+                                <p>Messages</p>
+                            </div>
+                            <div class="video_cam">
+                                <span><i class="fas fa-video"></i></span>
+                                <span><i class="fas fa-phone"></i></span>
                             </div>
                         </div>
-                        <div class="card-body msg_card_body">
-                            <!-- Messages dynamically inserted here -->
-                        </div>
-                        <div class="card-footer">
-                            <form id="send-message-form">
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
-                                    </div>
-                                    <input type="text" name="message" id="input-message" class="form-control type_msg" placeholder="Type your message...">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-secondary" type="submit">
-                                            <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
-                                        </button>
-                                    </div>
+                    </div>
+                    <div class="card-body msg_card_body">
+                        <!-- Messages dynamically inserted here -->
+                    </div>
+                    <div class="card-footer">
+                        <form id="send-message-form">
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
                                 </div>
-                            </form>
-                        </div>
+                                <input type="text" name="message" id="input-message" class="form-control type_msg"
+                                       placeholder="Type your message...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-secondary" type="submit">
+                                        <span class="input-group-text send_btn"><i
+                                                class="fas fa-location-arrow"></i></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        let input_message = $('#input-message');
-let send_message_form = $('#send-message-form');
-const USER_ID = $('#logged-in-user').val();
+<script>
+    const USER_ID = $('#logged-in-user').val();
+    let socket = null;
 
-let loc = window.location;
-let wsStart = 'ws://';
+    const inputMessage = $('#input-message');
+    const sendMessageForm = $('#send-message-form');
 
-if (loc.protocol === 'https') {
-    wsStart = 'wss://';
-}
+    // Open chat when contact is clicked
+    $('.contact-li').on('click', function () {
+        $('.contact-li.active').removeClass('active');
+        $(this).addClass('active');
 
-let endpoint = wsStart + loc.host + loc.pathname;
-var socket = new WebSocket(endpoint);
+        const otherUserId = $(this).data('user-id');
+        const threadId = $(this).attr('chat_structure-id').replace('chat_', '');
 
-socket.onopen = function (e) {
-    console.log('Socket opened', e);
-    send_message_form.on('submit', function (e) {
-        e.preventDefault();
-        let message = input_message.val();
-        let send_to = get_active_other_user_id();
-        let thread_id = get_active_thread_id();
+        $('#chat-window').attr('chat_structure-id', `chat_${threadId}`);
+        $('#chat-window').attr('other-user-id', otherUserId);
+        $('#chat-window').addClass('is_active').show();
 
-        let data = {
-            'message': message,
-            'sent_by': USER_ID,
-            'send_to': send_to,
-            'thread_id': thread_id
+        $('#chat-username').text('Chat with ' + $(this).find('.user_info span').text());
+
+        // Close any existing socket
+        if (socket) socket.close();
+
+        // Create new socket per thread
+        let loc = window.location;
+        let wsStart = loc.protocol === 'https:' ? 'wss://' : 'ws://';
+        let endpoint = wsStart + loc.host + `/ws/chat/${threadId}/`;
+
+        socket = new WebSocket(endpoint);
+
+        socket.onopen = function () {
+            console.log('[WebSocket] Connected to', endpoint);
+
+            sendMessageForm.off('submit').on('submit', function (e) {
+                e.preventDefault();
+                const message = inputMessage.val().trim();
+                if (!message) return;
+
+                const data = {
+                    message: message,
+                    sent_by: USER_ID,
+                    send_to: otherUserId,
+                    thread_id: threadId
+                };
+                socket.send(JSON.stringify(data));
+                inputMessage.val('');
+            });
         };
-        data = JSON.stringify(data);
-        socket.send(data);
-        $(this)[0].reset();
+
+        socket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const msg = data.message;
+            const sentBy = data.sent_by;
+
+            const isSentByUser = sentBy == USER_ID;
+
+            const msgHtml = isSentByUser
+                ? `<div class="d-flex mb-4 replied">
+                    <div class="msg_cotainer_send">
+                        ${msg}
+                        <span class="msg_time_send">Just now</span>
+                    </div>
+                </div>`
+                : `<div class="d-flex mb-4 received">
+                    <div class="img_cont_msg">
+                        <img src="https://via.placeholder.com/50" class="rounded-circle user_img_msg">
+                    </div>
+                    <div class="msg_cotainer">
+                        ${msg}
+                        <span class="msg_time">Just now</span>
+                    </div>
+                </div>`;
+
+            $('#chat-window .msg_card_body').append(msgHtml).animate({
+                scrollTop: $('#chat-window .msg_card_body')[0].scrollHeight
+            }, 100);
+        };
+
+        socket.onerror = function (e) {
+            console.error('[WebSocket] Error', e);
+        };
+
+        socket.onclose = function (e) {
+            console.log('[WebSocket] Closed', e.code);
+        };
     });
-};
 
-socket.onmessage = function (e) {
-    console.log('Message received:', e);
-    let data = JSON.parse(e.data);
-    let message = data['message'];
-    let sent_by_id = data['sent_by'];
-    let thread_id = data['thread_id'];
-
-    newMessage(message, sent_by_id, thread_id);
-};
-
-socket.onerror = function (e) {
-    console.log('Socket error', e);
-};
-
-socket.onclose = function (e) {
-    console.log('Socket closed', e);
-};
-
-function newMessage(message, sent_by_id, thread_id) {
-    if ($.trim(message) === '') {
-        return false;
-    }
-
-    // Find the correct chat_id to append the message
-    let chat_id = 'chat_' + thread_id;
-    let message_element;
-
-    // Format the message depending on who sent it
-    if (sent_by_id == USER_ID) {
-        message_element = `
-            <div class="d-flex mb-4 replied">
-                <div class="msg_cotainer_send">
-                    ${message}
-                    <span class="msg_time_send">8:55 AM, Today</span>
-                </div>
-                <div class="img_cont_msg">
-                    <img>
-                </div>
-            </div>
-        `;
-    } else {
-        message_element = `
-            <div class="d-flex mb-4 received">
-                <div class="img_cont_msg">
-                    <img src="https://via.placeholder.com/50" class="rounded-circle user_img_msg">
-                </div>
-                <div class="msg_cotainer">
-                    ${message}
-                    <span class="msg_time">8:40 AM, Today</span>
-                </div>
-            </div>
-        `;
-    }
-
-    // Append the message to the correct message body of the active chat window
-    let message_body = $(`.messages-wrapper[chat_structure-id="${chat_id}"] .msg_card_body`);
-    if (message_body.length > 0) {
-        message_body.append($(message_element));
-        message_body.animate({
-            scrollTop: message_body[0].scrollHeight
-        }, 100);
-    } else {
-        console.error('Message body not found for chat_id:', chat_id);
-    }
-
-    input_message.val(null);
-}
-
-$('.contact-li').on('click', function () {
-    $('.contacts .active').removeClass('active');
-    $(this).addClass('active');
-
-    // message wrappers
-    let chat_id = $(this).attr('chat_structure-id');
-    $('.messages-wrapper.is_active').removeClass('is_active');
-    $(`.messages-wrapper[chat_structure-id="${chat_id}"]`).addClass('is_active');
-});
-
-function get_active_other_user_id() {
-    let other_user_id = $('.messages-wrapper.is_active').attr('other-user-id');
-    return $.trim(other_user_id);
-}
-
-function get_active_thread_id() {
-    let chat_id = $('.messages-wrapper.is_active').attr('chat_structure-id');
-    return chat_id.replace('chat_', '');
-}
-
-$(document).ready(function () {
-    console.log("Search bar script loaded");
-    $('#contacts-list').hide();
-
-    // Search functionality for contacts
+    // Search functionality
     $('#search-input').on('input', function () {
-        var searchText = $(this).val().toLowerCase();
-
-        if (searchText.trim() === '') {
-            $('#contacts-list').show(); // Show all contacts if search is cleared
-            return;
-        }
-
-        $('#contacts-list').show(); // Show when searching
-
+        const text = $(this).val().toLowerCase();
         $('#contacts-list li').each(function () {
-            var contactName = $(this).find('.user_info span').text().toLowerCase();
-
-            if (contactName.includes(searchText)) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
+            const name = $(this).find('.user_info span').text().toLowerCase();
+            $(this).toggle(name.includes(text));
         });
     });
+</script>
 
-    // Simulating switching between chats
-    $('#contacts-list li').on('click', function () {
-        var chatId = "chat_" + $(this).data('user-id');
-        $('.messages-wrapper').removeClass('is_active').addClass('hide');
-        $("#" + chatId).removeClass('hide').addClass('is_active');
-    });
-});
-
-    </script>
 </body>
 </html>
