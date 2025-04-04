@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'cloudinary',
     'cloudinary_storage',
-
+    'daphne',
     "chat.apps.ChatConfig",
     "channels",
 ]

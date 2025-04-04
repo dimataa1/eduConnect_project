@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
-from chat.models import Thread
-
+from chat.models import Thread, ChatMessage
 
 
 @login_required
@@ -60,3 +60,18 @@ def start_chat(request, user_id):
 
     # Redirect to the chat room for the thread
     return redirect('chat_room', thread_id=thread.id)
+
+@login_required
+def get_chat_messages(request, thread_id):
+    thread = Thread.objects.filter(id=thread_id).first()
+    if not thread:
+        return JsonResponse({'error': 'Thread not found'}, status=404)
+
+    messages = ChatMessage.objects.filter(thread=thread).order_by('timestamp')
+    message_list = [{
+        'message': m.message,
+        'sent_by': m.user.id,
+        'timestamp': m.timestamp.strftime('%H:%M')
+    } for m in messages]
+
+    return JsonResponse({'messages': message_list})
