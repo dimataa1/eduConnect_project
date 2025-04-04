@@ -1,7 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,7 +61,6 @@
         }
     </style>
 </head>
-
 <body>
 {% if user.is_authenticated %}
     <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.username }}</h1>
@@ -132,7 +130,7 @@
                         <!-- Messages dynamically inserted here -->
                     </div>
                     <div class="card-footer">
-                        <form id="send-message-form" onsubmit="sendMessage(event)">
+                        <form id="send-message-form">
                             <div class="input-group">
                                 <div class="input-group-append">
                                     <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
@@ -155,50 +153,13 @@
 </div>
 
 <script>
-    const USER_ID = {{ user.id }};
-    let socket = null;
-
-    // Function to safely send a message through WebSocket
-    function sendMessage(event) {
-        event.preventDefault();  // Prevent form from refreshing the page
-        const message = $('#input-message').val().trim();
-        if (!message) return;
-
-        const otherUserId = $('#chat-window').attr('other-user-id');
-        const threadId = $('#chat-window').attr('chat_structure-id').replace('chat_', '');
-
-        const data = {
-            message: message,
-            sent_by: USER_ID,
-            send_to: otherUserId,
-            thread_id: threadId
-        };
-
-        // Check if the socket is open before sending
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify(data));  // Send the message via WebSocket
-            $('#input-message').val('');  // Clear the input field
-        } else {
-            console.error('WebSocket is not open.');
-        }
-    }
-
-    // Close the current socket if it is open, before establishing a new connection
-    function closeCurrentSocket() {
-        if (socket) {
-            socket.close();
-            console.log('WebSocket connection closed');
-        }
-    }
-
-    // Load previous messages for a chat thread
     function loadPreviousMessages(threadId, currentUserId) {
         $.ajax({
             url: `/chat/api/messages/${threadId}/`,
             method: 'GET',
             success: function (data) {
                 const container = $('#chat-window .msg_card_body');
-                container.html('');
+                container.html('');  // Clear previous messages
 
                 data.messages.forEach(msg => {
                     const isSentByUser = msg.sent_by === parseInt(currentUserId);
@@ -225,49 +186,60 @@
             },
             error: function (err) {
                 console.error("Error loading messages:", err);
+                alert('Error loading messages. Check the server and API.');
             }
         });
     }
 
-    // Handle the click event on a contact to start a chat
-    $('.contact-li').on('click', function () {
-        const otherUserId = $(this).data('user-id');
-        const threadId = $(this).attr('chat_structure-id').replace('chat_', '');
+    let socket;
 
-        // Make the clicked contact active
+    $('.contact-li').on('click', function () {
         $('.contact-li.active').removeClass('active');
         $(this).addClass('active');
 
-        // Update chat window info
+        const otherUserId = $(this).data('user-id');
+        const threadId = $(this).attr('chat_structure-id').replace('chat_', '');
+
         $('#chat-window').attr('chat_structure-id', `chat_${threadId}`);
         $('#chat-window').attr('other-user-id', otherUserId);
         $('#chat-window').addClass('is_active').show();
 
-        // Set username of the other user in the chat window
         $('#chat-username').text('Chat with ' + $(this).find('.user_info span').text());
 
-        // Load previous messages
-        loadPreviousMessages(threadId, USER_ID);
+        loadPreviousMessages(threadId, $('#logged-in-user').val());
 
-        // Close any previous WebSocket connection if open
-        closeCurrentSocket();
+        if (socket) socket.close();
 
         let loc = window.location;
         let wsStart = loc.protocol === 'https:' ? 'wss://' : 'ws://';
-        let endpoint = wsStart + loc.hostname + `/ws/chat/${threadId}/`;
+        let endpoint = wsStart + loc.host + `/ws/chat/${threadId}/`;
 
-        // Open a new WebSocket connection for the selected chat
         socket = new WebSocket(endpoint);
 
         socket.onopen = function () {
             console.log('[WebSocket] Connected to', endpoint);
+
+            $('#send-message-form').off('submit').on('submit', function (e) {
+                e.preventDefault();
+                const message = $('#input-message').val().trim();
+                if (!message) return;
+
+                const data = {
+                    message: message,
+                    sent_by: $('#logged-in-user').val(),
+                    send_to: otherUserId,
+                    thread_id: threadId
+                };
+                socket.send(JSON.stringify(data));
+                $('#input-message').val('');
+            });
         };
 
         socket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const msg = data.message;
             const sentBy = data.sent_by;
-            const isSentByUser = sentBy == USER_ID;
+            const isSentByUser = sentBy == $('#logged-in-user').val();
 
             const msgHtml = isSentByUser
                 ? `<div class="d-flex mb-4 replied">
@@ -282,25 +254,21 @@
                     </div>
                     <div class="msg_cotainer">
                         ${msg}
-                        <span class="msg_time">Just now</span>
+                        <span class="msg_time">${new Date().toLocaleString()}</span>
                     </div>
                 </div>`;
-
-            const container = $('#chat-window .msg_card_body');
-            container.append(msgHtml);
-            container.scrollTop(container[0].scrollHeight);
-        };
-
-        socket.onerror = function (e) {
-            console.error('[WebSocket] Error', e);
+            $('#chat-window .msg_card_body').append(msgHtml);
+            $('#chat-window .msg_card_body').scrollTop($('#chat-window .msg_card_body')[0].scrollHeight);
         };
 
         socket.onclose = function (e) {
-            console.log('[WebSocket] Closed', e.code);
+            console.log('[WebSocket] Disconnected', e);
+        };
+
+        socket.onerror = function (e) {
+            console.error('[WebSocket] Error occurred:', e);
         };
     });
 </script>
-
-
 </body>
 </html>
