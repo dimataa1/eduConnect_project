@@ -158,6 +158,40 @@
     const USER_ID = {{ user.id }};
     let socket = null;
 
+    // Function to safely send a message through WebSocket
+    function sendMessage(event) {
+        event.preventDefault();  // Prevent form from refreshing the page
+        const message = $('#input-message').val().trim();
+        if (!message) return;
+
+        const otherUserId = $('#chat-window').attr('other-user-id');
+        const threadId = $('#chat-window').attr('chat_structure-id').replace('chat_', '');
+
+        const data = {
+            message: message,
+            sent_by: USER_ID,
+            send_to: otherUserId,
+            thread_id: threadId
+        };
+
+        // Check if the socket is open before sending
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify(data));  // Send the message via WebSocket
+            $('#input-message').val('');  // Clear the input field
+        } else {
+            console.error('WebSocket is not open.');
+        }
+    }
+
+    // Close the current socket if it is open, before establishing a new connection
+    function closeCurrentSocket() {
+        if (socket) {
+            socket.close();
+            console.log('WebSocket connection closed');
+        }
+    }
+
+    // Load previous messages for a chat thread
     function loadPreviousMessages(threadId, currentUserId) {
         $.ajax({
             url: `/chat/api/messages/${threadId}/`,
@@ -195,25 +229,7 @@
         });
     }
 
-    function sendMessage(event) {
-        event.preventDefault();  // Prevent form from refreshing the page
-        const message = $('#input-message').val().trim();
-        if (!message || !socket) return;
-
-        const otherUserId = $('#chat-window').attr('other-user-id');
-        const threadId = $('#chat-window').attr('chat_structure-id').replace('chat_', '');
-
-        const data = {
-            message: message,
-            sent_by: USER_ID,
-            send_to: otherUserId,
-            thread_id: threadId
-        };
-
-        socket.send(JSON.stringify(data));  // Send the message via WebSocket
-        $('#input-message').val('');  // Clear the input field
-    }
-
+    // Handle the click event on a contact to start a chat
     $('.contact-li').on('click', function () {
         const otherUserId = $(this).data('user-id');
         const threadId = $(this).attr('chat_structure-id').replace('chat_', '');
@@ -233,13 +249,14 @@
         // Load previous messages
         loadPreviousMessages(threadId, USER_ID);
 
-        // Close previous WebSocket connection if open
-        if (socket) socket.close();
+        // Close any previous WebSocket connection if open
+        closeCurrentSocket();
 
         let loc = window.location;
         let wsStart = loc.protocol === 'https:' ? 'wss://' : 'ws://';
         let endpoint = wsStart + loc.hostname + `/ws/chat/${threadId}/`;
 
+        // Open a new WebSocket connection for the selected chat
         socket = new WebSocket(endpoint);
 
         socket.onopen = function () {
@@ -283,6 +300,7 @@
         };
     });
 </script>
+
 
 </body>
 </html>
