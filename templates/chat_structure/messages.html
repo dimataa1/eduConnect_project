@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,6 +62,7 @@
         }
     </style>
 </head>
+
 <body>
 {% if user.is_authenticated %}
     <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.username }}</h1>
@@ -130,7 +132,7 @@
                         <!-- Messages dynamically inserted here -->
                     </div>
                     <div class="card-footer">
-                        <form id="send-message-form">
+                        <form id="send-message-form" onsubmit="sendMessage(event)">
                             <div class="input-group">
                                 <div class="input-group-append">
                                     <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
@@ -153,13 +155,16 @@
 </div>
 
 <script>
+    const USER_ID = {{ user.id }};
+    let socket = null;
+
     function loadPreviousMessages(threadId, currentUserId) {
         $.ajax({
             url: `/chat/api/messages/${threadId}/`,
             method: 'GET',
             success: function (data) {
                 const container = $('#chat-window .msg_card_body');
-                container.html('');  // Clear previous messages
+                container.html('');
 
                 data.messages.forEach(msg => {
                     const isSentByUser = msg.sent_by === parseInt(currentUserId);
@@ -186,60 +191,66 @@
             },
             error: function (err) {
                 console.error("Error loading messages:", err);
-                alert('Error loading messages. Check the server and API.');
             }
         });
     }
 
-    let socket;
+    function sendMessage(event) {
+        event.preventDefault();  // Prevent form from refreshing the page
+        const message = $('#input-message').val().trim();
+        if (!message || !socket) return;
+
+        const otherUserId = $('#chat-window').attr('other-user-id');
+        const threadId = $('#chat-window').attr('chat_structure-id').replace('chat_', '');
+
+        const data = {
+            message: message,
+            sent_by: USER_ID,
+            send_to: otherUserId,
+            thread_id: threadId
+        };
+
+        socket.send(JSON.stringify(data));  // Send the message via WebSocket
+        $('#input-message').val('');  // Clear the input field
+    }
 
     $('.contact-li').on('click', function () {
-        $('.contact-li.active').removeClass('active');
-        $(this).addClass('active');
-
         const otherUserId = $(this).data('user-id');
         const threadId = $(this).attr('chat_structure-id').replace('chat_', '');
 
+        // Make the clicked contact active
+        $('.contact-li.active').removeClass('active');
+        $(this).addClass('active');
+
+        // Update chat window info
         $('#chat-window').attr('chat_structure-id', `chat_${threadId}`);
         $('#chat-window').attr('other-user-id', otherUserId);
         $('#chat-window').addClass('is_active').show();
 
+        // Set username of the other user in the chat window
         $('#chat-username').text('Chat with ' + $(this).find('.user_info span').text());
 
-        loadPreviousMessages(threadId, $('#logged-in-user').val());
+        // Load previous messages
+        loadPreviousMessages(threadId, USER_ID);
 
+        // Close previous WebSocket connection if open
         if (socket) socket.close();
 
         let loc = window.location;
         let wsStart = loc.protocol === 'https:' ? 'wss://' : 'ws://';
-        let endpoint = wsStart + loc.host + `/ws/chat/${threadId}/`;
+        let endpoint = wsStart + loc.hostname + `/ws/chat/${threadId}/`;
 
         socket = new WebSocket(endpoint);
 
         socket.onopen = function () {
             console.log('[WebSocket] Connected to', endpoint);
-
-            $('#send-message-form').off('submit').on('submit', function (e) {
-                e.preventDefault();
-                const message = $('#input-message').val().trim();
-                if (!message) return;
-
-                const data = {
-                    message: message,
-                    sent_by: $('#logged-in-user').val(),
-                    send_to: otherUserId,
-                    thread_id: threadId
-                };
-                socket.send(JSON.stringify(data));
-                $('#input-message').val('');
-            });
         };
 
         socket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const msg = data.message;
             const sentBy = data.sent_by;
-            const isSentByUser = sentBy == $('#logged-in-user').val();
+            const isSentByUser = sentBy == USER_ID;
 
             const msgHtml = isSentByUser
                 ? `<div class="d-flex mb-4 replied">
@@ -254,21 +265,24 @@
                     </div>
                     <div class="msg_cotainer">
                         ${msg}
-                        <span class="msg_time">${new Date().toLocaleString()}</span>
+                        <span class="msg_time">Just now</span>
                     </div>
                 </div>`;
-            $('#chat-window .msg_card_body').append(msgHtml);
-            $('#chat-window .msg_card_body').scrollTop($('#chat-window .msg_card_body')[0].scrollHeight);
-        };
 
-        socket.onclose = function (e) {
-            console.log('[WebSocket] Disconnected', e);
+            const container = $('#chat-window .msg_card_body');
+            container.append(msgHtml);
+            container.scrollTop(container[0].scrollHeight);
         };
 
         socket.onerror = function (e) {
-            console.error('[WebSocket] Error occurred:', e);
+            console.error('[WebSocket] Error', e);
+        };
+
+        socket.onclose = function (e) {
+            console.log('[WebSocket] Closed', e.code);
         };
     });
 </script>
+
 </body>
 </html>
