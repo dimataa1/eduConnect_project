@@ -133,7 +133,7 @@
                         <!-- Messages dynamically inserted here -->
                     </div>
                     <div class="card-footer">
-                        <form id="send-message-form">
+                        <form id="send-message-form" onsubmit="sendMessage(event)">
                             <div class="input-group">
                                 <div class="input-group-append">
                                     <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
@@ -157,14 +157,15 @@
 
 <script>
     const USER_ID = {{ user.id }};
+    let socket = null;
 
     function loadPreviousMessages(threadId, currentUserId) {
         $.ajax({
-            url: `/chat/api/messages/${threadId}/`,  // Ensure this URL is routed correctly
+            url: `/chat/api/messages/${threadId}/`,
             method: 'GET',
             success: function (data) {
                 const container = $('#chat-window .msg_card_body');
-                container.html(''); // Clear previous messages
+                container.html('');
 
                 data.messages.forEach(msg => {
                     const isSentByUser = msg.sent_by === parseInt(currentUserId);
@@ -195,6 +196,25 @@
         });
     }
 
+    function sendMessage(event) {
+        event.preventDefault();  // Prevent form from refreshing the page
+        const message = $('#input-message').val().trim();
+        if (!message || !socket) return;
+
+        const otherUserId = $('#chat-window').attr('other-user-id');
+        const threadId = $('#chat-window').attr('chat_structure-id').replace('chat_', '');
+
+        const data = {
+            message: message,
+            sent_by: USER_ID,
+            send_to: otherUserId,
+            thread_id: threadId
+        };
+
+        socket.send(JSON.stringify(data));  // Send the message via WebSocket
+        $('#input-message').val('');  // Clear the input field
+    }
+
     $('.contact-li').on('click', function () {
         $('.contact-li.active').removeClass('active');
         $(this).addClass('active');
@@ -208,7 +228,6 @@
 
         $('#chat-username').text('Chat with ' + $(this).find('.user_info span').text());
 
-        // Load past messages
         loadPreviousMessages(threadId, USER_ID);
 
         if (socket) socket.close();
@@ -220,61 +239,4 @@
         socket = new WebSocket(endpoint);
 
         socket.onopen = function () {
-            console.log('[WebSocket] Connected to', endpoint);
-
-            $('#send-message-form').off('submit').on('submit', function (e) {
-                e.preventDefault();
-                const message = $('#input-message').val().trim();
-                if (!message) return;
-
-                const data = {
-                    message: message,
-                    sent_by: USER_ID,
-                    send_to: otherUserId,
-                    thread_id: threadId
-                };
-                socket.send(JSON.stringify(data));
-                $('#input-message').val('');
-            });
-        };
-
-        socket.onmessage = function (e) {
-            const data = JSON.parse(e.data);
-            const msg = data.message;
-            const sentBy = data.sent_by;
-            const isSentByUser = sentBy == USER_ID;
-
-            const msgHtml = isSentByUser
-                ? `<div class="d-flex mb-4 replied">
-                    <div class="msg_cotainer_send">
-                        ${msg}
-                        <span class="msg_time_send">Just now</span>
-                    </div>
-                </div>`
-                : `<div class="d-flex mb-4 received">
-                    <div class="img_cont_msg">
-                        <img src="https://via.placeholder.com/50" class="rounded-circle user_img_msg">
-                    </div>
-                    <div class="msg_cotainer">
-                        ${msg}
-                        <span class="msg_time">Just now</span>
-                    </div>
-                </div>`;
-
-            const container = $('#chat-window .msg_card_body');
-            container.append(msgHtml);
-            container.scrollTop(container[0].scrollHeight);
-        };
-
-        socket.onerror = function (e) {
-            console.error('[WebSocket] Error', e);
-        };
-
-        socket.onclose = function (e) {
-            console.log('[WebSocket] Closed', e.code);
-        };
-    });
-</script>
-
-</body>
-</html>
+            console.log('[WebSocket
