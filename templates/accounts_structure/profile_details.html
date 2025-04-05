@@ -2,84 +2,135 @@
 {% load static %}
 {% block content %}
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white text-center">
-                       <h2><i class="bi bi-person-circle"></i> Детайли на профила</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                {% if profile.profile_picture %}
-                                     <img src="{{ profile.profile_picture.url }}" class="img-fluid mb-3 border rounded">
-                                {% else %}
-                                    <img src="{% static 'profile_images/../../static/default/default_pfp.jpg' %}"
-                                         class="img-fluid mb-3 border rounded">
-                                {% endif %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
 
-                                <h5 class="text-muted">{{ profile.first_name }} {{ profile.last_name }}</h5>
-                                <p class="badge bg-secondary">{{ profile.user.get_role_display }}</p>
-                            </div>
-                            <div class="col-md-8">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">
-                                        <strong>Описание: </strong>
-                                        <span class="text-muted">{{ profile.description|default:"Няма предоставено описание за този профил." }}</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Имейл: </strong>
-                                        <span class="text-muted">{{ profile.user.email }}</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Възраст: </strong>
-                                        <span class="text-muted">{{ profile.age|default:"N/A" }}</span>
-                                    </li>
-                                    {% if profile.user.role == 'student' %}
-                                        <li class="list-group-item">
-                                            <strong>Предмет: </strong>
-                                            <span class="text-muted">{{ profile.grade|default:"N/A" }}</span>
-                                        </li>
-                                    {% elif profile.user.role == 'teacher' %}
-                                        <li class="list-group-item">
-                                            <strong>Предмет: </strong>
-                                            <span class="text-muted">{{ profile.subject|default:"N/A" }}</span>
-                                        </li>
-                                    {% endif %}
-                                </ul>
-                            </div>
+    .card-header-custom {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+    }
+
+    .btn-ios-primary {
+        background-color: #007aff;
+        color: white;
+        border: none;
+    }
+
+    .btn-ios-primary:hover {
+        background-color: #005bb5;
+    }
+
+    .btn-ios-warning {
+        background-color: #ff9500;
+        color: white;
+        border: none;
+    }
+
+    .btn-ios-warning:hover {
+        background-color: #cc7a00;
+    }
+
+    .btn-ios-danger {
+        background-color: #ff3b30;
+        color: white;
+        border: none;
+    }
+
+    .btn-ios-danger:hover {
+        background-color: #cc2e24;
+    }
+
+    .rounded-soft {
+        border-radius: 1rem;
+    }
+
+    .badge-muted {
+        background-color: #8e8e93;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-soft">
+                <div class="card-header card-header-custom text-center py-4">
+                    <h2 class="mb-0"><i class="bi bi-person-circle me-2"></i>Детайли на профила</h2>
+                </div>
+                <div class="card-body p-5 bg-white">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-md-4 text-center">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" class="img-fluid border rounded-circle shadow-sm" style="max-height: 200px;">
+                            {% else %}
+                                <img src="{% static 'default/default_pfp.jpg' %}" class="img-fluid border rounded-circle shadow-sm" style="max-height: 200px;">
+                            {% endif %}
+                            <h5 class="mt-3 fw-semibold">{{ profile.first_name }} {{ profile.last_name }}</h5>
+                            <span class="badge badge-muted text-white py-2 px-3">{{ profile.user.get_role_display }}</span>
+                        </div>
+                        <div class="col-md-8">
+                            <ul class="list-group list-group-flush fs-5">
+                                <li class="list-group-item">
+                                    <strong>Описание:</strong>
+                                    <span class="text-muted">{{ profile.description|default:"Няма предоставено описание за този профил." }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Имейл:</strong>
+                                    <span class="text-muted">{{ profile.user.email }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Възраст:</strong>
+                                    <span class="text-muted">{{ profile.age|default:"N/A" }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Предмет:</strong>
+                                    <span class="text-muted">
+                                        {% if profile.user.role == 'student' %}
+                                            {{ profile.grade|default:"N/A" }}
+                                        {% elif profile.user.role == 'teacher' %}
+                                            {{ profile.subject|default:"N/A" }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="card-footer text-center">
-                        {% if request.user == profile.user %}
-                            <div class="d-flex justify-content-center gap-2">
-                                <!-- Updated URL with correct username parameter -->
-                                <a href="{% url 'profile_update' username=profile.user.username %}" class="btn btn-outline-primary">
-                                    ✏️ Редактиране на профила
-                                </a>
-                                <a href="{% url 'change_password' username=profile.user.username %}" class="btn btn-outline-warning">
-                                    🔒 Смяна на парола
-                                </a>
-                                <a href="{% url 'delete_profile_picture' username=profile.user.username %}" class="btn btn-outline-danger">
-                                    🗑️ Изтрий снимка
-                                </a>
-                                <a href="{% url 'delete_profile' username=profile.user.username %}" class="btn btn-danger">
-                                    🚨 Изтрий профилa
-                                </a>
-                            </div>
-                        {% endif %}
-                    </div>
                 </div>
-                 {% if request.user != profile.user %}
-                    <div class="text-center mt-4">
-                        <a href="{% url 'start_chat' user_id=profile.user.id %}" class="btn btn-success btn-lg px-4 py-3 shadow-lg rounded-pill">
-                            <i class="bi bi-chat-dots-fill me-2"></i> Започни чат
-                        </a>
+
+                {% if request.user == profile.user %}
+                    <div class="card-footer bg-light text-center rounded-bottom-4 py-4">
+                        <div class="d-flex flex-wrap justify-content-center gap-3">
+                            <a href="{% url 'profile_update' username=profile.user.username %}" class="btn btn-ios-primary rounded-pill px-4 shadow-sm">
+                                ✏️ Редактиране на профила
+                            </a>
+                            <a href="{% url 'change_password' username=profile.user.username %}" class="btn btn-ios-warning rounded-pill px-4 shadow-sm">
+                                🔒 Смяна на парола
+                            </a>
+                            <a href="{% url 'delete_profile_picture' username=profile.user.username %}" class="btn btn-outline-danger rounded-pill px-4 shadow-sm">
+                                🗑️ Изтрий снимка
+                            </a>
+                            <a href="{% url 'delete_profile' username=profile.user.username %}" class="btn btn-ios-danger rounded-pill px-4 shadow-sm">
+                                🚨 Изтрий профила
+                            </a>
+                        </div>
                     </div>
                 {% endif %}
             </div>
+
+            {% if request.user != profile.user %}
+                <div class="text-center mt-5">
+                    <a href="{% url 'start_chat' user_id=profile.user.id %}" class="btn btn-success btn-lg rounded-pill px-5 py-3 shadow">
+                        <i class="bi bi-chat-dots-fill me-2"></i>Започни чат
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </div>
+</div>
 
 {% endblock %}
