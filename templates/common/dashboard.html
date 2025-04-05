@@ -1,8 +1,18 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
+<style>
+.form-heading {
+    font-size: 2.6rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #00bcd4, #2196f3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+</style>
     <div class="container py-5">
-        <h1 class="mb-4 text-center text-uppercase font-weight-bold">Табло за управление</h1>
+        <h1 class="mb-4 text-center text-uppercase font-weight-bold form-heading">Табло за управление</h1>
 
         <div class="row justify-content-center">
             {% for item_data in items_with_type %}

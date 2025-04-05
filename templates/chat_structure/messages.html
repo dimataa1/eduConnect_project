@@ -65,7 +65,14 @@
 
 <body>
 {% if user.is_authenticated %}
-    <h1 style="text-align: end; padding-right: 10px">Logged in as : {{ user.username }}</h1>
+    <h1
+            style="text-align: center; padding-right: 10px;padding-top: 10px; margin-right: 20px; background: linear-gradient(90deg, #00bcd4, #2196f3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); cursor: pointer;font-size: 3rem;"
+            onclick="window.location.href='{% url 'home' %}'">
+        Home
+    </h1>
+
+
+
     <input type="hidden" id="logged-in-user" value="{{ user.id }}">
 {% endif %}
 

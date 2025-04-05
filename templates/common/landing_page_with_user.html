@@ -1,75 +1,85 @@
 {% extends 'common/base.html' %}
 {% load static %}
 {% block content %}
-<div class="container py-5">
-{#<h1 class="align-items-center text-center">⚠️ ВАЖНО: Този уебсайт все още не е във финалната си версия. В момента работя върху нови функции и подобрения. Очаквайте скоро допълнителни възможности и оптимизации. Благодаря за разбирането! 🙌</h1>#}
-    <h1 class="text-center">Добре дошли обратно, {{ username }}!</h1>
-    <p class="text-center">Използвайте функционалностите за търсене на постове и училища.</p>
+    <style>
+        .form-heading {
+            font-size: 2.7rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #00bcd4, #2196f3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+    <div class="container py-5">
+        {#<h1 class="align-items-center text-center">⚠️ ВАЖНО: Този уебсайт все още не е във финалната си версия. В момента работя върху нови функции и подобрения. Очаквайте скоро допълнителни възможности и оптимизации. Благодаря за разбирането! 🙌</h1>#}
+        <h1 class="text-center form-heading">Добре дошли обратно, {{ username }}!</h1>
+        <p class="text-center">Използвайте функционалностите за търсене на постове и училища.</p>
 
 
-    <div class="text-center mt-4 mb-4">
-        <a href="{% url 'dashboard' %}" class="btn btn-success btn-lg">
-            Вижте вашето табло
-        </a>
-    </div>
+        <div class="text-center mt-4 mb-4">
+            <a href="{% url 'dashboard' %}" class="btn btn-success btn-lg">
+                Вижте вашето табло
+            </a>
+        </div>
 
-    <div class="card shadow-lg mb-4">
-        <div class="card-body">
-            <h4 class="card-title">Търсене на постове</h4>
-            <form id="searchPostForm">
-                <div class="row">
-                    <div class="col-md-5 mb-3">
-                        <input type="text" id="subject" name="subject" class="form-control"
-                               placeholder="Търсене по предмет">
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h4 class="card-title">Търсене на постове</h4>
+                <form id="searchPostForm">
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <input type="text" id="subject" name="subject" class="form-control"
+                                   placeholder="Търсене по предмет">
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <input type="text" id="grade" name="grade" class="form-control"
+                                   placeholder="Търсене по клас">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-block">Търси</button>
+                            <button type="button" class="btn btn-danger btn-block" id="clearPostSearch">
+                                Изчисти
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-md-5 mb-3">
-                        <input type="text" id="grade" name="grade" class="form-control"
-                               placeholder="Търсене по клас">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary btn-block">Търси</button>
-                        <button type="button" class="btn btn-danger btn-block" id="clearPostSearch">
-                            Изчисти
-                        </button>
-                    </div>
+                </form>
+                <div class="text-center mt-4">
+                    <a href="{% url 'post_list' %}" class="btn btn-secondary">Всички Постове</a>
                 </div>
-            </form>
-            <div class="text-center mt-4">
-                <a href="{% url 'post_list' %}" class="btn btn-secondary">Всички Постове</a>
             </div>
         </div>
+
+        <div id="postResults" class="row mb-5"></div>
+
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h4 class="card-title">Търсене на училища и техните събития</h4>
+                <form id="searchSchoolForm">
+                    <div class="row">
+                        <div class="col-md-10 mb-3">
+                            <input type="text" id="town" name="town" class="form-control"
+                                   placeholder="Въведете град за търсене">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-block">Търси</button>
+                            <button type="button" class="btn btn-danger btn-block" id="clearSchoolSearch">
+                                Изчисти
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="text-center mb-4">
+                <a href="{% url 'school_list' %}" class="btn btn-secondary">Всички училища</a>
+            </div>
+        </div>
+
+        <div id="schoolResults" class="row"></div>
     </div>
 
-    <div id="postResults" class="row mb-5"></div>
 
-    <div class="card shadow-lg">
-        <div class="card-body">
-            <h4 class="card-title">Търсене на училища и техните събития</h4>
-            <form id="searchSchoolForm">
-                <div class="row">
-                    <div class="col-md-10 mb-3">
-                        <input type="text" id="town" name="town" class="form-control"
-                               placeholder="Въведете град за търсене">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary btn-block">Търси</button>
-                        <button type="button" class="btn btn-danger btn-block" id="clearSchoolSearch">
-                            Изчисти
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="text-center mb-4">
-            <a href="{% url 'school_list' %}" class="btn btn-secondary">Всички училища</a>
-        </div>
-    </div>
-
-    <div id="schoolResults" class="row"></div>
-</div>
-
-
-<script>
+    <script>
         document.getElementById("searchPostForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
@@ -190,5 +200,5 @@
             document.getElementById("schoolResults").innerHTML = '';
         });
 
-</script>
+    </script>
 {% endblock %}
