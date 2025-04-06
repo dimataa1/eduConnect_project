@@ -13,7 +13,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        /* Global Body */
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
@@ -22,7 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* WOW Navbar */
         .wow-navbar {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
@@ -55,7 +53,9 @@
             color: #fff;
             font-weight: 500;
             position: relative;
-            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             transition: 0.3s ease;
         }
 
@@ -78,6 +78,19 @@
         .wow-navbar .nav-link:hover {
             color: #00ffff;
             text-shadow: 0 0 10px #00ffff;
+        }
+
+        .wow-navbar .nav-link.text-danger {
+            color: #ff4d4d !important;
+        }
+
+        .wow-navbar .nav-link.text-danger:hover {
+            color: #ff9999 !important;
+            text-shadow: 0 0 6px #ff4d4d;
+        }
+
+        .wow-navbar .navbar-nav {
+            gap: 0.5rem;
         }
 
         .dropdown-menu {
@@ -128,12 +141,13 @@
                 <img src="{% static 'images/logo.webp' %}" alt="Logo">
                 EduConnect
             </a>
-            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-                <ul class="navbar-nav align-items-center gap-2">
+                <ul class="navbar-nav align-items-center">
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2"></i> Табло</a>
@@ -143,7 +157,7 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="addDropdown" data-bs-toggle="dropdown">
-                                ➕ Добави
+                                <i class="bi bi-plus-circle"></i> Добави
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{% url 'new_post' %}"><i class="bi bi-pencil-square me-2"></i> Пост</a></li>
@@ -163,6 +177,9 @@
                         {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'chat' %}"><i class="bi bi-chat-dots"></i> Чат</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'academic_calendar' %}"><i class="bi bi-calendar-event"></i> Календар</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'profile_details' username=request.user.username %}"><i class="bi bi-person-circle"></i> Профил</a>
