@@ -68,10 +68,8 @@
     <h1
             style="text-align: center; padding-right: 10px;padding-top: 10px; margin-right: 20px; background: linear-gradient(90deg, #00bcd4, #2196f3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); cursor: pointer;font-size: 3rem;"
             onclick="window.location.href='{% url 'home' %}'">
-        Home
+        <i class="fas fa-home"></i> Home
     </h1>
-
-
 
     <input type="hidden" id="logged-in-user" value="{{ user.id }}">
 {% endif %}
@@ -121,8 +119,7 @@
                     <div class="card-header msg_head">
                         <div class="d-flex bd-highlight">
                             <div class="img_cont">
-                                <img id="chat-user-img" src="{{ user.image.url }}"
-                                     class="rounded-circle user_img">
+                                <img id="chat-user-img" src="{{ user.image.url }}" class="rounded-circle user_img">
                                 <span class="online_icon"></span>
                             </div>
                             <div class="user_info">
@@ -203,7 +200,7 @@
     }
 
     function sendMessage(event) {
-        event.preventDefault();  // Prevent form from refreshing the page
+        event.preventDefault();
         const message = $('#input-message').val().trim();
         if (!message || !socket) return;
 
@@ -217,30 +214,25 @@
             thread_id: threadId
         };
 
-        socket.send(JSON.stringify(data));  // Send the message via WebSocket
-        $('#input-message').val('');  // Clear the input field
+        socket.send(JSON.stringify(data));
+        $('#input-message').val('');
     }
 
     $('.contact-li').on('click', function () {
         const otherUserId = $(this).data('user-id');
         const threadId = $(this).attr('chat_structure-id').replace('chat_', '');
 
-        // Make the clicked contact active
         $('.contact-li.active').removeClass('active');
         $(this).addClass('active');
 
-        // Update chat window info
         $('#chat-window').attr('chat_structure-id', `chat_${threadId}`);
         $('#chat-window').attr('other-user-id', otherUserId);
         $('#chat-window').addClass('is_active').show();
 
-        // Set username of the other user in the chat window
         $('#chat-username').text('Chat with ' + $(this).find('.user_info span').text());
 
-        // Load previous messages
         loadPreviousMessages(threadId, USER_ID);
 
-        // Close previous WebSocket connection if open
         if (socket) socket.close();
 
         let loc = window.location;
@@ -288,6 +280,20 @@
         socket.onclose = function (e) {
             console.log('[WebSocket] Closed', e.code);
         };
+    });
+
+    // ✅ Search functionality
+    $(document).ready(function () {
+        $('#search-input').on('keyup', function () {
+            let value = $(this).val().toLowerCase();
+            $('#contacts-list li').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+
+        $('#search-btn').on('click', function () {
+            $('#search-input').trigger('keyup');
+        });
     });
 </script>
 
